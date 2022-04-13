@@ -25,6 +25,7 @@ $(function() {
     'columns': [
         { data: 'full_name' },
         { data: 'email' },
+        { data: 'department' },
         { data: 'designation' },
         { data: 'role' },
         { data: 'j_date' },

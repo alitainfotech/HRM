@@ -24,7 +24,6 @@ class RoleController extends Controller
         $id = 0;
         foreach ($data['roles'] as $role) {
             $button = '';
-            // dd($role['title']);
             $button .= '<a href="'.route('role.role_show',$role['id']).'"><button class="role_show btn btn-sm btn-success m-1"  data-id="'.$role['id'].'" > 
             <i class="mdi mdi-view-module"></i>
             </button></a>';
@@ -38,8 +37,6 @@ class RoleController extends Controller
                 <i class="mdi mdi-delete"></i>
                 </button>';
             }
-            
-           
             $id++;
             $data_result[] = array(  
             "id"=>$id,      
@@ -65,16 +62,24 @@ class RoleController extends Controller
                 'permission.*' => 'required|min:1',
             ]
         );
-        
-        $role_t = Role::where('title',$request['title'])->first();
-        
-        if(is_null($role_t) && $request['id']==0){
-            $role = new Role();
-            echo json_encode('inserted');
+
+        if($request['id']==0){
+            $role_t = Role::where('title',$request['title'])->first();
+            if(is_null($role_t)){
+                $role = new Role();
+                $role->created_at =now();
+            }else{
+                $responce = [
+                    'status'=>false,
+                    'message'=>"Already create this role!",
+                    'redirect_url'=>"",
+                ];
+                echo json_encode($responce);
+                exit;
+            } 
         }else{
             $role = Role::where('id','=',$request['id'])->with('role_role_permission')->first();
             DB::table('role__permissions')->where('role_id', $request['id'])->delete();
-            echo 'updated';
         }
         $role->title = $request['title'];
         $role->created_at =now();
@@ -87,52 +92,81 @@ class RoleController extends Controller
             ];
         }
         Role_permission::insert($permissions);
-       
+        if($role->save() && Role_permission::insert($permissions)){
+            $responce = [
+                'status'=>true,
+                'message'=>"Success",
+            ];
+            echo json_encode($responce);
+            exit;
+        }else{
+            $responce = [
+                'status'=>false,
+                'message'=>"Fail in adding role",
+                'redirect_url'=>"",
+            ];
+            echo json_encode($responce);
+            exit;
+        }
     }
 
     public function show(Request $request)
     {
         $id=$request['id'];
         $role = Role::where('id',$id)->with('role_role_permission')->first();
-        if(!empty($role)){
+        if(!is_null($role) ){
+            $data['responce'] = [
+                'status'=>true,
+                'message'=>"Success",
+            ];
             $i=0;
             foreach($role->role_role_permission as $permission){
                 $p_id[$i]=$permission->permission_id;
                 $i++;
             }
             $title=$role->title;
-            $data = array("title"=>$title, "p_id"=>$p_id);
+            $data['permission'] = array("title"=>$title, "p_id"=>$p_id);
             echo json_encode($data);
+            exit;
         }else{
-            return redirect(route('role.dashboard'));
-        }
-        
+            $data['responce'] = [
+                'status'=>false,
+                'message'=>"This data is not available for update",
+                'redirect_url'=>"",
+            ];
+            echo json_encode($data);
+            exit;
+        } 
     }
 
     public function delete(Request $request)
     {
         $id=$request['id'];
-        // dd($request['id']);
         $role = role::where('id',$id)->first();
-        if(!empty($role) && $role['status']==1){
+        if(!is_null($role) && $role['status']==1){
             $role->status = 2;
+            $role->updated_at=now();
             $role->update();
-            echo 'deleted';
+            $responce = [
+                'status'=>true,
+                'message'=>"Success",
+            ];
+            echo json_encode($responce);
+            exit;
         }else{
-            return redirect(route('role.dashboard'));
+            $responce = [
+                'status'=>false,
+                'message'=>"This data is not available for delete",
+                'redirect_url'=>"",
+            ];
+            echo json_encode($responce);
+            exit;
         }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function role_show(Role $role)
     {
         $id = $role['id'];
         $role_ = Role::where('id',$id)->with('role_role_permission')->first(); 
-        // dd($role_);
         if(!empty($role_)){
             $i=0;
             foreach($role_->role_role_permission as $role_permission){
@@ -147,23 +181,5 @@ class RoleController extends Controller
         }
         return view('pages.admin.role_show',compact('data'));
         
-    }
-
-   
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

@@ -125,8 +125,8 @@ class PermissionController extends Controller
         $permission = Permission::where('id',$request['id'])->first();
         if(!is_null($permission) && $permission['status']==1){
             $permission->status = 2;
-            $permission->update();
             $permission->updated_at=now();
+            $permission->update();
             $responce = [
                 'status'=>true,
                 'message'=>"Success",

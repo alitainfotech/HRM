@@ -5,32 +5,32 @@ $.ajaxSetup({
     headers: {
       'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
     }
-  });
+});
   
   /* datatable */
-  $(function() {
+$(function() {
     'use strict';
     $(function() {
-      $('#dataTableExample').DataTable({
-        "aLengthMenu": [
-          [10, 30, 50, -1],
-          [10, 30, 50, "All"]
-        ],
-        "iDisplayLength": 10,
-        "language": {
-          search: ""
+        $('#dataTableExample').DataTable({
+            "aLengthMenu": [
+            [10, 30, 50, -1],
+            [10, 30, 50, "All"]
+            ],
+            "iDisplayLength": 10,
+            "language": {
+            search: ""
+            },
+            'ajax': {
+            type:'POST',
+            url: aurl + "/admin/role/listing", 
         },
-        'ajax': {
-          type:'POST',
-          url: aurl + "/admin/role/listing", 
-      },
-      'columns': [
-          { data: 'id' },
-          { data: 'title' },
-          { data: 'action' },
-  
-      ]
-      });
+        'columns': [
+            { data: 'id' },
+            { data: 'title' },
+            { data: 'action' },
+    
+        ]
+        });
       $('#dataTableExample').each(function() {
         var datatable = $(this);
         // SEARCH - Add the placeholder for Search and Turn this into in-line form control
@@ -42,11 +42,12 @@ $.ajaxSetup({
         length_sel.removeClass('form-control-sm');
       });
     });
-  });
+});
   
 $(document).ready(function(){
 
-    $('#role_form').validate({ // initialize the plugin
+    /* validation for role form */
+    $('#role_form').validate({ 
         rules: {
             title: {
                 required: true
@@ -87,7 +88,7 @@ $(document).ready(function(){
         });
     });
 
-    /* adding and updating job opening data */    
+    /* adding and updating role data */    
     $(".submit_value").on("click", function(event){
         event.preventDefault();
         console.log(event);
@@ -97,19 +98,35 @@ $(document).ready(function(){
             $.ajax({
                 url: aurl + "/admin/role/store",
                 type: 'POST',
+                dataType: "JSON",
                 data:formData,
                 cache:false,
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    $('#role_modal').modal('hide');
-                    window.location.href = aurl + "/admin/role";
+                    console.log(data)
+                    if(data.status){
+                        $('#role_modal').modal('hide');
+                        window.location.href = aurl + "/admin/role";
+                    }else{
+                        const swalWithBootstrapButtons = Swal.mixin({
+                            customClass: {
+                                confirmButton: 'btn btn-success',
+                                cancelButton: 'btn btn-danger me-2'
+                            },
+                            buttonsStyling: false,
+                        })
+                        swalWithBootstrapButtons.fire(
+                            'Cancelled',
+                            data.message,
+                            'error'
+                        )
+                    }
                 },
             });
         } else {
             console.log('Please enter required fields!')
         }
-        
     });
 
     /* display update role modal */
@@ -123,20 +140,34 @@ $(document).ready(function(){
             data: {id:id},
             dataType: "JSON",
             success: function(data){
-                $("#role_form").trigger('reset');
-                $('#title_role_modal').text("Update role");
-                $('#role_modal').modal('show');
-                $('.submit_value').text("Update role");
-                $('.permission').select2({
-                    dropdownParent: $('#role_modal')
-                });
-                $('.title').val(data.title);
-                var p_id_ar = data.p_id;
-                // alert(p_id[1]);
-                $.each(p_id_ar, function( index, value ) {
-                    $('.permission option[value="'+value+'"]').prop('selected', true);
-                });
-                $('.permission').trigger('change');
+                if(data.responce.status){
+                    $("#role_form").trigger('reset');
+                    $('#title_role_modal').text("Update role");
+                    $('#role_modal').modal('show');
+                    $('.submit_value').text("Update role");
+                    $('.permission').select2({
+                        dropdownParent: $('#role_modal')
+                    });
+                    $('.title').val(data.permission.title);
+                    var p_id_ar = data.permission.p_id;
+                    $.each(p_id_ar, function( index, value ) {
+                        $('.permission option[value="'+value+'"]').prop('selected', true);
+                    });
+                    $('.permission').trigger('change');
+                }else{
+                    const swalWithBootstrapButtons = Swal.mixin({
+                        customClass: {
+                            confirmButton: 'btn btn-success',
+                            cancelButton: 'btn btn-danger me-2'
+                        },
+                        buttonsStyling: false,
+                        })
+                    swalWithBootstrapButtons.fire(
+                        'Cancelled',
+                        data.responce.message,
+                        'error'
+                    )
+                }
             },
             error: function (error) {
                 alert('error; ' + eval(error));
@@ -156,10 +187,10 @@ $(document).ready(function(){
         });
     });
     
+    /* deleteing role */
     $('body').on("click", ".role_delete", function(event){
         event.preventDefault();
         var id = $(this).data('id');
-        // alert(id);
         const swalWithBootstrapButtons = Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-success',
@@ -180,23 +211,38 @@ $(document).ready(function(){
             if (result.value) {
                 $.ajax({
                     type: "post",
+                    dataType: "JSON",
                     url: aurl + "/admin/role/delete",
                     data: {id: id},
                     success: function(data) {
-                        swalWithBootstrapButtons.fire({
-                            title: 'Deleted!',
-                            text: "Your file has been deleted.",
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            reverseButtons: true
-                        }).then((result) => {
-                            if(result.value){
-                                window.location.href = aurl + "/admin/role";
-                            }
-                        })
+                        if(data.status){
+                            swalWithBootstrapButtons.fire({
+                                title: 'Deleted!',
+                                text: "Your file has been deleted.",
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                reverseButtons: true
+                            }).then((result) => {
+                                if(result.value){
+                                    window.location.href = aurl + "/admin/role";
+                                }
+                            })
+                        }else{
+                            const swalWithBootstrapButtons = Swal.mixin({
+                                customClass: {
+                                    confirmButton: 'btn btn-success',
+                                    cancelButton: 'btn btn-danger me-2'
+                                },
+                                buttonsStyling: false,
+                                })
+                            swalWithBootstrapButtons.fire(
+                                'Cancelled',
+                                data.message,
+                                'error'
+                            )
+                        }
                     },
                     error: function (error) {
-                        // alert('error; ' + eval(error));
                         swalWithBootstrapButtons.fire(
                             'Cancelled',
                             'this data is not available for delete:)',
@@ -204,11 +250,7 @@ $(document).ready(function(){
                         )
                     }
                 });
-               
-            } else if (
-                // Read more about handling dismissals
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
+            }else if(result.dismiss === Swal.DismissReason.cancel){
                 swalWithBootstrapButtons.fire(
                 'Cancelled',
                 'Your data is safe :)',
@@ -217,6 +259,4 @@ $(document).ready(function(){
             }
         })
     });
-
-   
 });

@@ -100,11 +100,11 @@
               <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Department</th>
                 <th>Designation</th>
                 <th>Role</th>
                 <th>joining date</th>
                 <th>Action</th>
-                
               </tr>
             </thead>
           </table>

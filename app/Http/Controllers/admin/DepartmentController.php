@@ -125,8 +125,8 @@ class DepartmentController extends Controller
         $department = Department::where('id',$id)->first();
         if(!is_null($department) && $department['status']==1){
             $department->status = 2;
-            $department->update();
             $department->updated_at=now();
+            $department->update();
             $responce = [
                 'status'=>true,
                 'message'=>"Success",

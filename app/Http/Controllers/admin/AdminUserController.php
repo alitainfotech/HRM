@@ -22,9 +22,8 @@ class AdminUserController extends Controller
     /* listing of user */
     public function listing()
     {
-        $data['admin_users']= Admin::where('status',1)->where('role_id','!=',1)->with('role')->get();
+        $data['admin_users']= Admin::where('status',1)->where('role_id','!=',1)->with('role')->with('department')->get();
         $data_result = [];
-       
         foreach ($data['admin_users'] as $admin_user) {
             $button = '';
             if(in_array("7", permission())){
@@ -40,6 +39,7 @@ class AdminUserController extends Controller
             $data_result[] = array(    
             "full_name"=>$admin_user['full_name'],
             "email"=>$admin_user['email'],
+            "department"=>$admin_user->department->name,
             "j_date"=>$joining_date,
             "designation"=>$admin_user['designation'],
             "role"=>$admin_user->role->title,
@@ -75,7 +75,6 @@ class AdminUserController extends Controller
                 ]
             );
             $user = new Admin();
-            echo 'added';
         }else{
             $user = Admin::where('id','=',$request['id'])->first();
             echo 'updated';
@@ -97,22 +96,21 @@ class AdminUserController extends Controller
         $email = $_POST['email'];
         $user = Admin::where('email', $email)->first();
         echo $user;
-     }
+    }
      
-     /* display user for updating */
-     public function show(Request $request)
-     {
-         $id=$request['id'];
-         $user = Admin::where('id',$id)->first(); 
-         if(!empty($user)){
-             echo json_encode($user);
-         }else{
-             return redirect(route('user.dashboard'));
-         }
-         
-     }
+    /* display user for updating */
+    public function show(Request $request)
+    {
+        $id=$request['id'];
+        $user = Admin::where('id',$id)->first(); 
+        if(!empty($user)){
+            echo json_encode($user);
+        }else{
+            return redirect(route('user.dashboard'));
+        }
+    }
 
-     /* for deleting user */
+    /* for deleting user */
     public function delete(Request $request)
     {
         $id=$request['id'];
@@ -125,5 +123,4 @@ class AdminUserController extends Controller
             return redirect(route('user.dashboard'));
         }
     }
-    
 }

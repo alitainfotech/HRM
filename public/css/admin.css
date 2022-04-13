@@ -1,0 +1,11 @@
+/*Cards*/
+.card-common{
+    box-shadow: 1px 2px 5px gray;
+   transition: all .4s; 
+}
+.card-common:hover {
+    box-shadow: 2px 3px 15px gray;
+    transform: translateY(-1px);
+}
+/*End of cards*/
+

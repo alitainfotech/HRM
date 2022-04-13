@@ -3,38 +3,30 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Application;
+use App\Models\Interview;
+use App\Models\Opening;
+use App\Models\User;
 use Facade\FlareClient\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    
+    /* display log in page */
     public function index()
     {
         return view('pages.admin.login');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    /* display dashboard for admin */
     public function dashboard()
     {
         return view('pages.admin.dashboard');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    /* add user of admin panel */
     public function store(Request $request)
     {
         
@@ -47,59 +39,33 @@ class AdminController extends Controller
         }
     }
 
+    /* view of profile */
     public function profile()
     {
         return view('pages.admin.profile');
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    
+    /* return value for dashboard */
+    public function value()
     {
-        //
+        $data['openings_active']= count(Opening::where('status',1)->get());
+        $data['users_active']= count(User::where('status',1)->get());
+        $data['users_inactive']= count(User::where('status',0)->get());
+        $data['application_pending']= count(Application::where('status',0)->get());
+        $data['application_reviewed']= count(Application::where('status',1)->get());
+        $data['application_rejected']= count(Application::where('status',3)->get());
+        $data['application_selected']= count(Application::where('status',2)->get());
+        $data['interviews_active']= count(Interview::where('status',1)->get());
+        $data['interviews_inactive']= count(Interview::where('status',0)->get());
+        echo json_encode($data); 
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    /* logout */
    public function destroy(Request $request)
     {
-        // dd($request);
         Auth::guard('admin')->logout();
-
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
-
         return redirect(route('admin.login'));
     }
     

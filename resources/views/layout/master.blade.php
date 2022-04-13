@@ -62,6 +62,7 @@ License: For each use you must have a valid license purchased only from above li
 
     <!-- base js -->
     <script src="{{ asset('js/app1.js') }}"></script>
+    <script src="{{ asset('assets/plugins/font-awesome/6dbd611646.js') }}" crossorigin="anonymous"></script>
     <script src="{{ asset('assets/plugins/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <!-- end base js -->

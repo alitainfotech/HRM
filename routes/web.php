@@ -35,6 +35,11 @@ Route::group(['prefix' => 'admin'], function(){
     Route::get('profile',[AdminController::class,'profile'])->name('admin.profile');
 });
 
+/* admin dashboard routes */
+Route::group(['prefix' => 'admin/dashboard'], function(){
+    Route::post('/value',[AdminController::class,'value']);
+});
+
 /* opening routes */
 Route::group(['prefix' => 'admin/opening'], function(){
     Route::get('/',[OpeningController::class,'index'])->name('opening.dashboard');
