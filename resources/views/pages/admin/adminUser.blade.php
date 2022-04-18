@@ -53,7 +53,7 @@
               <label for="email" class="form-label">Email</label>
               <input type="text" class="form-control email" id="email" name="u_email" >
           </div>
-          <div class="mb-3">
+          <div class="mb-3 password">
             <label for="password" class="form-label">Password</label>
             <input type="password" class="form-control password" id="password" name="password" >
           </div>

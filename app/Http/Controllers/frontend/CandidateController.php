@@ -8,6 +8,7 @@ use App\Models\Application;
 use App\Models\Opening;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Events\NewApplication;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -84,7 +85,11 @@ class CandidateController extends Controller
         $application->created_at =now();
         $application->updated_at =now();
         $application->save();
-        Mail::to($candidate->email)->send(new MailApplication($request['o_id'],$fullname));
+        if($application->save()){
+            // event(new NewApplication($fullname));
+            Mail::to($candidate->email)->send(new MailApplication($request['o_id'],$fullname));
+        }
+        
 
     
     }

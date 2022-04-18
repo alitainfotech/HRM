@@ -14,69 +14,55 @@
 <nav class="page-breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Roles</li>
+    <li class="breadcrumb-item"><a href="{{ route('role.dashboard') }}">Roles</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ (!is_null($data['role'])) ? 'edit' :'add'}}</li>
   </ol>
 </nav>
-<!-- add_role_modal -->
-{{-- <div class="modal fade  bd-example-modal-lg" id="role_modal" tabindex="-1" aria-labelledby="title_role_modal" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="title_role_modal">Add Role</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
-        </div>
-        <div class="modal-body">
-          <form class="forms-sample" method="POST" name="registration" id="role_form">
-            @csrf
-            <div >
-              <input type="hidden" name="id" class="id" value="0">
-            </div>
-            <div class="mb-3">
-                <label for="title" class="form-label">Title</label>
-                <input type="text" class="form-control title" id="title" name="title"  >
-            </div>
-            <div class="mb-3">
-              @foreach ($permissions as $permission)
-              <div class="form-check form-check-inline">
-                <input type="checkbox" value="{{ $permission['id'] }}" name="permission[]" class="form-check-input " id="checkInline">
-                <label class="form-check-label" for="checkInline">
-                  {{ $permission['name'] }}
-                </label>
-              </div>
-              @endforeach
-            </div>
-            <div class="">
-              <button class="btn btn-primary submit_value" type="button"></button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-</div> --}}
 <div class="row">
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
           <div class="row">
-            <h6 class="card-title col">roles</h6>
-            <div class="col-2 ">
-              @if(in_array("10", permission()))
-                <a  class="btn btn-primary add_role" href="{{ route('role.add') }}"  style="float: right" id="add_role">Add role</a>
-              @endif
-              </div>
+            <h6 class="card-title col">{{ (!is_null($data['role'])) ? 'Edit Role' :'Add Role'}}</h6>
           </div>
-        <div class="table-responsive mt-2">
-          <table id="dataTableExample" class="table" >
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Action</th>
-                
-              </tr>
-            </thead>
-          </table>
-        </div>
+          <form class="forms-sample" method="POST" name="registration" id="role_form">
+            @csrf
+            <div >
+              <input type="hidden" name="id" class="id" value="{{ (!is_null($data['role'])) ? $data['role']->id :'0'}}">
+            </div>
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control title" id="title" name="title"  value="{{ (!is_null($data['role'])) ? $data['role']->title :''}}">
+            </div>
+            <div class="mb-3 check">
+              <label for="" class="form-label">Permissions</label>
+              <br>
+              @foreach ($data['permissions'] as $permission)
+              @php 
+              $checked='';
+              if(!is_null($data['role'])){
+                if(in_array($permission->id, $data['p_id']['p_id'])){
+                  $checked="checked";
+                }
+              }
+              @endphp
+              <div class="form-check form-check-inline">
+                <input type="checkbox" value="{{ $permission['id'] }}" name="permission[]" class="form-check-input permission" id="" {{ $checked }} >
+                <label class="form-check-label" for="">
+                  {{ $permission['name'] }}
+                </label>
+              </div>
+              @endforeach
+              <br>
+              <input type="checkbox" value="" name="" class="form-check-input " id="selectall" >
+              <label class="form-check-label" for="selectall">
+                Select All
+              </label>
+            </div>
+            <div class="">
+              <button class="btn btn-primary submit_value" type="button">{{ (!is_null($data['role'])) ? 'Edit Role' :'Add Role'}}</button>
+            </div>
+          </form>
       </div>
     </div>
   </div>

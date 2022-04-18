@@ -71,7 +71,7 @@ $(document).ready(function(){
                 digits: true
             },
             icon: {
-                required: true,
+                required: $("#id").val() == 0,
                 extension: "png|jpeg|jpg"
             },
             description: {

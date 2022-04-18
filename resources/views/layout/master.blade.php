@@ -65,6 +65,7 @@ License: For each use you must have a valid license purchased only from above li
     <script src="{{ asset('assets/plugins/font-awesome/6dbd611646.js') }}" crossorigin="anonymous"></script>
     <script src="{{ asset('assets/plugins/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/pusher/pusher.min.js') }}"></script>
     <!-- end base js -->
 
     <!-- plugin js -->
@@ -74,7 +75,57 @@ License: For each use you must have a valid license purchased only from above li
     <!-- common js -->
     <script src="{{ asset('assets/js/template.js') }}"></script>
     <!-- end common js -->
+    <script type="text/javascript">
+      var notificationsWrapper   = $('.dropdown-notifications');
+      var notificationsToggle    = notificationsWrapper.find('a[data-toggle]');
+      var notificationsCountElem = notificationsToggle.find('i[data-count]');
+      var notificationsCount     = parseInt(notificationsCountElem.data('count'));
+      var notifications          = notificationsWrapper.find('ul.dropdown-menu');
 
+      if (notificationsCount <= 0) {
+        notificationsWrapper.hide();
+      }
+
+      // Enable pusher logging - don't include this in production
+      // Pusher.logToConsole = true;
+
+      var pusher = new Pusher('e6538165a90c0af6b873', {
+        encrypted: true
+      });
+
+      // Subscribe to the channel we specified in our Laravel Event
+      var channel = pusher.subscribe('new-application');
+
+      // Bind a function to a Event (the full Laravel class)
+      channel.bind('App\Events\NewApplication', function(data) {
+        var existingNotifications = notifications.html();
+        var avatar = Math.floor(Math.random() * (71 - 20 + 1)) + 20;
+        var newNotificationHtml = `
+          <li class="notification active">
+              <div class="media">
+                <div class="media-left">
+                  <div class="media-object">
+                    <img src="https://api.adorable.io/avatars/71/`+avatar+`.png" class="img-circle" alt="50x50" style="width: 50px; height: 50px;">
+                  </div>
+                </div>
+                <div class="media-body">
+                  <strong class="notification-title">`+data.message+`</strong>
+                  <!--p class="notification-desc">Extra description can go here</p-->
+                  <div class="notification-meta">
+                    <small class="timestamp">about a minute ago</small>
+                  </div>
+                </div>
+              </div>
+          </li>
+        `;
+        notifications.html(newNotificationHtml + existingNotifications);
+
+        notificationsCount += 1;
+        notificationsCountElem.attr('data-count', notificationsCount);
+        notificationsWrapper.find('.notif-count').text(notificationsCount);
+        notificationsWrapper.show();
+      });
+    </script>
     @stack('custom-scripts')
 </body>
 </html>

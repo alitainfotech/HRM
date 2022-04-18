@@ -100,7 +100,7 @@
               <i class="fa-solid fa-clipboard fa-4x text-info"></i>
               <div class="text-right text-dark">
                 @php
-                $pending_applications = (in_array("17", permission())) ? route('application.dashboard') : route('admin.dashboard');
+                $pending_applications = (in_array("17", permission())) ? route('application.pending') : route('admin.dashboard');
                 @endphp
                 <h2 class="pending_applications text-info"></h2>
                 <a href="{{ $pending_applications }}" class="text-dark"><h4>Pending Applications</h4></a>

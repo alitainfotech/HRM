@@ -57,6 +57,7 @@ Route::group(['prefix' => 'admin/user'], function(){
     Route::post('/emailcheck',[AdminUserController::class, 'emailcheck' ]);
     Route::post('/store',[AdminUserController::class, 'store' ]);
     Route::post('/show',[AdminUserController::class,'show']);
+    Route::post('/updatePassword',[AdminUserController::class,'password']);
 });
 
 /* permission routes */
@@ -72,18 +73,31 @@ Route::group(['prefix' => 'admin/permission'], function(){
 Route::group(['prefix' => 'admin/role'], function(){
     Route::get('/',[RoleController::class,'index'])->name('role.dashboard');
     Route::post('/listing',[RoleController::class,'listing']);
+    Route::get('/add',[RoleController::class,'roleAdd'])->name('role.add');
     Route::post('/store',[RoleController::class,'store'])->name('role.store');
-    Route::post('/show',[RoleController::class,'show']);
+    Route::get('/edit/{role}',[RoleController::class,'edit'])->name('role.edit');
     Route::get('/role_show/{role}',[RoleController::class,'role_show'])->name('role.role_show');
     Route::post('/delete',[RoleController::class,'delete']);
 });
 
-/* admin candidate routes */
-Route::group(['prefix' => 'admin/application'], function(){
-    Route::get('/',[ApplicationController::class,'index'])->name('application.dashboard');
+/* pending applications routes */
+Route::group(['prefix' => 'admin/application/pending'], function(){
+    Route::get('/',[ApplicationController::class,'index'])->name('application.pending');
     Route::post('/listing',[ApplicationController::class,'listing']);
     Route::post('/name/show',[ApplicationController::class,'nameShow']);
     Route::post('/reject',[ApplicationController::class,'applicationReject']);
+});
+
+/* rejected applications routes */
+Route::group(['prefix' => 'admin/application/rejected'], function(){
+    Route::get('/',[ApplicationController::class,'indexReject'])->name('application.reject');
+    Route::post('/listing',[ApplicationController::class,'listingReject']);
+});
+
+/* selected applications routes */
+Route::group(['prefix' => 'admin/application/selected'], function(){
+    Route::get('/',[ApplicationController::class,'indexSelect'])->name('application.select');
+    Route::post('/listing',[ApplicationController::class,'listingSelect']);
 });
 
 /* interviews route */

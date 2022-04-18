@@ -201,56 +201,60 @@ $(document).ready(function(){
         event.preventDefault();
         var id = $(this).data('id');
         var i_id = $(this).data('i_id');
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-                confirmButton: 'btn btn-success',
-                cancelButton: 'btn btn-danger me-2'
-            },
-            buttonsStyling: false,
-            })
-            
-            swalWithBootstrapButtons.fire({
-            title: 'Are you sure?',
+        const value  = Swal.fire({
+            title: "Are you sure?",
             text: "You won't be able to revert this!",
-            icon: 'warning',
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonText: 'Yes, reject it!',
-            cancelButtonText: 'No, cancel!',
-            reverseButtons: true
-            }).then((result) => {
-            if (result.value) {
-                $.ajax({
-                    type: "post",
-                    url: aurl + "/admin/application/reject",
-                    data: {id: id,i_id: i_id},
-                    success: function(data) {
-                        swalWithBootstrapButtons.fire({
-                            title: 'rejected!',
-                            text: "Application is rejected",
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            reverseButtons: true
-                        }).then((result) => {
-                            if(result.value){
-                                window.location.href = aurl + "/admin/interview";
-                            }
-                        })
-                    },
-                    error: function (error) {
-                        swalWithBootstrapButtons.fire(
-                            'Cancelled',
-                            'this data is not available for delete:)',
-                            'error'
-                        )
+            confirmButtonText: "Yes, reject it!",
+            cancelButtonText: "No, cancel!",
+            input: "textarea",
+            inputPlaceholder: "Why you want to reject...",
+            inputAttributes: {
+                "aria-label": "Type your message here",
+            },
+            showCancelButton: true,
+            inputValidator: (value) => {
+                return new Promise((resolve) => {
+                    if (value) {
+                        resolve();
+                    } else {
+                        resolve("reason is required!");
                     }
                 });
-            }else if (result.dismiss === Swal.DismissReason.cancel){
-                swalWithBootstrapButtons.fire(
-                'Cancelled',
-                'Your data is safe :)',
-                'error'
-                )
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var reason = result.value;
+                $.ajax({
+                    type: "post",
+                    url: aurl + "/admin/application/pending/reject",
+                    data: {id: id,reason: reason,i_id: i_id},
+                    dataType: "JSON",
+                    success: function(data) {
+                        if(data.status){
+                            swal.fire({
+                                title: 'rejected!',
+                                text: "Application is rejected",
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                reverseButtons: true
+                            }).then((result) => {
+                                if(result.value){
+                                    window.location.href = aurl + "/admin/application/pending";
+                                }
+                            })
+                        }else{
+                            swal.fire('Cancelled',data.message,'error')
+                        }
+                    },
+                    error: function (error) {
+                        alert('error; ' + eval(error));
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swal.fire("Cancelled", "Application is pending :)", "info");
             }
-        })
+        });
     });
 });

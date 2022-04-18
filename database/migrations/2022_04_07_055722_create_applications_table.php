@@ -23,6 +23,7 @@ class CreateApplicationsTable extends Migration
             $table->string('experience',100);
             $table->text('description');
             $table->boolean('status')->default(0)->comment("0=pending,1=review,2=selected,3=rejected");
+            $table->text('reason')->nullable();
             $table->boolean('app_status')->default(1)->comment("0=delete,1=active");
             $table->timestamps();
         });

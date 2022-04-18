@@ -1,5 +1,5 @@
 @extends('layout.master')
-@section('title',"Interview")
+@section('title',"Application Pending")
 @php
 //   use App\Candidate;
 //   $c_id =  Session::get('c_id');
@@ -20,67 +20,68 @@
 <nav class="page-breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Interviews</li>
+    <li class="breadcrumb-item active" aria-current="page">Applications</li>
+    <li class="breadcrumb-item active" aria-current="page">Pending</li>
   </ol>
 </nav>
 <!-- interview_modal -->
 <div class="modal fade  bd-example-modal-lg" id="interview_modal" tabindex="-1" aria-labelledby="title_interview_modal" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="title_interview_modal">Add Job Opening</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
-      </div>
-      <div class="modal-body">
-      @if(isset($err)){
-          <div class="alert alert-danger">
-            <p>{{ $err }}</p>
-          </div>
-        }
-        @endif
-        <form class="forms-sample" method="POST" name="registration" enctype="multipart/form-data" id="interview_form">
-          @csrf
-          <div class="mb-3">
-              <input type="hidden" class="form-control id" id="id" name="id" value="0">
-          </div>
-          <div class="mb-3">
-            <input type="hidden" class="form-control i_id" id="i_id" name="i_id" value="0">
-          </div>
-          <div class="mb-3">
-              <label for="Name" class="form-label">Name</label>
-              <input type="text" class="form-control name" id="Name" name="name" disabled value="">
-          </div>
-          <div class="mb-3 select">
-            <label class="form-label">Team Leader</label>
-            <select class="js-example-basic-single form-select leader" data-width="100%" name="leader" >
-              <option value=""selected disabled hidden>Select Team Leader</option>
-              @foreach ($tls as $tl)
-                <option value="{{ $tl['id'] }}">{{ $tl['full_name'] }}</option>
-              @endforeach
-            </select>
-            <div class="text-danger">
-              @error('leader')
-                {{$message}}
-              @enderror
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="title_interview_modal"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+        </div>
+        <div class="modal-body">
+        @if(isset($err)){
+            <div class="alert alert-danger">
+              <p>{{ $err }}</p>
             </div>
-          </div>
-          
-          <div class="mb-3">
-          <label class="form-label">Date & Time</label>
-          <input type="datetime-local" class="form-control mb-4 mb-md-0 date" name="date"/>
-          </div>
-          <input class="btn btn-primary submit_value" type="button" value="Submit" id="add_interview">
-        </form>
+          }
+          @endif
+          <form class="forms-sample" method="POST" name="registration" enctype="multipart/form-data" id="interview_form">
+            @csrf
+            <div class="mb-3">
+                <input type="hidden" class="form-control id" id="id" name="id" value="">
+            </div>
+            <div class="mb-3">
+              <input type="hidden" class="form-control i_id" id="i_id" name="i_id" value="0">
+            </div>
+            <div class="mb-3">
+                <label for="Name" class="form-label">Name</label>
+                <input type="text" class="form-control name" id="Name" name="name" disabled value="">
+            </div>
+            <div class="mb-3 select">
+              <label class="form-label">Team Leader</label>
+              <select class="js-example-basic-single form-select leader" data-width="100%" name="leader" >
+                <option value=""selected disabled hidden>Select Team Leader</option>
+                @foreach ($tls as $tl)
+                  <option value="{{ $tl['id'] }}">{{ $tl['full_name'] }}</option>
+                @endforeach
+              </select>
+              <div class="text-danger">
+                @error('leader')
+                  {{$message}}
+                @enderror
+              </div>
+            </div>
+            
+            <div class="mb-3">
+            <label class="form-label">Date & Time</label>
+            <input type="datetime-local" class="form-control mb-4 mb-md-0 phone" name="date"/>
+            </div>
+            <input class="btn btn-primary submit_value" type="button" value="Submit" id="add_interview">
+          </form>
+        </div>
       </div>
     </div>
-  </div>
 </div>
 <div class="row">
   <div class="col-md-12 grid-margin stretch-card">
     <div class="card">
       <div class="card-body">
           <div class="row">
-            <h6 class="card-title col">Interviews</h6>
+            <h6 class="card-title col">Pending applications for job</h6>
           </div>
         <div class="table-responsive mt-2">
           <table id="dataTableExample" class="table" >
@@ -88,10 +89,12 @@
               <tr>
                 <th>ID</th>
                 <th>POST</th>
-                <th>Interviewer</th>
-                <th>Interviewee </th>
-                <th>time & date</th>
+                <th>NAME</th>
+                <th>PHONE</th>
+                <th>EMAIL</th>
                 <th>CV</th>
+                <th>Description</th>
+                <th>experience</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -121,10 +124,6 @@
    {{-- custom js --}}
  <!-- jquery validationjs -->
  <script src="{{ asset('assets/js/jquery.validate.min.js')}}"></script>
- <script src="{{ asset('assets/js/validation.js')}}"></script>
- <script>
-     FormValidation.init();
- </script>
-  <script src="{{ asset('assets/js/interview.js') }}"></script>
+  <script src="{{ asset('assets/js/applicationPending.js') }}"></script>
   
 @endpush

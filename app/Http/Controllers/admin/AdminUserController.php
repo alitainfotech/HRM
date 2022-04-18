@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\UserPasswoRdreset;
 use App\Models\Admin;
 use App\Models\Department;
 use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 
 class AdminUserController extends Controller
 {
+    
+
     /* display user dashboard */
     public function index()
     {
@@ -28,11 +32,17 @@ class AdminUserController extends Controller
             $button = '';
             if(in_array("7", permission())){
                 $button .= '<button class="user_edit btn btn-sm btn-success m-1" data-id="'.$admin_user['id'].'" > 
-                <i class="mdi mdi-square-edit-outline"></i>
+                <i class="fa-solid fa-pen-to-square"></i>
                 </button>';
-            }if(in_array("8", permission())){
+            }
+            if(in_array("8", permission())){
                 $button .= '<button class="user_delete btn btn-sm btn-danger m-1" data-id="'.$admin_user['id'].'"> 
-                <i class="mdi mdi-delete"></i>
+                <i class="fa-solid fa-trash"></i>
+                </button>';
+            }
+            if(in_array("7", permission())){
+                $button .= '<button class="user_password_edit btn btn-sm btn-success m-1" data-id="'.$admin_user['id'].'" > 
+                <i class="fa-solid fa-unlock"></i>
                 </button>';
             }
             $joining_date=date('d-m-Y',strtotime($admin_user['created_at']));
@@ -121,6 +131,44 @@ class AdminUserController extends Controller
             echo 'deleted';
         }else{
             return redirect(route('user.dashboard'));
+        }
+    }
+
+    /* for updating password */
+    public function password(Request $request)
+    {
+        function generateRandomString($length) {
+            $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*_-=+';
+            $charactersLength = strlen($characters);
+            $randomString = '';
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[rand(0, $charactersLength - 1)];
+            }
+            return $randomString;
+        }
+        $id=$request['id'];
+        $user = Admin::where('id',$id)->first();
+        if(!is_null($user)){
+            $password=generateRandomString(12);
+            $user->password=$password;
+            $user->save();
+            if($user->save()){
+                $responce = [
+                    'status'=>true,
+                    'message'=>"Success",
+                ];
+                Mail::to($user->email)->send(new UserPasswoRdreset($user->email,$password));
+                echo json_encode($responce);
+                exit;
+            }
+        }else{
+            $responce = [
+                'status'=>false,
+                'message'=>"This data is not available for update",
+                'redirect_url'=>"",
+            ];
+            echo json_encode($responce);
+            exit;
         }
     }
 }

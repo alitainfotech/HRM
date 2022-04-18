@@ -60,7 +60,7 @@ $(document).ready(function(){
               label.insertAfter(element.closest(".form-check")); 
             }
             else if(element.attr("type") == "checkbox"){
-            label.insertAfter(element.closest(".form-check")); 
+            label.insertAfter(element.closest(".check")); 
             }
             else if(element.is('select') ){
               label.insertAfter(element.closest(".select"));
@@ -76,22 +76,9 @@ $(document).ready(function(){
         },
     });
 
-    /* display add role modal */
-    $('body').on("click", ".add_role", function(){
-        $("#role_form").trigger('reset');
-        $('#role_modal').modal('show');
-        $('.id').val('0');
-        $('#title_role_modal').text("Add Role");
-        $('.submit_value').text("Add Role");
-        $('.permission').select2({
-            dropdownParent: $('#role_modal')
-        });
-    });
-
     /* adding and updating role data */    
     $(".submit_value").on("click", function(event){
         event.preventDefault();
-        console.log(event);
         var form = $('#role_form')[0];
         var formData = new FormData(form);
         if($("#role_form").valid()){   
@@ -129,64 +116,6 @@ $(document).ready(function(){
         }
     });
 
-    /* display update role modal */
-    $('body').on("click", ".role_edit", function(event){
-        var id = $(this).data("id");
-        $('.id').val(id);
-        event.preventDefault();
-        $.ajax({
-            url: aurl + "/admin/role/show",
-            type: "POST",
-            data: {id:id},
-            dataType: "JSON",
-            success: function(data){
-                if(data.responce.status){
-                    $("#role_form").trigger('reset');
-                    $('#title_role_modal').text("Update role");
-                    $('#role_modal').modal('show');
-                    $('.submit_value').text("Update role");
-                    $('.permission').select2({
-                        dropdownParent: $('#role_modal')
-                    });
-                    $('.title').val(data.permission.title);
-                    var p_id_ar = data.permission.p_id;
-                    $.each(p_id_ar, function( index, value ) {
-                        $('.permission option[value="'+value+'"]').prop('selected', true);
-                    });
-                    $('.permission').trigger('change');
-                }else{
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger me-2'
-                        },
-                        buttonsStyling: false,
-                        })
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        data.responce.message,
-                        'error'
-                    )
-                }
-            },
-            error: function (error) {
-                alert('error; ' + eval(error));
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: {
-                        confirmButton: 'btn btn-success',
-                        cancelButton: 'btn btn-danger me-2'
-                    },
-                    buttonsStyling: false,
-                    })
-                swalWithBootstrapButtons.fire(
-                    'Cancelled',
-                    'this data is not available for update :)',
-                    'error'
-                )
-            }
-        });
-    });
-    
     /* deleteing role */
     $('body').on("click", ".role_delete", function(event){
         event.preventDefault();
@@ -258,5 +187,24 @@ $(document).ready(function(){
                 )
             }
         })
+    });
+
+    /* select all permissions */
+    $("#selectall").change(function(){  //"select all" change 
+        var status = this.checked; // "select all" checked status
+        $('.permission').each(function(){ //iterate all listed checkbox items
+            this.checked = status; //change ".checkbox" checked status
+        });
+    });
+    $('.permission').change(function(){ //".permission" change 
+        //uncheck "select all", if one of the listed permission item is unchecked
+        if(this.checked == false){ //if this item is unchecked
+            $("#selectall")[0].checked = false; //change "select all" checked status to false
+        }
+        
+        //check "select all" if all permission items are checked
+        if ($('.permission:checked').length == $('.permission').length ){ 
+            $("#selectall")[0].checked = true; //change "select all" checked status to true
+        }
     });
 });

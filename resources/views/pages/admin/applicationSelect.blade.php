@@ -1,11 +1,5 @@
 @extends('layout.master')
-@section('title',"Application")
-@php
-//   use App\Candidate;
-//   $c_id =  Session::get('c_id');
-// //   dd($c_id)
-//   $candidate = Candidate::where('c_id', $c_id)->first();  
-@endphp 
+@section('title',"Application Selected")
 @push('plugin-styles')
   <link href="{{ asset('assets/plugins/datatables-net/dataTables.bootstrap4.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/@mdi/css/materialdesignicons.min.css') }}" rel="stylesheet" />
@@ -21,6 +15,7 @@
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
     <li class="breadcrumb-item active" aria-current="page">Applications</li>
+    <li class="breadcrumb-item active" aria-current="page">Selected</li>
   </ol>
 </nav>
 <!-- interview_modal -->
@@ -28,7 +23,7 @@
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="title_interview_modal">Add Job Opening</h5>
+          <h5 class="modal-title" id="title_interview_modal"></h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
         </div>
         <div class="modal-body">
@@ -80,7 +75,7 @@
     <div class="card">
       <div class="card-body">
           <div class="row">
-            <h6 class="card-title col">Applied for job applications</h6>
+            <h6 class="card-title col">Selected applications for job</h6>
           </div>
         <div class="table-responsive mt-2">
           <table id="dataTableExample" class="table" >
@@ -123,6 +118,6 @@
    {{-- custom js --}}
  <!-- jquery validationjs -->
  <script src="{{ asset('assets/js/jquery.validate.min.js')}}"></script>
-  <script src="{{ asset('assets/js/adminCandidate.js') }}"></script>
+  <script src="{{ asset('assets/js/applicationSelect.js') }}"></script>
   
 @endpush

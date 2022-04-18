@@ -41,15 +41,15 @@
       </div>
     </form>
     <ul class="navbar-nav">
-      <li class="nav-item dropdown">
+      <li class="nav-item dropdown dropdown-notifications">
         <a class="nav-link dropdown-toggle" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i data-feather="bell"></i>
+          <i data-count="0" data-feather="bell"></i>
           <div class="indicator">
             <div class="circle"></div>
           </div>
         </a>
         <div class="dropdown-menu p-0" aria-labelledby="notificationDropdown">
-          <div class="px-3 py-2 d-flex align-items-center justify-content-between border-bottom">
+          {{-- <div class="px-3 py-2 d-flex align-items-center justify-content-between border-bottom">
             <p>6 New Notifications</p>
             <a href="javascript:;" class="text-muted">Clear all</a>
           </div>
@@ -102,7 +102,7 @@
           </div>
           <div class="px-3 py-2 d-flex align-items-center justify-content-center border-top">
             <a href="javascript:;">View all</a>
-          </div>
+          </div> --}}
         </div>
       </li>
       <li class="nav-item dropdown">
@@ -133,8 +133,8 @@
                 this.closest('form').submit();">
                 <i class="me-2 icon-md" data-feather="log-out"></i>
                 <span>Log Out</span>
-              </a>
-            </form>
+                </a>
+              </form>
               
             </li>
           </ul>

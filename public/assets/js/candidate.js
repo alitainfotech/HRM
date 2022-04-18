@@ -70,7 +70,7 @@ $(document).ready(function(){
             },
             cv: {
                 required: true,
-                extension: "pdf|doc"
+                extension: "pdf|docx"
             },
             description: {
                 required: true
@@ -99,7 +99,10 @@ $(document).ready(function(){
                 minlength: "Your phone must be 10 characters long",
                 maxlength:"Your phone must be 10 characters only"
             },
-            cv: "Please upload your cv",
+            cv: {
+                required: "Please upload your cv",
+                extension: "Please upload pdf or docx file only",
+            },
             password: {
               required: "Please provide a password",
               minlength: "Your password must be at least 8 characters long",

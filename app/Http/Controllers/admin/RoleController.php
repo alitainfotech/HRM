@@ -28,9 +28,9 @@ class RoleController extends Controller
             <i class="mdi mdi-view-module"></i>
             </button></a>';
             if(in_array("11", permission())){
-                $button .= '<button class="role_edit btn btn-sm btn-success m-1" data-id="'.$role['id'].'" > 
+                $button .= '<a href="'.route('role.edit',$role['id']).'"><button class="role_edit btn btn-sm btn-success m-1" data-id="'.$role['id'].'" > 
                 <i class="mdi mdi-square-edit-outline"></i>
-                </button>';
+                </button></a>';
             }
             if(in_array("12", permission())){
                 $button .= '<button class="role_delete btn btn-sm btn-danger m-1" data-id="'.$role['id'].'"> 
@@ -62,7 +62,6 @@ class RoleController extends Controller
                 'permission.*' => 'required|min:1',
             ]
         );
-
         if($request['id']==0){
             $role_t = Role::where('title',$request['title'])->first();
             if(is_null($role_t)){
@@ -91,8 +90,8 @@ class RoleController extends Controller
                 "permission_id" => $permission
             ];
         }
-        Role_permission::insert($permissions);
-        if($role->save() && Role_permission::insert($permissions)){
+        $x= Role_permission::insert($permissions);
+        if($role->save() && $x){
             $responce = [
                 'status'=>true,
                 'message'=>"Success",
@@ -110,34 +109,34 @@ class RoleController extends Controller
         }
     }
 
-    public function show(Request $request)
-    {
-        $id=$request['id'];
-        $role = Role::where('id',$id)->with('role_role_permission')->first();
-        if(!is_null($role) ){
-            $data['responce'] = [
-                'status'=>true,
-                'message'=>"Success",
-            ];
-            $i=0;
-            foreach($role->role_role_permission as $permission){
-                $p_id[$i]=$permission->permission_id;
-                $i++;
-            }
-            $title=$role->title;
-            $data['permission'] = array("title"=>$title, "p_id"=>$p_id);
-            echo json_encode($data);
-            exit;
-        }else{
-            $data['responce'] = [
-                'status'=>false,
-                'message'=>"This data is not available for update",
-                'redirect_url'=>"",
-            ];
-            echo json_encode($data);
-            exit;
-        } 
-    }
+    // public function show(Request $request)
+    // {
+    //     $id=$request['id'];
+    //     $role = Role::where('id',$id)->with('role_role_permission')->first();
+    //     if(!is_null($role) ){
+    //         $data['responce'] = [
+    //             'status'=>true,
+    //             'message'=>"Success",
+    //         ];
+    //         $i=0;
+    //         foreach($role->role_role_permission as $permission){
+    //             $p_id[$i]=$permission->permission_id;
+    //             $i++;
+    //         }
+    //         $title=$role->title;
+    //         $data['permission'] = array("title"=>$title, "p_id"=>$p_id);
+    //         echo json_encode($data);
+    //         exit;
+    //     }else{
+    //         $data['responce'] = [
+    //             'status'=>false,
+    //             'message'=>"This data is not available for update",
+    //             'redirect_url'=>"",
+    //         ];
+    //         echo json_encode($data);
+    //         exit;
+    //     } 
+    // }
 
     public function delete(Request $request)
     {
@@ -180,6 +179,34 @@ class RoleController extends Controller
             return redirect(route('role.dashboard'));
         }
         return view('pages.admin.role_show',compact('data'));
+        
+    }
+
+    public function roleAdd()
+    {
+        $data['permissions'] = Permission::where('status',1)->get();
+        $data['role']=null;
+        $data['p_id']=null;
+        return view('pages.admin.roleAdd',compact('data'));
+    }
+
+    public function edit(Role $role)
+    {
+        $id = $role['id'];
+        $data['role'] = Role::where('id',$id)->with('role_role_permission')->first(); 
+        $data['permissions'] = Permission::where('status',1)->get();
+            if(!is_null($role) ){
+                $i=0;
+                foreach($role->role_role_permission as $permission){
+                    $p_id[$i]=$permission->permission_id;
+                    $i++;
+                }
+                $title=$role->title;
+                $data['p_id'] = array("p_id"=>$p_id);
+                return view('pages.admin.roleAdd',compact('data'));
+            }else{
+                return view('pages.admin.role');
+            } 
         
     }
 }
