@@ -27,7 +27,9 @@ $(function() {
             { data: 'post' },
             { data: 'name' },
             { data: 'hr_review' },
+            { data: 'hr_des' },
             { data: 'tl_review' },
+            { data: 'tl_des' },
             { data: 'action' },
             
         ]
@@ -47,159 +49,11 @@ $(function() {
   
 $(document).ready(function(){
 
-    /* validation of interview form */
-    $('#interview_form').validate({ 
-        rules: {
-            name: {
-                required: true
-            },
-            leader: {
-                required: true
-            },
-            date: {
-                required: true
-            },
-        },
-        errorPlacement: function (label, element) {
-            if(element.attr("type") == "radio" )
-            {
-              label.insertAfter(element.closest(".form-check")); 
-            }
-            else if(element.attr("type") == "checkbox"){
-            label.insertAfter(element.closest(".form-check")); 
-            }
-            else if(element.is('select') ){
-              label.insertAfter(element.closest(".select"));
-            }
-            else 
-            {
-            label.insertAfter(element);
-            }
-          },
-        messages: {
-            name: "please enter your name",
-            leader: "please select team leader",
-            date: "please chooce date for interview",
-        },
-    });
-    
-    /* updating interview data in database */
-    $(".submit_value").on("click", function(event){
-        event.preventDefault();
-        var form = $('#interview_form')[0];
-        var formData = new FormData(form);
-        if($("#interview_form").valid()){   
-            $.ajax({
-                url: aurl + "/admin/interview/store",
-                type: 'POST',
-                dataType: "JSON",
-                data:formData,
-                cache:false,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    if(data.status){
-                        $('#interview_form').modal('hide');
-                        window.location.href = aurl + "/admin/interview";
-                    }else{
-                        const swalWithBootstrapButtons = Swal.mixin({
-                            customClass: {
-                                confirmButton: 'btn btn-success',
-                                cancelButton: 'btn btn-danger me-2'
-                            },
-                            buttonsStyling: false,
-                        })
-                        swalWithBootstrapButtons.fire(
-                            'Cancelled',
-                            data.message,
-                            'error'
-                        )
-                    }
-                },
-                error: function (error) {
-                    alert('error; ' + eval(error));
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger me-2'
-                        },
-                        buttonsStyling: false,
-                        })
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'this application is not available for interview :)',
-                        'error'
-                    )
-                }
-            });
-        } else {
-            console.log('Please enter required fields!')
-        }
-    });
-
-    /* display update interview modal */
-    $('body').on("click", ".edit_interview", function(event){
-        var id = $(this).data("id");
-        $('.i_id').val(id);
-        event.preventDefault();
-        $.ajax({
-            url: aurl + "/admin/interview/show",
-            type: "POST",
-            data: {id:id},
-            dataType: "JSON",
-            success: function(data){
-                if(data.status){
-                    $("#interview_form").trigger('reset');
-                    $('#interview_modal').modal('show');
-                    $('#title_interview_modal').text("Add Interview");
-                    $('.submit_value').val("Add interview");
-                    $('.name').val(data.name);
-                    $('.leader option[value="'+data.id+'"]').prop('selected', true);
-                    var dateArr = data.date.split(' ');
-                    date = dateArr[0]+'T'+dateArr[1];
-                    $('.date').val(date);
-                    $('.leader').select2({
-                        dropdownParent: $('#interview_modal')
-                    });
-                }else{
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger me-2'
-                        },
-                        buttonsStyling: false,
-                        })
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        data.message,
-                        'error'
-                    )
-                
-                }
-            },
-            error: function (error) {
-                alert('error; ' + eval(error));
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: {
-                        confirmButton: 'btn btn-success',
-                        cancelButton: 'btn btn-danger me-2'
-                    },
-                    buttonsStyling: false,
-                    })
-                swalWithBootstrapButtons.fire(
-                    'Cancelled',
-                    'this data is not available for access :)',
-                    'error'
-                )
-            }
-        });
-    });
-    
-    /* reject the application */
-    $('body').on("click", ".reject", function(event){
+    /* reject the candidate */
+    $('body').on("click", ".reject_candidate", function(event){
         event.preventDefault();
         var id = $(this).data('id');
-        var i_id = $(this).data('i_id');
+        var a_id = $(this).data('a_id');
         const value  = Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -227,20 +81,20 @@ $(document).ready(function(){
                 var reason = result.value;
                 $.ajax({
                     type: "post",
-                    url: aurl + "/admin/application/pending/reject",
-                    data: {id: id,reason: reason,i_id: i_id},
+                    url: aurl + "/admin/review/reject",
+                    data: {id: id,reason: reason,a_id: a_id},
                     dataType: "JSON",
                     success: function(data) {
                         if(data.status){
                             swal.fire({
                                 title: 'rejected!',
-                                text: "Application is rejected",
+                                text: "Candidate is rejected",
                                 icon: 'success',
                                 confirmButtonText: 'OK',
                                 reverseButtons: true
                             }).then((result) => {
                                 if(result.value){
-                                    window.location.href = aurl + "/admin/application/pending";
+                                    window.location.href = aurl + "/admin/review";
                                 }
                             })
                         }else{
@@ -252,7 +106,54 @@ $(document).ready(function(){
                     }
                 });
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                swal.fire("Cancelled", "Application is pending :)", "info");
+                swal.fire("Cancelled", "candidate is not rejected :)", "info");
+            }
+        });
+    });
+    /* select the candidate */
+    $('body').on("click", ".select_candidate", function(event){
+        event.preventDefault();
+        var id = $(this).data('id');
+        var a_id = $(this).data('a_id');
+        const value  = Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "success",
+            showCancelButton: true,
+            confirmButtonText: "Yes, select it!",
+            cancelButtonText: "No, cancel!",
+            showCancelButton: true,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var reason = result.value;
+                $.ajax({
+                    type: "post",
+                    url: aurl + "/admin/review/select",
+                    data: {id: id,a_id: a_id},
+                    dataType: "JSON",
+                    success: function(data) {
+                        if(data.status){
+                            swal.fire({
+                                title: 'selected!',
+                                text: "Candidate is selected",
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                reverseButtons: true
+                            }).then((result) => {
+                                if(result.value){
+                                    window.location.href = aurl + "/admin/review";
+                                }
+                            })
+                        }else{
+                            swal.fire('Cancelled',data.message,'error')
+                        }
+                    },
+                    error: function (error) {
+                        alert('error; ' + eval(error));
+                    }
+                });
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                swal.fire("Cancelled", "candidate is not selected :)", "info");
             }
         });
     });

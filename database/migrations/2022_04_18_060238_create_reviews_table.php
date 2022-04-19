@@ -15,9 +15,10 @@ class CreateReviewsTable extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->string('review',60);
             $table->unsignedBigInteger('i_id');
             $table->foreign('i_id')->references('id')->on('interviews');
+            $table->string('review',60);
+            $table->text('description');
             $table->boolean('status')->default(0)->comment("0=TL review,1=HR review");
             $table->timestamps();
         });

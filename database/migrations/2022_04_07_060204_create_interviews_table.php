@@ -20,7 +20,7 @@ class CreateInterviewsTable extends Migration
             $table->unsignedBigInteger('tl_id');
             $table->foreign('tl_id')->references('id')->on('admins');
             $table->dateTime('date');
-            $table->boolean('status')->default(1)->comment("0=delete,1=active");
+            $table->boolean('status')->default(1)->comment("0=completed,1=active");
             $table->timestamps();
         });
     }

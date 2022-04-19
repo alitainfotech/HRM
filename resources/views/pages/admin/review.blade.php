@@ -33,7 +33,9 @@
                 <th>POST</th>
                 <th>NAME</th>
                 <th>HR review</th>
+                <th>HR description</th>
                 <th>TL review</th>
+                <th>TL description</th>
                 <th>Action</th>
               </tr>
             </thead>

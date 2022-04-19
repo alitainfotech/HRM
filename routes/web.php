@@ -122,9 +122,9 @@ Route::group(['prefix' => 'admin/department'], function(){
 Route::group(['prefix' => 'admin/review'], function(){
     Route::get('/',[ReviewController::class,'index'])->name('review.dashboard');
     Route::post('/listing',[ReviewController::class,'listing']);
-    Route::post('/show',[ReviewController::class,'show']);
+    Route::post('/reject',[ReviewController::class,'reject']);
+    Route::post('/select',[ReviewController::class,'select']);
     Route::post('/store',[ReviewController::class,'store']);
-    Route::post('/delete',[DepartmentController::class,'delete']);
 });
 
 
