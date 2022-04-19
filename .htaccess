@@ -1,8 +1,4 @@
 # Prevent Directory Listing
-<IfModule autoindex>
-	IndexIgnore *
-</IfModule>
-
 <IfModule mod_rewrite.c>
     # Prevent Directory Listing
     <IfModule mod_negotiation.c>
@@ -12,8 +8,8 @@
     RewriteEngine On
 
     # Redirect Trailing Slashes If Not A Folder...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)/$ /$1 [L,R=301]
+    RewriteCond %{REQUEST_FILENAME} !^public
+    RewriteRule ^(.*)$ public/$1 [L]
 
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
