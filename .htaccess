@@ -1,22 +1,21 @@
-# Prevent Directory Listing
-<IfModule mod_rewrite.c>
-    # Prevent Directory Listing
-    <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
-    </IfModule>
-
+<ifmodule mod_rewrite.c>
+ 
+    <ifmodule mod_negotiation.c>
+        Options -MultiViews
+    </ifmodule>
+     
     RewriteEngine On
-
-    # Redirect Trailing Slashes If Not A Folder...
-    RewriteCond %{REQUEST_FILENAME} !^public
-    RewriteRule ^(.*)$ public/$1 [L]
-
-    # Send Requests To Front Controller...
+     
+    RewriteCond %{REQUEST_FILENAME} -d [OR]
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ ^$1 [N]
+ 
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ /public/$1 [L,QSA]
+ 
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^ server.php [L]
+    RewriteRule ^ server.php
+ 
+</ifmodule>
 
-    # Handle Authorization Header
-    RewriteCond %{HTTP:Authorization} .
-    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-</IfModule>
