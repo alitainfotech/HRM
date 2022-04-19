@@ -14,7 +14,7 @@
                     </div>
                     <div class="col-md-8 ps-md-0">
                         <div class="auth-form-wrapper px-4 py-5">
-                            <a href="#" class="noble-ui-logo d-block mb-2"><img src="{{ asset('assets/images/logo-black.SVG') }}" alt=""></a>
+                            <a href="#" class="noble-ui-logo d-block mb-2"><img src="{{ asset('assets/images/logo-black.png') }}" alt=""></a>
                         {{-- forgot form start --}}
                         <form class="forms-sample" name="forgot_form" method="POST" action="{{ route('password.email') }}">
                             @csrf

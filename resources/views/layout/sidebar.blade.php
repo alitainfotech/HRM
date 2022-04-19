@@ -1,6 +1,6 @@
 <nav class="sidebar">
   <div class="sidebar-header">
-    <a href="#" class="sidebar-brand"><img src="{{ asset('assets/images/logo-black.SVG') }}" alt=""></a>
+    <a href="#" class="sidebar-brand"><img src="{{ asset('assets/images/logo-black.png') }}" alt=""></a>
 
     <div class="sidebar-toggler not-active">
       <span></span>

@@ -16,7 +16,7 @@
           </div>
           <div class="col-md-8 ps-md-0">
             <div class="auth-form-wrapper px-4 py-5">
-              <a href="#" class="noble-ui-logo d-block mb-2"><img src="{{ asset('assets/images/logo-black.SVG') }}" alt=""></a>
+              <a href="#" class="noble-ui-logo d-block mb-2"><img src="{{ asset('assets/images/logo-black.png') }}" alt=""></a>
               <h5 class="text-muted fw-normal mb-4">Welcome back! Log in to your account.</h5>
 
               {{-- error --}}
@@ -47,9 +47,9 @@
                 </div>
                 <div>
                   <button  class="btn btn-primary me-2 mb-2 mb-md-0" type="submit">Login</button>
-                  <p class="d-block mt-3 text-muted">Forgot Your Password? <a href="{{ route('password.request') }}">Reset it here!</a></p>
+                  {{-- <p class="d-block mt-3 text-muted">Forgot Your Password? <a href="{{ route('password.request') }}">Reset it here!</a></p> --}}
                 </div>
-                <a href="{{ url('/auth/register') }}" class="d-block mt-3 text-muted">Not a user? Sign up</a>
+                {{-- <a href="{{ url('/auth/register') }}" class="d-block mt-3 text-muted">Not a user? Sign up</a> --}}
               </form>
               {{-- login form end --}}
             </div>
