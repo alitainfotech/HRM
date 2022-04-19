@@ -65,12 +65,6 @@
         </li>
       @endif 
       @if(in_array("17", permission()))
-        {{-- <li class="nav-item {{ active_class(['/admin/dashboard']) }} ">
-          <a href="{{ route('application.dashboard') }}" class="nav-link">
-            <i class="link-icon" data-feather="user"></i>
-            <span class="link-title">Applications</span>
-          </a>
-        </li> --}}
         <li class="nav-item {{ active_class(['/admin/application/*']) }} ">
           <a class="nav-link" data-bs-toggle="collapse" href="#email" role="button" aria-expanded="{{ is_active_route(['email/*']) }}" aria-controls="email">
             <i class="link-icon" data-feather="user"></i>
@@ -108,9 +102,15 @@
         </a>
       </li>
       @endif
+      @if(in_array("29", permission()))
+      <li class="nav-item {{ active_class(['/admin/review']) }} ">
+        <a href="{{ route('review.dashboard') }}" class="nav-link">
+          <i class="link-icon" data-feather="clipboard"></i>
+          <span class="link-title">Review</span>
+        </a>
+      </li>
       @endif
-      
-      
+      @endif
     </ul>
   </div>
 </nav>

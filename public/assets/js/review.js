@@ -4,12 +4,10 @@ $.ajaxSetup({
       'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
     }
 });
-function updateTextInput(val) {
-    document.getElementById('textInput').value=val; 
-}
+  
 /* datatable */
 $(function() {
-'use strict';
+    'use strict';
     $(function() {
         $('#dataTableExample').DataTable({
         "aLengthMenu": [
@@ -22,15 +20,14 @@ $(function() {
         },
         'ajax': {
             type:'POST',
-            url: aurl + "/admin/interview/listing", 
+            url: aurl + "/admin/review/listing", 
         },
         'columns': [
             { data: 'id' },
             { data: 'post' },
-            { data: 'Interviewer' },
-            { data: 'Interviewee' },
-            { data: 'date' },
-            { data: 'cv' },
+            { data: 'name' },
+            { data: 'hr_review' },
+            { data: 'tl_review' },
             { data: 'action' },
             
         ]
@@ -85,18 +82,7 @@ $(document).ready(function(){
             date: "please chooce date for interview",
         },
     });
-    $('#review_form').validate({ 
-        rules: {
-            review: {
-                required: true,
-                minlength: 1,
-                maxlength: 10,
-            },
-            description: {
-                required: true,
-            }
-        },
-    });
+    
     /* updating interview data in database */
     $(".submit_value").on("click", function(event){
         event.preventDefault();
@@ -269,69 +255,5 @@ $(document).ready(function(){
                 swal.fire("Cancelled", "Application is pending :)", "info");
             }
         });
-    });
-
-    /* display add review modal */
-    $("body").on("click", ".add_review", function () {
-        var id = $(this).data("id");
-        $(".i_id").val(id);
-        $("#review_form").trigger("reset");
-        $("#review_modal").modal("show");
-        $("#title_review_modal").text("Add Review");
-        $(".submit_value").val("Add Review");
-    });
-
-    /* adding review data in database */
-    $(".submit_review").on("click", function(event){
-        event.preventDefault();
-        var form = $('#review_form')[0];
-        var formData = new FormData(form);
-        if($("#review_form").valid()){   
-            $.ajax({
-                url: aurl + "/admin/review/store",
-                type: 'POST',
-                dataType: "JSON",
-                data:formData,
-                cache:false,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    if(data.status){
-                        $('#review_form').modal('hide');
-                        window.location.href = aurl + "/admin/review";
-                    }else{
-                        const swalWithBootstrapButtons = Swal.mixin({
-                            customClass: {
-                                confirmButton: 'btn btn-success',
-                                cancelButton: 'btn btn-danger me-2'
-                            },
-                            buttonsStyling: false,
-                        })
-                        swalWithBootstrapButtons.fire(
-                            'Cancelled',
-                            data.message,
-                            'error'
-                        )
-                    }
-                },
-                error: function (error) {
-                    alert('error; ' + eval(error));
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger me-2'
-                        },
-                        buttonsStyling: false,
-                        })
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'this application is not available for review :)',
-                        'error'
-                    )
-                }
-            });
-        } else {
-            console.log('Please enter required fields!')
-        }
     });
 });

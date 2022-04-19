@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Application;
 use App\Models\Interview;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InterviewController extends Controller
 {
@@ -22,7 +25,15 @@ class InterviewController extends Controller
     /* listing of interview */
     public function listing()
     {
-        $interviews= Interview::where('status',1)->with('application')->with('tl')->get();
+        $role = Admin::with(['role'])->find(Auth::guard('admin')->id())->role->title;
+        if($role=='team leader'){
+            $interviews= Interview::where('status',1)->where('tl_id',Auth::guard('admin')->user()->id)->with('application')->with('tl')->get();
+            $review='tl_review';
+        }
+        else{
+            $interviews= Interview::where('status',1)->with('application')->with('tl')->get();
+            $review='hr_review';
+        }
 
         $data_result = [];
         $id=0;
@@ -33,10 +44,13 @@ class InterviewController extends Controller
             $id++;
             $button = '';
             if(in_array("23", permission())){
-                $button.='<div class="btn btn-success edit_interview" data-id="'.$interview['id'].'"><i class="mdi mdi-square-edit-outline"></i></div>';
+                $button.='<div class="btn btn-success edit_interview m-1" data-id="'.$interview['id'].'"><i class="mdi mdi-square-edit-outline"></i></div>';
              }
-             if(in_array("20", permission())){
-                $button.='<div class="btn btn-danger reject" data-i_id="'.$interview['id'].'" data-id="'.$interview->application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
+            if(in_array("20", permission())){
+                $button.='<div class="btn btn-danger reject m-1" data-i_id="'.$interview['id'].'" data-id="'.$interview->application['id'].'" ><i class="mdi mdi-close-outline"></i></div>';
+            }
+            if(in_array("20", permission())){
+                $button.='<div class="btn btn-info add_review m-1" data-i_id="'.$interview['id'].'" data-id="'.$interview->application['id'].'"><i class="mdi mdi-book"></i></div>';
             }
             $date = date('d-m-Y  g:i:s a',strtotime($interview['date']));
             $cv='<a href="'.asset('/assets/candidates/candidates_cv').'/'.$interview->application['cv'].'" download><p>'.$interview->application['cv'].'</p></a>';

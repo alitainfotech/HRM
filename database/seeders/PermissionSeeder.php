@@ -98,5 +98,14 @@ class PermissionSeeder extends Seeder
         $table = new Permission();
         $table->name='Department.Delete';
         $table->save();
+        $table = new Permission();
+        $table->name='review.view';
+        $table->save();
+        $table = new Permission();
+        $table->name='candidate.select';
+        $table->save();
+        $table = new Permission();
+        $table->name='candidate.reject';
+        $table->save();
     }
 }

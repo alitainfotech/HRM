@@ -1,11 +1,6 @@
 @extends('layout.master')
 @section('title',"Interview")
-@php
-//   use App\Candidate;
-//   $c_id =  Session::get('c_id');
-// //   dd($c_id)
-//   $candidate = Candidate::where('c_id', $c_id)->first();  
-@endphp 
+
 @push('plugin-styles')
   <link href="{{ asset('assets/plugins/datatables-net/dataTables.bootstrap4.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/@mdi/css/materialdesignicons.min.css') }}" rel="stylesheet" />
@@ -53,10 +48,14 @@
           <div class="mb-3 select">
             <label class="form-label">Team Leader</label>
             <select class="js-example-basic-single form-select leader" data-width="100%" name="leader" >
-              <option value=""selected disabled hidden>Select Team Leader</option>
-              @foreach ($tls as $tl)
-                <option value="{{ $tl['id'] }}">{{ $tl['full_name'] }}</option>
-              @endforeach
+              @if($tls->isEmpty())
+                <option selected disabled hidden>please add team leader as user first</option>
+              @else
+                <option value=""selected disabled hidden>Select Team Leader</option>
+                @foreach ($tls as $tl)
+                  <option value="{{ $tl['id'] }}">{{ $tl['full_name'] }}</option>
+                @endforeach
+              @endif
             </select>
             <div class="text-danger">
               @error('leader')
@@ -70,6 +69,41 @@
           <input type="datetime-local" class="form-control mb-4 mb-md-0 date" name="date"/>
           </div>
           <input class="btn btn-primary submit_value" type="button" value="Submit" id="add_interview">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- review_modal -->
+<div class="modal fade  bd-example-modal-md" id="review_modal" tabindex="-1" aria-labelledby="title_review_modal" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="title_review_modal">Add Review</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+      </div>
+      <div class="modal-body">
+      @if(isset($err)){
+          <div class="alert alert-danger">
+            <p>{{ $err }}</p>
+          </div>
+        }
+        @endif
+        <form class="forms-sample" method="POST" name="registration" enctype="multipart/form-data" id="review_form">
+          @csrf
+          <div class="mb-3">
+            <input type="hidden" class="form-control i_id" id="i_id" name="i_id" value="0">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Review</label>
+            <input type="range" class="form-range" name="review" min="0" max="10" value="0" onchange="updateTextInput(this.value);">
+            <input type="text" class="form-control" id="textInput" value="">
+          </div>
+          <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control description" id="description" name="description" rows="2"></textarea>
+          </div>
+          <input class="btn btn-primary submit_review" type="button" value="Submit" id="add_review">
         </form>
       </div>
     </div>
@@ -121,10 +155,6 @@
    {{-- custom js --}}
  <!-- jquery validationjs -->
  <script src="{{ asset('assets/js/jquery.validate.min.js')}}"></script>
- <script src="{{ asset('assets/js/validation.js')}}"></script>
- <script>
-     FormValidation.init();
- </script>
   <script src="{{ asset('assets/js/interview.js') }}"></script>
   
 @endpush

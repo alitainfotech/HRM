@@ -54,10 +54,14 @@
             <div class="mb-3 select">
               <label class="form-label">Team Leader</label>
               <select class="js-example-basic-single form-select leader" data-width="100%" name="leader" >
-                <option value=""selected disabled hidden>Select Team Leader</option>
+                @if($tls->isEmpty())
+                <option selected disabled hidden>please add team leader as user first</option>
+              @else
                 @foreach ($tls as $tl)
+                  <option value=""selected disabled hidden>Select Team Leader</option>
                   <option value="{{ $tl['id'] }}">{{ $tl['full_name'] }}</option>
                 @endforeach
+              @endif
               </select>
               <div class="text-danger">
                 @error('leader')

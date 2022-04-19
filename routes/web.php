@@ -7,6 +7,7 @@ use App\Http\Controllers\admin\DepartmentController;
 use App\Http\Controllers\admin\InterviewController;
 use App\Http\Controllers\admin\OpeningController;
 use App\Http\Controllers\admin\PermissionController;
+use App\Http\Controllers\admin\ReviewController;
 use App\Http\Controllers\admin\RoleController;
 use App\Http\Controllers\frontend\CandidateController;
 use Illuminate\Support\Facades\Route;
@@ -114,6 +115,15 @@ Route::group(['prefix' => 'admin/department'], function(){
     Route::post('/listing',[DepartmentController::class,'listing']);
     Route::post('/show',[DepartmentController::class,'show']);
     Route::post('/store',[DepartmentController::class,'store']);
+    Route::post('/delete',[DepartmentController::class,'delete']);
+});
+
+/* review route */
+Route::group(['prefix' => 'admin/review'], function(){
+    Route::get('/',[ReviewController::class,'index'])->name('review.dashboard');
+    Route::post('/listing',[ReviewController::class,'listing']);
+    Route::post('/show',[ReviewController::class,'show']);
+    Route::post('/store',[ReviewController::class,'store']);
     Route::post('/delete',[DepartmentController::class,'delete']);
 });
 
