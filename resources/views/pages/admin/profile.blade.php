@@ -1,6 +1,5 @@
 
 @php
-$admin_user = Auth::guard('admin')->user();
 if(!empty($admin_user['image'])){
   $url=url('/assets/images/admin_users/admin_users_profile_photo/'.$admin_user['image']);
 }else {
@@ -9,7 +8,10 @@ if(!empty($admin_user['image'])){
 @endphp  
 @extends('layout.master')
 
-@section('title',"Profile")
+@push('plugin-styles')
+  <link href="{{ asset('assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.css') }}" rel="stylesheet" />
+@endpush
+@section('title',"Admin Profile")
 @push('plugin-styles')
 <link rel="stylesheet" href=" {{ asset('css/style.css') }}">
 @endpush
@@ -30,7 +32,7 @@ if(!empty($admin_user['image'])){
             </div>
             <div class="modal-body">
               {{-- Edit profile form --}}
-              <form class="forms-sample" name="registration" enctype="multipart/form-data" id="profile_form">
+              <form class="forms-sample" name="registration" enctype="multipart/form-data" id="adminProfile_form">
                 @csrf
                 <div class="mb-3">
                   <input type="hidden" class="form-control" id="id" name="id" value="{{ $admin_user->id }}">
@@ -42,7 +44,7 @@ if(!empty($admin_user['image'])){
                   </div>
                   <div class="col-md-6">
                     <label for="email" class="form-label">Email</label>
-                    <input type="text" class="form-control" id="email" name="email" value="{{ $admin_user->email }}">
+                    <input type="text" class="form-control" id="email" name="email" value="{{ $admin_user->email }}" readonly>
                   </div>
                 </div>
                 <div class="row mb-3">
@@ -55,11 +57,24 @@ if(!empty($admin_user['image'])){
                     <input type="number" class="form-control" id="phone" name="phone"  value="">
                   </div>
                 </div>
+                <div class="date datepicker mb-3" id="datePickerExample">
+                  <label for="dob" class="form-label">DOB</label>
+                  <input type="text" class="form-control input-group-addon" id="dob" name="dob" value="">
+                </div>
                 <div class="mb-3 select">
                   <label class="form-label">Bio</label>
                   <textarea name="bio" class="form-control bio" id="bio" cols="" rows="3"> @if(!is_null($admin_user->bio)) {{ $admin_user->bio }} @endif</textarea>
                   <div class="text-danger">
                     @error('bio')
+                      {{$message}}
+                    @enderror
+                  </div>
+                </div>
+                <div class="mb-3 select">
+                  <label class="form-label">Address</label>
+                  <textarea name="address" class="form-control address" id="address" cols="" rows="3"> @if(!is_null($admin_user->address)) {{ $admin_user->address }} @endif</textarea>
+                  <div class="text-danger">
+                    @error('address')
                       {{$message}}
                     @enderror
                   </div>
@@ -116,10 +131,40 @@ if(!empty($admin_user['image'])){
         <label class="tx-11 fw-bolder mb-0 text-uppercase">Email:</label>
         <p class="text-muted">{{ $admin_user->email }}</p>
       </div>
+      @if(!is_null($admin_user->dob))
+      <div class="mt-3">
+        <label class="tx-11 fw-bolder mb-0 text-uppercase">Date of Birth:</label>
+        <p class="text-muted">{{ date('F d,Y',strtotime($admin_user->dob)) }}</p>
+      </div>
+      @endif
+      @if(!is_null($admin_user->address))
+      <div class="mt-3">
+        <label class="tx-11 fw-bolder mb-0 text-uppercase">Address:</label>
+        <p class="text-muted">{{ $admin_user->address }}</p>
+      </div>
+      @endif
       @if(!is_null($admin_user->phone))
       <div class="mt-3">
         <label class="tx-11 fw-bolder mb-0 text-uppercase">Phone:</label>
         <p class="text-muted">{{ $admin_user->phone }}</p>
+      </div>
+      @endif
+      @if(!is_null($admin_user->designation))
+      <div class="mt-3">
+        <label class="tx-11 fw-bolder mb-0 text-uppercase">Designation:</label>
+        <p class="text-muted">{{ $admin_user->designation }}</p>
+      </div>
+      @endif
+      @if(!is_null($admin_user->department))
+      <div class="mt-3">
+        <label class="tx-11 fw-bolder mb-0 text-uppercase">Department:</label>
+        <p class="text-muted">{{ $admin_user->department->name }}</p>
+      </div>
+      @endif
+      @if(!is_null($admin_user->role->title))
+      <div class="mt-3">
+        <label class="tx-11 fw-bolder mb-0 text-uppercase">Role:</label>
+        <p class="text-muted">{{ $admin_user->role->title }}</p>
       </div>
       @endif
     </div>
@@ -127,10 +172,14 @@ if(!empty($admin_user['image'])){
 </div>
 </div>
 @endsection
+@push('plugin-scripts')
+  <script src="{{ asset('assets/plugins/bootstrap-datepicker/bootstrap-datepicker.min.js') }}"></script>
+@endpush
 @push('custom-scripts')
 <script type="text/javascript">
 var aurl = {!! json_encode(url('/')) !!}
 </script>
+<script src="{{ asset('assets/js/datepicker.js') }}"></script>
 <script src="{{ asset('assets/js/jquery.validate.min.js')}}"></script>
 <script src="{{ asset('assets/js/additional-methods.min.js')}}"></script>
 <script src="{{ asset('assets/js/adminProfile.js') }}"></script>

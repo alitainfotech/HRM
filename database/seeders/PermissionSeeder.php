@@ -102,6 +102,9 @@ class PermissionSeeder extends Seeder
         $table->name='review.view';
         $table->save();
         $table = new Permission();
+        $table->name='review.add';
+        $table->save();
+        $table = new Permission();
         $table->name='candidate.select';
         $table->save();
         $table = new Permission();

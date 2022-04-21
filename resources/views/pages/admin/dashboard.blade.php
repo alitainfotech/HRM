@@ -29,11 +29,8 @@
             <div class="d-flex justify-content-between align-middle">
               <i class="fa-solid fa-briefcase fa-4x text-success"></i>
               <div class="text-right text-dark">
-                @php
-                $active_openings = (in_array("1", permission())) ? route('opening.dashboard') : route('admin.dashboard');
-                @endphp
                 <h2 class="active_openings text-success"></h2>
-                <a href="{{ $active_openings }}" class="text-dark"><h4>Active Openings</h4></a>
+                <a href="{{ (in_array("1", permission())) ? route('opening.dashboard') : route('admin.dashboard') }}" class="text-dark"><h4>Active Openings</h4></a>
               </div>
             </div>
           </div>
@@ -57,11 +54,8 @@
             <div class="d-flex justify-content-between align-middle">
               <i class="fa-solid fa-users fa-4x text-success"></i>
               <div class="text-right text-dark">
-                @php
-                $active_users = (in_array("5", permission())) ? route('user.dashboard') : route('admin.dashboard');
-                @endphp
                 <h2 class="active_users text-success"></h2>
-                <a href="{{ $active_users }}" class="text-dark"><h4>Active Users</h4></a>
+                <a href="{{ (in_array("5", permission())) ? route('user.dashboard') : route('admin.dashboard') }}" class="text-dark"><h4>Active Users</h4></a>
               </div>
             </div>
           </div>
@@ -99,11 +93,8 @@
             <div class="d-flex justify-content-between align-middle">
               <i class="fa-solid fa-clipboard fa-4x text-info"></i>
               <div class="text-right text-dark">
-                @php
-                $pending_applications = (in_array("17", permission())) ? route('application.pending') : route('admin.dashboard');
-                @endphp
                 <h2 class="pending_applications text-info"></h2>
-                <a href="{{ $pending_applications }}" class="text-dark"><h4>Pending Applications</h4></a>
+                <a href="{{ (in_array("17", permission())) ? route('application.pending') : route('admin.dashboard') }}" class="text-dark"><h4>Pending Applications</h4></a>
               </div>
             </div>
           </div>
@@ -129,7 +120,7 @@
               <i class="fa-regular fa-clipboard fa-4x text-danger"></i>
                 <div class="text-right text-dark">
                   <h2 class="rejected_applications text-danger"></h2>
-                  <h4>Rejected Applications</h4>
+                  <a href="{{ (in_array("17", permission())) ? route('application.reject') : route('admin.dashboard') }}" class="text-dark"><h4>Rejected Applications</h4></a>
                 </div>
             </div>
           </div>
@@ -142,7 +133,7 @@
               <i class="fa-solid fa-clipboard-check fa-4x text-success"></i>
                 <div class="text-right text-dark">
                   <h2 class="selected_applications text-success"></h2>
-                  <h4>Selected Applications</h4>
+                  <a href="{{ (in_array("17", permission())) ? route('application.select') : route('admin.dashboard') }}" class="text-dark"><h4>Selected Applications</h4></a>
                 </div>
             </div>
           </div>
@@ -167,11 +158,8 @@
             <div class="d-flex justify-content-between align-middle">
               <i class="fa-solid fa-user-check fa-4x text-success"></i>
               <div class="text-right text-dark">
-                @php
-                $active_Interviews = (in_array("21", permission())) ? route('interview.dashboard') : route('admin.dashboard');
-                @endphp
                 <h2 class="active_interviews text-success"></h2>
-                <a href="{{ $active_Interviews }}" class="text-dark"><h4>Active Interviews</h4></a>
+                <a href="{{ (in_array("21", permission())) ? route('interview.dashboard') : route('admin.dashboard') }}" class="text-dark"><h4>Active Interviews</h4></a>
               </div>
             </div>
           </div>

@@ -41,10 +41,10 @@ class ReviewController extends Controller
             $opening = $interview->application->load('opening')->opening;
             $id++;
             $button = '';
-            if(in_array("31", permission())){
+            if(in_array("32", permission())){
                  $button.='<div class="btn btn-danger reject_candidate m-1" data-id="'.$interview['id'].'" data-a_id="'.$interview->application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
             }
-            if(in_array("30", permission())){
+            if(in_array("31", permission())){
                 $button.='<div class="btn btn-success select_candidate m-1" data-id="'.$interview['id'].'" data-a_id="'.$interview->application['id'].'"><i class="mdi mdi-check-outline"></i></div>';
             }
             $data_result[] = array( 

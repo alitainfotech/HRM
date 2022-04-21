@@ -52,7 +52,7 @@
                     </div>
                     <div class="col-md-6">
                       <label for="phone" class="form-label">Phone</label>
-                      <input type="number" class="form-control" id="phone" name="phone"  value="">
+                      <input type="number" class="form-control" id="phone" name="phone"  value="{{ (!is_null($user->phone)) ? $user->phone :''}}">
                     </div>
                   </div>
                   <div class="mb-3 select">

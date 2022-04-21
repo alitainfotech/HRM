@@ -19,7 +19,7 @@ class CreateAdminsTable extends Migration
             $table->string('full_name',60);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('dob',50)->nullable();
+            $table->date('dob')->nullable();
             $table->string('phone')->nullable();
             $table->string('designation',250)->nullable();
             $table->unsignedBigInteger('d_id')->nullable();

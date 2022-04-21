@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin;
 use App\Models\Application;
 use App\Models\Interview;
 use App\Models\Opening;
@@ -42,7 +43,8 @@ class AdminController extends Controller
     /* view of profile */
     public function profile()
     {
-        return view('pages.admin.profile');
+        $admin_user = Admin::with(['role'])->with('department')->find(Auth::guard('admin')->id());
+        return view('pages.admin.profile',compact('admin_user'));
     }
     
     /* return value for dashboard */
@@ -67,6 +69,48 @@ class AdminController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect(route('admin.login'));
+    }
+
+    /* profile update */
+    public function update(Request $request)
+    {
+        {
+            $request->validate(
+                [
+                    'name' => 'required',
+                    'email' => 'required',
+                ]
+            );
+                
+            $user =Admin::where('id',$request->id)->first();
+            $user->full_name=$request->name;
+            if(!is_null($request->image)){
+                
+                $p_image=$request->image;
+                $name = $p_image->getClientOriginalName();
+                $allowedp_imageExtension=['png','jpg','jpeg'];
+                $extension = $p_image->getClientOriginalExtension();
+                $check=in_array($extension,$allowedp_imageExtension);
+                if($check){
+                    $image['filePath'] = $name;
+                    $p_image->move(public_path().'/assets/images/admin_users/admin_users_profile_photo/', $name);
+                    $user->image = $name;
+                }
+            }
+            if(!is_null($request->bio)){
+                $user->bio=$request->bio;
+            }
+            if(!is_null($request->phone)){
+                $user->phone=$request->phone;
+            }
+            if(!is_null($request->dob)){
+                $user->dob=date('Y-m-d',strtotime($request->dob));
+            }
+            if(!is_null($request->address)){
+                $user->address=$request->address;
+            }
+            $user->save();
+        }
     }
     
 }

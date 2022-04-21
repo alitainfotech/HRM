@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Role extends Model
 {
     use HasFactory;
+    public function setTitleAttribute($value){
+        $this->attributes['title'] = ucwords($value);
+    }
     public function role_role_permission(){
         return $this->hasMany('App\Models\Role_Permission', 'role_id' ,'id');
     }

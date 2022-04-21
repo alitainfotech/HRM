@@ -33,7 +33,8 @@ Route::group(['prefix' => 'admin'], function(){
     Route::post('/login',[AdminController::class,'store'])->name('admin.login'); 
     Route::get('/dashboard',[AdminController::class,'dashboard'])->middleware('admin')->name('admin.dashboard');
     Route::post('/logout',[AdminController::class,'destroy'])->name('admin.logout');
-    Route::get('profile',[AdminController::class,'profile'])->name('admin.profile');
+    Route::get('/profile',[AdminController::class,'profile'])->name('admin.profile');
+    Route::post('/profile/update', [AdminController::class,'update']);
 });
 
 /* admin dashboard routes */

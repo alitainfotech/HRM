@@ -54,6 +54,7 @@
               </div>
               @endforeach
               <br>
+              <br>
               <input type="checkbox" value="" name="" class="form-check-input " id="selectall" >
               <label class="form-check-label" for="selectall">
                 Select All

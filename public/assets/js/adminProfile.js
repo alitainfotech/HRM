@@ -5,7 +5,7 @@ $.ajaxSetup({
   });
 $(document).ready(function(){
 
-    $('#profile_form').validate({ // initialize the plugin
+    $('#adminProfile_form').validate({ // initialize the plugin
         rules: {
             name: {
                 required: true
@@ -30,19 +30,18 @@ $(document).ready(function(){
     });
 
     $('body').on("click", ".edit_profile", function(){
-        $("#profile_form").trigger('reset');
+        $("#adminProfile_form").trigger('reset');
         $('#profile_modal').modal('show');
         $('#title_profile_modal').text("Edit your profile");
         $('.submit_value').val("Update profile");
     });
     $(".submit_value").on("click", function(event){
         event.preventDefault();
-        console.log(event);
-        var form = $('#profile_form')[0];
+        var form = $('#adminProfile_form')[0];
         var formData = new FormData(form);
-        if($("#profile_form").valid()){   
+        if($("#adminProfile_form").valid()){   
             $.ajax({
-                url: aurl + "/candidate/profile/update",
+                url: aurl + "/admin/profile/update",
                 type: 'POST',
                 data:formData,
                 cache:false,
@@ -50,7 +49,7 @@ $(document).ready(function(){
                 processData: false,
                 success: function(data) {
                     $('#profile_modal').modal('hide');
-                    // window.location.href = aurl + "/candidate/profile";
+                    window.location.href = aurl + "/admin/profile";
                 },
             });
         } else {

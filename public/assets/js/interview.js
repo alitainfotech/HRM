@@ -298,7 +298,7 @@ $(document).ready(function(){
                 success: function(data) {
                     if(data.status){
                         $('#review_form').modal('hide');
-                        window.location.href = aurl + "/admin/review";
+                        window.location.href = aurl + "/admin/interview";
                     }else{
                         const swalWithBootstrapButtons = Swal.mixin({
                             customClass: {

@@ -50,7 +50,7 @@ $(document).ready(function(){
                 processData: false,
                 success: function(data) {
                     $('#profile_modal').modal('hide');
-                    // window.location.href = aurl + "/candidate/profile";
+                    window.location.href = aurl + "/profile";
                 },
             });
         } else {

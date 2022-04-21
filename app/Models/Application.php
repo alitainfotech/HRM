@@ -12,6 +12,6 @@ class Application extends Model
         return $this->hasOne('App\Models\User', 'id' ,'c_id');
     }
     public function opening(){
-        return $this->hasOne('App\Models\opening', 'id' ,'o_id');
+        return $this->hasOne('App\Models\Opening', 'id' ,'o_id');
     }
 }

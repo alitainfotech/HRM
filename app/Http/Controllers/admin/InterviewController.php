@@ -46,10 +46,10 @@ class InterviewController extends Controller
             if(in_array("23", permission())){
                 $button.='<div class="btn btn-success edit_interview m-1" data-id="'.$interview['id'].'"><i class="mdi mdi-square-edit-outline"></i></div>';
              }
-            if(in_array("20", permission())){
+            if(in_array("24", permission())){
                 $button.='<div class="btn btn-danger reject m-1" data-i_id="'.$interview['id'].'" data-id="'.$interview->application['id'].'" ><i class="mdi mdi-close-outline"></i></div>';
             }
-            if(in_array("20", permission())){
+            if(in_array("30", permission())){
                 $button.='<div class="btn btn-info add_review m-1" data-i_id="'.$interview['id'].'" data-id="'.$interview->application['id'].'"><i class="mdi mdi-book"></i></div>';
             }
             $date = date('d-m-Y  g:i:s a',strtotime($interview['date']));
