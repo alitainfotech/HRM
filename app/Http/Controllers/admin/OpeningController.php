@@ -103,10 +103,12 @@ class OpeningController extends Controller
             $button = '';
             $min_year = intdiv($opening['min_experience'],12);
             $min_month = $opening['min_experience']%12;
-            $min_experience= $min_year.' year '.$min_month.' month '; 
+            $min_experience= $min_year.' years '.$min_month.' months '; 
             $max_year = intdiv($opening['max_experience'],12);
             $max_month = $opening['max_experience']%12;
-            $max_experience= $max_year.' year '.$max_month.' month ';
+            $year=($min_year==1) ? 'year' : 'years';
+            $month=($min_month==1) ? 'month' : 'months';
+            $max_experience= $max_year.' '.$year.' '.$max_month.' '.$month;
             if(in_array("3", permission())){
                 $button .= '<button class="job_edit btn btn-sm btn-success m-1" data-id="'.$opening['id'].'" > 
                 <i class="mdi mdi-square-edit-outline"></i>

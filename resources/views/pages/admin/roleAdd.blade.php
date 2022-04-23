@@ -61,7 +61,10 @@
               </label>
             </div>
             <div class="">
-              <button class="btn btn-primary submit_value" type="button">{{ (!is_null($data['role'])) ? 'Edit Role' :'Add Role'}}</button>
+              <button class="btn btn-primary submit_value" type="button">{{ (!is_null($data['role'])) ? 'Update' :'Save'}}</button>
+              <a href="{{ route('role.dashboard') }}">
+                <button class="btn btn-primary"  type="button">Cancle</button>
+              </a>
             </div>
           </form>
       </div>

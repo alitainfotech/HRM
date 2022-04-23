@@ -133,6 +133,8 @@
             
             <label class="float-left">Status</label>
             <div class="btn mx-2 {{ $class }} ">{{ $status }}</div>
+            @else
+              <a href="#" class="btn btn-primary apply_job" data-id="{{ $job_opening['id'] }}" data-c_id="{{ $candidate->id }}">Apply</a>
             @endif
           @endforeach
            
