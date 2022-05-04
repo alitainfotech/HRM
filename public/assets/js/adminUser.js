@@ -62,7 +62,7 @@ $(document).ready(function(){
             u_email: {
                 required: true,
                 email: true,
-                emailcheck: $("#id").val() == 0,
+                emailcheck: true,
             },
             password: {
                 required: true,
@@ -112,11 +112,12 @@ $(document).ready(function(){
     }, 'Please enter a valid password');
     $.validator.addMethod("emailcheck",function(value) { 
     var x = 0;
+    var id = $('#id').val();
     var x = $.ajax({
         url: aurl + "/admin/user/emailcheck",
         type: 'POST',
         async: false,
-        data: {email:value},
+        data: {email:value,id:id},
     }).responseText; 
     if (x != 0){ return false; }else return true;
     }, 'Please register with another email id');
@@ -126,6 +127,7 @@ $(document).ready(function(){
           $('.id').val('0');
           $('#title_user_modal').text("Add User");
           $('.submit_value').text("Add User");
+          $('.password').show();
           $("#user_form").trigger('reset');
           $('.form-select').select2({
               dropdownParent: $('#user_modal')

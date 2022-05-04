@@ -37,7 +37,7 @@ class ApplicationController extends Controller
             if(in_array("20", permission())){
             $button.='<div class="btn btn-danger reject m-1" data-id="'.$application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
             }
-            $cv='<a href="'.asset('/assets/users/users_cv').'/'.$application['cv'].'" download><p>'.$application['cv'].'</p></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p>'.$application['cv'].'</p></a>';
             $data_result[] = array( 
             "id"=>$id, 
             "post"=>$application->opening['title'],
@@ -147,7 +147,7 @@ class ApplicationController extends Controller
             $year = intdiv($application['experience'],12);
             $month = $application['experience']%12;
             $experience= $year.' year '.$month.' month ';
-            $cv='<a href="'.asset('/assets/users/users_cv').'/'.$application['cv'].'" download><p>'.$application['cv'].'</p></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p>'.$application['cv'].'</p></a>';
             $data_result[] = array( 
             "id"=>$id, 
             "post"=>$application->opening['title'],
@@ -190,13 +190,8 @@ class ApplicationController extends Controller
             $year = intdiv($application['experience'],12);
             $month = $application['experience']%12;
             $experience= $year.' year '.$month.' month ';
-            if(in_array("22", permission())){
-            $button.='<div class="btn btn-primary add_interview" data-id="'.$application['id'].'"><i class="mdi mdi-plus-outline"></i></div>';
-            }
-            if(in_array("20", permission())){
-            $button.='<div class="btn btn-danger reject" data-id="'.$application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
-            }
-            $cv='<a href="'.asset('/assets/users/users_cv').'/'.$application['cv'].'" download><p>'.$application['cv'].'</p></a>';
+            
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p>'.$application['cv'].'</p></a>';
             $data_result[] = array( 
             "id"=>$id, 
             "post"=>$application->opening['title'],
@@ -204,7 +199,6 @@ class ApplicationController extends Controller
             "phone"=>$application->candidate['phone'],
             "email"=>$application->candidate['email'],
             "cv"=>$cv,
-            "description"=>mb_strimwidth($application['description'], 0, 50, "..."),
             "experience"=>$experience,
             "action"=>$button
             );

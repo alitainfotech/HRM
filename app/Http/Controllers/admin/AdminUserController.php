@@ -105,7 +105,9 @@ class AdminUserController extends Controller
     public function emailcheck(){
         $email = $_POST['email'];
         $user = Admin::where('email', $email)->first();
-        echo $user;
+        if(!is_null($user) && $user->id != $_POST['id']){
+            echo $user;
+        }
     }
      
     /* display user for updating */

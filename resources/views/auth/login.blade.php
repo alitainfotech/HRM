@@ -48,7 +48,7 @@
                   <button  class="btn btn-primary me-2 mb-2 mb-md-0" type="submit">Login</button>
                   <p class="d-block mt-3 text-muted">Forgot Your Password? <a href="{{ route('password.request') }}">Reset it here!</a></p>
                 </div>
-                <a href="{{ route('register') }}" class="d-block mt-3 text-muted">Not a user? Sign up</a>
+                <p class="d-block mt-3">Not a user? <a href="{{ route('register') }}">Sign up</a></p>
               </form>
               {{-- login form end --}}
             </div>

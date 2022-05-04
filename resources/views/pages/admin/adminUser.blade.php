@@ -29,7 +29,7 @@
         <form class="forms-sample" method="POST" name="registration"enctype="multipart/form-data" id="user_form">
           @csrf
           <div >
-            <input type="hidden" name="id" class="id" value="0">
+            <input type="hidden" name="id" id="id" class="id" value="0">
           </div>
           <div class="mb-3 select">
             <label class="form-label">Role</label>

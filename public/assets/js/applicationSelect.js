@@ -29,9 +29,7 @@ $.ajaxSetup({
           { data: 'phone' },
           { data: 'email' },
           { data: 'cv' },
-          { data: 'description' },
           { data: 'experience' },
-          { data: 'action' },
             
       ]
       });

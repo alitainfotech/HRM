@@ -87,9 +87,7 @@
                 <th>PHONE</th>
                 <th>EMAIL</th>
                 <th>CV</th>
-                <th>Description</th>
                 <th>experience</th>
-                <th>Action</th>
               </tr>
             </thead>
           </table>
