@@ -27,8 +27,8 @@ class AdminController extends Controller
         return view('pages.admin.dashboard');
     }
 
-    /* add user of admin panel */
-    public function store(Request $request)
+    /* login user of admin panel */
+    public function login(Request $request)
     {
         
         $check = $request->all();
@@ -97,19 +97,29 @@ class AdminController extends Controller
                     $user->image = $name;
                 }
             }
-            if(!is_null($request->bio)){
-                $user->bio=$request->bio;
+            $user->bio=$request->bio;
+            $user->phone=$request->phone;
+            $user->dob=date('Y-m-d',strtotime($request->dob));
+            $user->address=$request->address;
+            if ($user->save()) {
+                $response = [
+                    'status' => true,
+                    'message' => 'Profile updated successfully',
+                    'icon' => 'success',
+                    'redirect_url' => "/admin/profile",
+                ];
+                echo json_encode($response);
+                exit;
+            } else {
+                $response = [
+                    'status' => false,
+                    'message' => "error in updating",
+                    'icon' => 'error',
+                    'redirect_url' => "/admin/profile",
+                ];
+                echo json_encode($response);
+                exit;
             }
-            if(!is_null($request->phone)){
-                $user->phone=$request->phone;
-            }
-            if(!is_null($request->dob)){
-                $user->dob=date('Y-m-d',strtotime($request->dob));
-            }
-            if(!is_null($request->address)){
-                $user->address=$request->address;
-            }
-            $user->save();
         }
     }
     

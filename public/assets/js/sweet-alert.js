@@ -139,3 +139,22 @@ $(function() {
   }
 
 });
+function toaster_message(message,icon,url){
+  const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+          confirmButton: 'btn btn-success',
+          cancelButton: 'btn btn-danger me-2'
+      },
+      buttonsStyling: false,
+  })
+  swalWithBootstrapButtons.fire({
+  text: message,
+  icon: icon,
+  confirmButtonText: 'OK',
+  reverseButtons: true
+  }).then((result) => {
+      if (result.value) {
+        (url!='') ? window.location.href = aurl + url :  listing.ajax.reload();                          
+      }
+  })
+}

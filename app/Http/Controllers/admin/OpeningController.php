@@ -55,10 +55,8 @@ class OpeningController extends Controller
                 ]
             );
             $opening = new Opening();
-            echo 'added';
         }else{
             $opening = Opening::where('id','=',$request['id'])->first();
-            echo 'updated';
         }
         if(isset($request['icon']) && !empty($request['icon'])) {
             $icon = $request['icon'];
@@ -81,9 +79,26 @@ class OpeningController extends Controller
         $opening->number_openings = $request['number_openings'];
         $opening->min_experience = $min_experience;
         $opening->max_experience = $max_experience;
-        $opening->created_at =now();
-        $opening->updated_at =now();
-        $opening->save();
+        $result = ($request['id'] == 0) ? $opening->save() : $opening->update();
+        if ($result) {
+            $response = [
+                'status' => true,
+                'message' => 'Opening '.($request['id']==0 ? 'Added' : 'Updated ').' Successfully',
+                'icon' => 'success',
+                'redirect_url' => "",
+            ];
+            echo json_encode($response);
+            exit;
+        } else {
+            $response = [
+                'status' => false,
+                'message' => "error in updating",
+                'icon' => 'error',
+                'redirect_url' => "",
+            ];
+            echo json_encode($response);
+            exit;
+        }
     }
 
     /* listing job opening data */
@@ -151,25 +166,56 @@ class OpeningController extends Controller
         $id=$request['id'];
         $job = Opening::where('id',$id)->first(); 
         if(!empty($job)){
-            echo json_encode($job);
+            $response = [
+                'status'=>true,
+                'title' => $job->title,
+                'description' => $job->description,
+                'fresher' => $job->fresher,
+                'min_experience' => $job->min_experience,
+                'max_experience' => $job->max_experience,
+                'number_openings' => $job->number_openings,
+            ];
+            echo json_encode($response);
+            exit;
         }else{
-            return redirect(route('opening.dashboard'));
+            $response = [
+                'status' => false,
+                'message' => "error in fetching",
+                'icon' => 'error',
+                'redirect_url' => "",
+            ];
+            echo json_encode($response);
+            exit;
         }
-        
     }
 
     /* deleting job opening data */
     public function delete(Request $request)
     {
         $id=$request['id'];
-        // dd($request['id']);
+        
         $job = Opening::where('id',$id)->first();
         if(!empty($job) && $job['status']==1){
             $job->status = 2;
-            $job->update();
-            echo 'deleted';
+        }
+        if($job->update()){
+            $response = [
+                'status' => true,
+                'message' => "Opening deleted successfully",
+                'icon' => 'success',
+                'redirect_url' => "",
+            ];
+            echo json_encode($response);
+            exit;
         }else{
-            return redirect(route('opening.dashboard'));
+            $response = [
+                'status' => false,
+                'message' => "error in deleting",
+                'icon' => 'error',
+                'redirect_url' => "",
+            ];
+            echo json_encode($response);
+            exit;
         }
     }
 

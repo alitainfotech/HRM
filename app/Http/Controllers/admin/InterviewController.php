@@ -89,14 +89,14 @@ class InterviewController extends Controller
             if(is_null($old_interview)){
                 $interview = new Interview();
                 $interview->a_id = $request['id'];
-                $interview->created_at =now();
             }else{
-                $responce = [
-                    'status'=>false,
-                    'message'=>"Already scheduled interview!",
-                    'redirect_url'=>"",
+                $response['status'] = [
+                    'status' => false,
+                    'message' => "already scheduled interview",
+                    'icon' => 'info',
+                    'redirect_url' => "",
                 ];
-                echo json_encode($responce);
+                echo json_encode($response);
                 exit;
             }
         }else{
@@ -104,29 +104,32 @@ class InterviewController extends Controller
         }
         $interview->tl_id = $request['leader'];
         $interview->date = $request['date'];
-        $interview->updated_at =now();
-        $interview->save();
-        if($interview->save()){
+        $result = ($request['i_id'] == 0) ? $interview->save() : $interview->update();
+        if($result){
             $data= Application::where('id',$interview['a_id'])->first();
             $data->status=1;
             $data->updated_at =now();
             $data->save();
-            $responce = [
-                'status'=>true,
-                'message'=>"Success",
+            $response = [
+                'status' => true,
+                'message' => 'interview '.($request['i_id']==0 ? 'added' : 'updated').' successfully',
+                'icon' => 'success',
+                'redirect_url' => "/admin/interview",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"Fail in scheduling interview",
-                'redirect_url'=>"",
+            $response = [
+                'status' => false,
+                'message' => "error in updating",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }
     }
+    
 
     /* display data of interview for updating data */
     public function show(Request $request)
@@ -134,22 +137,22 @@ class InterviewController extends Controller
         $interview= Interview::where('id',$request['id'])->with('application')->with('tl')->first();
         $candidate = $interview->application->load('candidate')->candidate;
         if(!is_null($interview) && !is_null($candidate)){
-            $responce = [
+            $response = [
                 'status'=>true,
-                'message'=>"Success",
                 'name' => $candidate->full_name,
                 'id' => $interview->tl->id,
                 'date' => $interview->date
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"This data is not available for update",
-                'redirect_url'=>"",
+            $response = [
+                'status' => false,
+                'message' => "error in fetching",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }
     }

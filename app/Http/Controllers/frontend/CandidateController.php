@@ -21,7 +21,9 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        $job_openings = Opening::where('status','=',1)->with('application')->get();
+        $job_openings = Opening::with(['application'=>function($q){
+            $q->where('c_id',Auth::user()->id);
+        }])->where('status','=',1)->get();
         return view('pages.candidate.dashboard',compact('job_openings'));
     }
 

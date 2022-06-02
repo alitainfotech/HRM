@@ -8,12 +8,27 @@ use App\Models\Admin;
 use App\Models\Department;
 use App\Models\Role;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
 class AdminUserController extends Controller
 {
     
+    protected $id;
+
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware(function ($request, $next) {
+            $this->id = Auth::guard('admin')->id();
+            return $next($request);
+        });
+    }
 
     /* display user dashboard */
     public function index()
@@ -87,7 +102,6 @@ class AdminUserController extends Controller
             $user = new Admin();
         }else{
             $user = Admin::where('id','=',$request['id'])->first();
-            echo 'updated';
         }
         $user->full_name =$request['fullname'];
         $user->email =$request['u_email'];
@@ -95,9 +109,26 @@ class AdminUserController extends Controller
         $user->designation = $request['designation'];
         $user->role_id = $request['role'];
         $user->d_id = $request['department'];
-        $user->created_at =now();
-        $user->updated_at =now();
-        $user->save();
+        $result = ($request['id'] == 0) ? $user->save() : $user->update();
+        if ($result) {
+            $response = [
+                'status' => true,
+                'message' => 'User '.($request['id']==0 ? 'Added' : 'Updated ').' Successfully',
+                'icon' => 'success',
+                'redirect_url' => "",
+            ];
+            echo json_encode($response);
+            exit;
+        } else {
+            $response = [
+                'status' => false,
+                'message' => "error in updating",
+                'icon' => 'error',
+                'redirect_url' => "",
+            ];
+            echo json_encode($response);
+            exit;
+        }
     
     }
 
@@ -115,10 +146,22 @@ class AdminUserController extends Controller
     {
         $id=$request['id'];
         $user = Admin::where('id',$id)->first(); 
-        if(!empty($user)){
-            echo json_encode($user);
-        }else{
-            return redirect(route('user.dashboard'));
+        if (!is_null($user)) {
+            $response['data'] = $user;
+            $response['status'] = [
+                'status' => true,
+            ];
+            echo json_encode($response);
+            exit;
+        } else {
+            $response = [
+                'status' => false,
+                'message' => "error in fetching",
+                'icon' => 'error',
+                'redirect_url' => "",
+            ];
+            echo json_encode($response);
+            exit;
         }
     }
 
@@ -129,10 +172,25 @@ class AdminUserController extends Controller
         $user = Admin::where('id',$id)->first();
         if(!empty($user) && $user['status']==1){
             $user->status = 0;
-            $user->update();
-            echo 'deleted';
-        }else{
-            return redirect(route('user.dashboard'));
+        }
+        if($user->update()){
+            $response = [
+                'status' => true,
+                'message' => "User deleted successfully",
+                'icon' => 'success',
+                'redirect_url' => "",
+            ];
+            echo json_encode($response);
+            exit;
+        }else {
+            $response = [
+                'status' => false,
+                'message' => "error in deleting",
+                'icon' => 'error',
+                'redirect_url' => "",
+            ];
+            echo json_encode($response);
+            exit;
         }
     }
 
@@ -153,23 +211,25 @@ class AdminUserController extends Controller
         if(!is_null($user)){
             $password=generateRandomString(12);
             $user->password=$password;
-            $user->save();
-            if($user->save()){
-                $responce = [
-                    'status'=>true,
-                    'message'=>"Success",
+            if($user->update()){
+                $response = [
+                    'status' => true,
+                    'message' => "User's password Updated successfully",
+                    'icon' => 'success',
+                    'redirect_url' => "",
                 ];
-                Mail::to($user->email)->send(new UserPasswoRdreset($user->email,$password));
-                echo json_encode($responce);
+                Mail::to($user->email)->send(new UserPasswordReset($user->email,$password));
+                echo json_encode($response);
                 exit;
             }
-        }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"This data is not available for update",
-                'redirect_url'=>"",
+        }else {
+            $response = [
+                'status' => false,
+                'message' => "error in updating",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }
     }

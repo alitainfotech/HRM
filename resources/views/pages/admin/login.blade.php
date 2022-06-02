@@ -47,9 +47,7 @@
                 </div>
                 <div>
                   <button  class="btn btn-primary me-2 mb-2 mb-md-0" type="submit">Login</button>
-                  {{-- <p class="d-block mt-3 text-muted">Forgot Your Password? <a href="{{ route('password.request') }}">Reset it here!</a></p> --}}
                 </div>
-                {{-- <a href="{{ url('/auth/register') }}" class="d-block mt-3 text-muted">Not a user? Sign up</a> --}}
               </form>
               {{-- login form end --}}
             </div>

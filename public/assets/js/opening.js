@@ -1,50 +1,45 @@
-$(function() {
-    'use strict';
-    $.ajaxSetup({
+$.ajaxSetup({
       headers: {
         'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
       }
-    });
-    $(function() {
-      $('#dataTableExample').DataTable({
-        "aLengthMenu": [
-          [10, 30, 50, -1],
-          [10, 30, 50, "All"]
-        ],
-        "iDisplayLength": 10,
-        "language": {
-          search: ""
-        },
-        'ajax': {
-          type:'POST',
-          url: aurl + "/admin/opening/listing", 
-      },
-      'columns': [
-        { data: 'technology' },
-        { data: 'id' },
-        { data: 'title' },
-        { data: 'description' },
-        { data: 'number_openings' },
-        { data: 'remaining' },
-        { data: 'min_experience' },
-        { data: 'max_experience' },
-        { data: 'action' },
+});
+var listing = $('#dataTableExample').DataTable({
+    "aLengthMenu": [
+        [10, 30, 50, -1],
+        [10, 30, 50, "All"]
+    ],
+    "iDisplayLength": 10,
+    "language": {
+        search: ""
+    },
+    'ajax': {
+        type:'POST',
+        url: aurl + "/admin/opening/listing", 
+    },
+    'columns': [
+    { data: 'technology' },
+    { data: 'id' },
+    { data: 'title' },
+    { data: 'description' },
+    { data: 'number_openings' },
+    { data: 'remaining' },
+    { data: 'min_experience' },
+    { data: 'max_experience' },
+    { data: 'action' },
 
-      ]
-      });
-      $('#dataTableExample').each(function() {
-        var datatable = $(this);
-        // SEARCH - Add the placeholder for Search and Turn this into in-line form control
-        var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
-        search_input.attr('placeholder', 'Search');
-        search_input.removeClass('form-control-sm');
-        // LENGTH - Inline-Form control
-        var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
-        length_sel.removeClass('form-control-sm');
-      });
-    });
-  
-  });
+    ]
+});
+$('#dataTableExample').each(function() {
+    var datatable = $(this);
+    // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+    var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+    search_input.attr('placeholder', 'Search');
+    search_input.removeClass('form-control-sm');
+    // LENGTH - Inline-Form control
+    var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+    length_sel.removeClass('form-control-sm');
+});
+
 $(document).ready(function(){
 
     $('#job_opening_form').validate({ // initialize the plugin
@@ -108,12 +103,14 @@ $(document).ready(function(){
             $.ajax({
                 url: aurl + "/admin/opening/store",
                 type: 'POST',
+                dataType: "JSON",
                 data:formData,
                 cache:false,
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    window.location.href = aurl + "/admin/opening";
+                    $('#job_opening_modal').modal('hide');
+                    toaster_message(data.message,data.icon,data.redirect_url);
                 },
             });
         } else {
@@ -132,38 +129,27 @@ $(document).ready(function(){
             type: "POST",
             data: {id:id},
             dataType: "JSON",
-            
             success: function(data){
-                $("#job_opening_form").trigger('reset');
-                $('#title_job_opening_modal').text("Update job Opening");
-                $('#job_opening_modal').modal('show');
-                $('.submit_value').text("Update job");
-                $('.title').val(data.title);
-                $('.description').val(data.description);
-                if(data.fresher==1){
-                    $('#fresher').prop('checked', true);
-                    $('.experience').hide();
+                if(data.status){
+                    $("#job_opening_form").trigger('reset');
+                    $('#title_job_opening_modal').text("Update job Opening");
+                    $('#job_opening_modal').modal('show');
+                    $('.submit_value').text("Update job");
+                    $('.title').val(data.title);
+                    $('.description').val(data.description);
+                    if(data.fresher==1){
+                        $('#fresher').prop('checked', true);
+                        $('.experience').hide();
+                    }
+                    $('.min_experience').val(data.min_experience);
+                    $('.max_experience').val(data.max_experience);
+                    $('.number_openings').val(data.number_openings);
+                }else{
+                    toaster_message(data.message,data.icon,data.redirect_url);
                 }
-                $('.min_experience').val(data.min_experience);
-                $('.max_experience').val(data.max_experience);
-                $('.number_openings').val(data.number_openings);
-
-
             },
             error: function (error) {
-                alert('error; ' + eval(error));
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: {
-                        confirmButton: 'btn btn-success',
-                        cancelButton: 'btn btn-danger me-2'
-                    },
-                    buttonsStyling: false,
-                    })
-                swalWithBootstrapButtons.fire(
-                    'Cancelled',
-                    'this data is not available for update :)',
-                    'error'
-                )
+                toaster_message(error,'error',''); 
             }
         });
     });
@@ -178,7 +164,6 @@ $(document).ready(function(){
             },
             buttonsStyling: false,
         })
-            
         swalWithBootstrapButtons.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -193,33 +178,16 @@ $(document).ready(function(){
                     type: "post",
                     url: aurl + "/admin/opening/delete",
                     data: {id: id},
+                    dataType: "JSON",
                     success: function(data) {
-                        swalWithBootstrapButtons.fire({
-                            title: 'Deleted!',
-                            text: "Your file has been deleted.",
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            reverseButtons: true
-                        }).then((result) => {
-                            if(result.value){
-                                console.log(data);
-                                window.location.href = aurl + "/admin/opening";
-                            }
-                        })
-                        
+                        toaster_message(data.message,data.icon,data.redirect_url);
                     },
                     error: function (error) {
-                        // alert('error; ' + eval(error));
-                        swalWithBootstrapButtons.fire(
-                            'Cancelled',
-                            'this data is not available :)',
-                            'error'
-                        )
+                        toaster_message(error,'error',''); 
                     }
                 });
-                
             } else if (result.dismiss === Swal.DismissReason.cancel){
-                swalWithBootstrapButtons.fire('Cancelled','Your data file is safe :)','error')
+                toaster_message('Cancle deleting','error','');
             }
         })
     });

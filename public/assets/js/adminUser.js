@@ -4,21 +4,16 @@ $.ajaxSetup({
     'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
   }
 });
-
-/* datatable */
-$(function() {
-  'use strict';
-  $(function() {
-    $('#dataTableExample').DataTable({
-      "aLengthMenu": [
-        [10, 30, 50, -1],
-        [10, 30, 50, "All"]
-      ],
-      "iDisplayLength": 10,
-      "language": {
-        search: ""
-      },
-      'ajax': {
+var listing = $('#dataTableExample').DataTable({
+    "aLengthMenu": [
+    [10, 30, 50, -1],
+    [10, 30, 50, "All"]
+    ],
+    "iDisplayLength": 10,
+    "language": {
+    search: ""
+    },
+    'ajax': {
         type:'POST',
         url: aurl + "/admin/user/listing", 
     },
@@ -32,22 +27,16 @@ $(function() {
         { data: 'action' },
 
     ]
-    });
-    $('#dataTableExample').each(function() {
-      var datatable = $(this);
-      // SEARCH - Add the placeholder for Search and Turn this into in-line form control
-      var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
-      search_input.attr('placeholder', 'Search');
-      search_input.removeClass('form-control-sm');
-      // LENGTH - Inline-Form control
-      var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
-      length_sel.removeClass('form-control-sm');
-    });
-  });
+});
+$('#dataTableExample').each(function() {
+    var datatable = $(this);
+    var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+    search_input.attr('placeholder', 'Search');
+    search_input.removeClass('form-control-sm');
+    var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+    length_sel.removeClass('form-control-sm');
 });
 $(document).ready(function(){
-
-
     $('#user_form').validate({ // initialize the plugin
         rules: {
             role: {
@@ -121,7 +110,8 @@ $(document).ready(function(){
     }).responseText; 
     if (x != 0){ return false; }else return true;
     }, 'Please register with another email id');
-  /* display add job opening modal */
+
+  /* display add user modal */
   $('body').on("click", ".add_user", function(){
           $('#user_modal').modal('show');
           $('.id').val('0');
@@ -134,7 +124,7 @@ $(document).ready(function(){
           });
       });
 
-  /* adding and updating job opening data */    
+  /* adding and updating user data */    
     $(".submit_value").click(function(event){
         event.preventDefault();
         var form = $('#user_form')[0];
@@ -143,12 +133,16 @@ $(document).ready(function(){
             $.ajax({
                 url: aurl + "/admin/user/store",
                 type: 'POST',
-                data:formData,
-                cache:false,
+                dataType: "JSON",
+                data: formData,
+                cache: false,
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    window.location.href = aurl + "/admin/user";
+                    if (data.status) {
+                        $("#user_modal").modal("hide");
+                    }
+                    toaster_message(data.message,data.icon,data.redirect_url);
                 },
             });
         } else {
@@ -168,38 +162,27 @@ $(document).ready(function(){
             data: {id:id},
             dataType: "JSON",
             success: function(data){
-                $("#user_form").trigger('reset');
-                $('#title_user_modal').text("Update User");
-                $('#user_modal').modal('show');
-                $('.submit_value').text("Update User");
-                $('.full_name').val(data.full_name);
-                $('.email').val(data.email);
-                $('#role option[value="'+data.role_id+'"]').prop('selected', true);
-                $('#department option[value="'+data.d_id+'"]').prop('selected', true);
-                $('.designation').val(data.designation);
-                $('.role').select2({
-                    dropdownParent: $('#user_modal')
-                });
-                $('.department').select2({
-                    dropdownParent: $('#user_modal')
-                });
-                $('.password').hide();
+                if(data.status.status){
+                    $("#user_form").trigger('reset');
+                    $('#title_user_modal').text("Update User");
+                    $('#user_modal').modal('show');
+                    $('.submit_value').text("Update User");
+                    $('.full_name').val(data.data.full_name);
+                    $('.email').val(data.data.email);
+                    $('#role option[value="'+data.data.role_id+'"]').prop('selected', true);
+                    $('#department option[value="'+data.data.d_id+'"]').prop('selected', true);
+                    $('.designation').val(data.data.designation);
+                    $('.role').select2({
+                        dropdownParent: $('#user_modal')
+                    });
+                    $('.department').select2({
+                        dropdownParent: $('#user_modal')
+                    });
+                    $('.password').hide();
+                }else{
+                    toaster_message(data.message,data.icon,data.redirect_url);
+                }
             },
-            error: function (error) {
-                alert('error; ' + eval(error));
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: {
-                        confirmButton: 'btn btn-success',
-                        cancelButton: 'btn btn-danger me-2'
-                    },
-                    buttonsStyling: false,
-                    })
-                swalWithBootstrapButtons.fire(
-                    'Cancelled',
-                    'this data is not available for update :)',
-                    'error'
-                )
-            }
         });
     });
     
@@ -229,40 +212,16 @@ $(document).ready(function(){
                     type: "post",
                     url: aurl + "/admin/user/delete",
                     data: {id: id},
+                    dataType: "JSON",
                     success: function(data) {
-                        swalWithBootstrapButtons.fire({
-                            title: 'Deleted!',
-                            text: "Your file has been deleted.",
-                            icon: 'success',
-                            confirmButtonText: 'OK',
-                            reverseButtons: true
-                        }).then((result) => {
-                            if(result.value){
-                                console.log(data);
-                                window.location.href = aurl + "/admin/user";
-                            }
-                        })
-                        
+                        toaster_message(data.message,data.icon,data.redirect_url);
                     },
                     error: function (error) {
-                        // alert('error; ' + eval(error));
-                        swalWithBootstrapButtons.fire(
-                            'Cancelled',
-                            'this data is not available :)',
-                            'error'
-                        )
+                        toaster_message(error,'error',''); 
                     }
                 });
-                
-            } else if (
-                // Read more about handling dismissals
-                result.dismiss === Swal.DismissReason.cancel
-            ) {
-                swalWithBootstrapButtons.fire(
-                'Cancelled',
-                'Your data file is safe :)',
-                'error'
-                )
+            } else if (result.dismiss === Swal.DismissReason.cancel){
+                toaster_message('Cancle deleting','error','');
             }
         })
     });
@@ -278,48 +237,10 @@ $(document).ready(function(){
             data: {id:id},
             dataType: "JSON",
             success: function(data){
-                if(data.status){
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-success me-2'
-                        },
-                        buttonsStyling: false,
-                        })
-                    swalWithBootstrapButtons.fire(
-                        'Updated',
-                        data.message,
-                        'success'
-                    )
-                }else{
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger me-2'
-                        },
-                        buttonsStyling: false,
-                        })
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        data.message,
-                        'error'
-                    )
-                }
+                toaster_message(data.message,data.icon,data.redirect_url);
             },
             error: function (error) {
-                alert('error; ' + eval(error));
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: {
-                        confirmButton: 'btn btn-success',
-                        cancelButton: 'btn btn-danger me-2'
-                    },
-                    buttonsStyling: false,
-                    })
-                swalWithBootstrapButtons.fire(
-                    'Cancelled',
-                    'this data is not available for update :)',
-                    'error'
-                )
+                toaster_message(error,'error',''); 
             }
         });
     });

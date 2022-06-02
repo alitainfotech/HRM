@@ -18,16 +18,16 @@ class ReviewController extends Controller
     }
 
      /* listing of reviews */
-     public function listing()
-     {
+    public function listing()
+    {
         $interviews= Interview::where('status',1)->with('application')->with('tl')->with('reviews')->get();
-         $data_result = [];
-         $id=0;
-         $hr_des='';
-         $hr_review='';
-         $tl_des='';
-         $tl_review='';
-         foreach ($interviews as $interview) {
+        $data_result = [];
+        $id=0;
+        $hr_des='';
+        $hr_review='';
+        $tl_des='';
+        $tl_review='';
+        foreach ($interviews as $interview) {
             foreach($interview->reviews as $review){
                 if($review->status==0){
                     $tl_review.=$review->review;
@@ -57,14 +57,14 @@ class ReviewController extends Controller
             "hr_des"=>$hr_des,
             "action"=>$button
             );
-         }
-         $dataset = array(
-             "echo" => 1,
-             "totalrecords" => count($data_result),
-             "totaldisplayrecords" => count($data_result),
-             "data" => $data_result
-         ); 
-         echo json_encode($dataset);
+        }
+        $dataset = array(
+            "echo" => 1,
+            "totalrecords" => count($data_result),
+            "totaldisplayrecords" => count($data_result),
+            "data" => $data_result
+        ); 
+        echo json_encode($dataset);
     }
      
     /* adding review data to database */
@@ -92,17 +92,21 @@ class ReviewController extends Controller
             $review->review=$review_r;
             $review->description=$request['description'];
             $review->status=$status;
-            $review->save();
-            $responce = [
-                'status'=>true,
-                'message'=>"Success",
-            ];
-            echo json_encode($responce);
-            exit;
+            if($review->save()){
+                $response = [
+                    'status' => true,
+                    'message' => 'Review Added Successfully',
+                    'icon' => 'success',
+                    'redirect_url' => "",
+                ];
+                echo json_encode($response);
+                exit;
+            }
         }else{
             $responce = [
                 'status'=>false,
                 'message'=>"Already upload reviews!",
+                'icon' => 'error',
                 'redirect_url'=>"",
             ];
             echo json_encode($responce);
@@ -124,73 +128,88 @@ class ReviewController extends Controller
                 if(!is_null($application)){
                     $application->status = 3;
                     $application->reason = $request['reason'];
-                    $application->updated_at = now();
-                    $application->update();
+                    if($application->update()){
+                        $response = [
+                            'status' => true,
+                            'message' => 'Candidate rejected Successfully',
+                            'icon' => 'success',
+                            'redirect_url' => "",
+                        ];
+                        echo json_encode($response);
+                        exit;
+                    }else{
+                        $response = [
+                            'status' => false,
+                            'message' => "error in updating",
+                            'icon' => 'error',
+                            'redirect_url' => "",
+                        ];
+                        echo json_encode($response);
+                        exit;
+                    }
                 }
-                $responce = [
-                    'status'=>true,
-                    'message'=>"Success",
-                ];
-                echo json_encode($responce);
-                exit;
             }else{
-                $responce = [
-                    'status'=>false,
-                    'message'=>"Fail in updating status",
-                    'redirect_url'=>"",
+                $response = [
+                    'status' => false,
+                    'message' => "error in updating",
+                    'icon' => 'error',
+                    'redirect_url' => "",
                 ];
-                echo json_encode($responce);
+                echo json_encode($response);
                 exit;
             }
-        }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"this application is not avialable for any rejection",
-                'redirect_url'=>"",
-            ];
-            echo json_encode($responce);
-            exit;
         }
     }
 
-    /* reject the application */
+    /* select the application */
     public function select(Request $request)
     {
         $id = $request['id'];
         $data= Interview::where('id',$id)->where('status','!=',0)->first();
         if(!is_null($data)) {
             $data->status=0;
-            $data->updated_at=now();
-            $data->update();
             if($data->update()){
                 $application = Application::where('id',$request['a_id'])->first();
                 if(!is_null($application)){
                     $application->status = 2;
-                    $application->updated_at = now();
-                    $application->update();
+                    if($application->update()){
+                        $response = [
+                            'status' => true,
+                            'message' => 'Candidate Selected Successfully',
+                            'icon' => 'success',
+                            'redirect_url' => "",
+                        ];
+                        echo json_encode($response);
+                        exit;
+                    }else{
+                        $response = [
+                            'status' => false,
+                            'message' => "error in updating",
+                            'icon' => 'error',
+                            'redirect_url' => "",
+                        ];
+                        echo json_encode($response);
+                        exit;
+                    }
                 }
-                $responce = [
-                    'status'=>true,
-                    'message'=>"Success",
-                ];
-                echo json_encode($responce);
-                exit;
             }else{
-                $responce = [
-                    'status'=>false,
-                    'message'=>"Fail in updating status",
-                    'redirect_url'=>"",
+                $response = [
+                    'status' => false,
+                    'message' => "error in updating",
+                    'icon' => 'error',
+                    'redirect_url' => "",
                 ];
-                echo json_encode($responce);
+                echo json_encode($response);
                 exit;
             }
         }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"this application is not avialable for any selection",
-                'redirect_url'=>"",
+            $response = [
+                'status' => false,
+                'message' => "error in updating",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }
     }

@@ -30,7 +30,7 @@ Route::get('/', function () {
 /* admin routes */
 Route::group(['prefix' => 'admin'], function(){
     Route::get('/login',[AdminController::class,'index'])->name('admin.login_form');
-    Route::post('/login',[AdminController::class,'store'])->name('admin.login'); 
+    Route::post('/login',[AdminController::class,'login'])->name('admin.login'); 
     Route::get('/dashboard',[AdminController::class,'dashboard'])->middleware('admin')->name('admin.dashboard');
     Route::post('/logout',[AdminController::class,'destroy'])->name('admin.logout');
     Route::get('/profile',[AdminController::class,'profile'])->name('admin.profile');

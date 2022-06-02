@@ -6,49 +6,45 @@ $.ajaxSetup({
 });
 
 /* datatable */
-$(function () {
-    "use strict";
-    $(function () {
-        $("#dataTableExample").DataTable({
-            aLengthMenu: [
-                [10, 30, 50, -1],
-                [10, 30, 50, "All"],
-            ],
-            iDisplayLength: 10,
-            language: {
-                search: "",
-            },
-            ajax: {
-                type: "POST",
-                url: aurl + "/admin/application/pending/listing",
-            },
-            columns: [
-                { data: "id" },
-                { data: "post" },
-                { data: "name" },
-                { data: "phone" },
-                { data: "email" },
-                { data: "cv" },
-                { data: "description" },
-                { data: "experience" },
-                { data: "action" },
-            ],
-        });
-        $("#dataTableExample").each(function () {
-            var datatable = $(this);
-            // SEARCH - Add the placeholder for Search and Turn this into in-line form control
-            var search_input = datatable
-                .closest(".dataTables_wrapper")
-                .find("div[id$=_filter] input");
-            search_input.attr("placeholder", "Search");
-            search_input.removeClass("form-control-sm");
-            // LENGTH - Inline-Form control
-            var length_sel = datatable
-                .closest(".dataTables_wrapper")
-                .find("div[id$=_length] select");
-            length_sel.removeClass("form-control-sm");
-        });
-    });
+
+var listing = $("#dataTableExample").DataTable({
+    aLengthMenu: [
+        [10, 30, 50, -1],
+        [10, 30, 50, "All"],
+    ],
+    iDisplayLength: 10,
+    language: {
+        search: "",
+    },
+    ajax: {
+        type: "POST",
+        url: aurl + "/admin/application/pending/listing",
+    },
+    columns: [
+        { data: "id" },
+        { data: "post" },
+        { data: "name" },
+        { data: "phone" },
+        { data: "email" },
+        { data: "cv" },
+        { data: "description" },
+        { data: "experience" },
+        { data: "action" },
+    ],
+});
+$("#dataTableExample").each(function () {
+    var datatable = $(this);
+    // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+    var search_input = datatable
+        .closest(".dataTables_wrapper")
+        .find("div[id$=_filter] input");
+    search_input.attr("placeholder", "Search");
+    search_input.removeClass("form-control-sm");
+    // LENGTH - Inline-Form control
+    var length_sel = datatable
+        .closest(".dataTables_wrapper")
+        .find("div[id$=_length] select");
+    length_sel.removeClass("form-control-sm");
 });
 
 $(document).ready(function () {
@@ -103,22 +99,8 @@ $(document).ready(function () {
                         dropdownParent: $("#interview_modal"),
                     });
                 } else {
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: "btn btn-success",
-                            cancelButton: "btn btn-danger me-2",
-                        },
-                        buttonsStyling: false,
-                    });
-                    swalWithBootstrapButtons.fire(
-                        "Cancelled",
-                        data.message,
-                        "error"
-                    );
+                    toaster_message(data.message,data.icon,data.redirect_url);
                 }
-            },
-            error: function (error) {
-                alert("error; " + eval(error));
             },
         });
     });
@@ -138,23 +120,8 @@ $(document).ready(function () {
                 contentType: false,
                 processData: false,
                 success: function (data) {
-                    if (data.status) {
-                        $("#interview_form").modal("hide");
-                        window.location.href = aurl + "/admin/interview";
-                    } else {
-                        const swalWithBootstrapButtons = Swal.mixin({
-                            customClass: {
-                                confirmButton: "btn btn-success",
-                                cancelButton: "btn btn-danger me-2",
-                            },
-                            buttonsStyling: false,
-                        });
-                        swalWithBootstrapButtons.fire(
-                            "Cancelled",
-                            data.message,
-                            "error"
-                        );
-                    }
+                    $("#interview_modal").modal("hide");
+                    toaster_message(data.message,data.icon,data.redirect_url);
                 },
                 error: function (error) {
                     alert("error; " + eval(error));
@@ -199,25 +166,8 @@ $(document).ready(function () {
                     data: {id: id,reason: reason},
                     dataType: "JSON",
                     success: function(data) {
-                        if(data.status){
-                            swal.fire({
-                                title: 'rejected!',
-                                text: "Application is rejected",
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                reverseButtons: true
-                            }).then((result) => {
-                                if(result.value){
-                                    window.location.href = aurl + "/admin/application/pending";
-                                }
-                            })
-                        }else{
-                            swal.fire('Cancelled',data.message,'error')
-                        }
+                        toaster_message(data.message,data.icon,data.redirect_url);
                     },
-                    error: function (error) {
-                        alert('error; ' + eval(error));
-                    }
                 });
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swal.fire("Cancelled", "Application is pending :)", "info");

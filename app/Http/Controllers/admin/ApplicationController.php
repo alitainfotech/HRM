@@ -63,21 +63,21 @@ class ApplicationController extends Controller
     public function nameShow(Request $request)
     {
         $data['applications']= Application::where('id',$request['id'])->with('candidate')->with('opening')->first();
-        if(!empty($data['applications'])){
-            $responce = [
-                'status'=>true,
-                'message'=>"Success",
+        if (!is_null($data['applications'])) {
+            $response = [
+                'status' => true,
                 'name' => $data['applications']->candidate['full_name']
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
-        }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"This data is not available for interview",
-                'redirect_url'=>"",
+        } else {
+            $response = [
+                'status' => false,
+                'message' => "error in fetching",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }
     }
@@ -90,8 +90,6 @@ class ApplicationController extends Controller
         if(!is_null($data)) {
             $data->status=3;
             $data->reason=$request['reason'];
-            $data->updated_at=now();
-            $data->update();
             if($data->update()){
                 if(!is_null($request['i_id'])){
                     $interview = Interview::where('id',$request['i_id'])->first();
@@ -101,25 +99,29 @@ class ApplicationController extends Controller
                         $interview->update();
                     }
                 }
-                $responce = [
-                    'status'=>true,
-                    'message'=>"Success",
+                $response = [
+                    'status' => true,
+                    'message' => 'application deleted successfully',
+                    'icon' => 'success',
+                    'redirect_url' => "",
                 ];
-                echo json_encode($responce);
+                echo json_encode($response);
                 exit;
             }else{
-                $responce = [
-                    'status'=>false,
-                    'message'=>"Fail in updating status",
-                    'redirect_url'=>"",
+                $response = [
+                    'status' => false,
+                    'message' => "error in updating",
+                    'icon' => 'error',
+                    'redirect_url' => "",
                 ];
-                echo json_encode($responce);
+                echo json_encode($response);
                 exit;
             }
         }else{
             $responce = [
                 'status'=>false,
                 'message'=>"this application is not avialable for any rejection",
+                'icon' => 'error',
                 'redirect_url'=>"",
             ];
             echo json_encode($responce);

@@ -10,7 +10,6 @@
   <link href="{{ asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
-  <link href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" />
   <link rel="stylesheet" href=" {{ asset('css/style.css') }}">
 @endpush
 
@@ -98,7 +97,6 @@
   @foreach ($job_openings as $job_opening )
   @php
  
-    
     $year = intdiv($job_opening['min_experience'],12);
     $month = $job_opening['min_experience']%12;
     $experience= $year.' year '.$month.' month ';  
@@ -116,6 +114,7 @@
           <p class="card-text mb-3">Required Minimum Experience: {{ $experience }}</p>
           @if($job_opening->application->isNotEmpty())
           @foreach ($job_opening->application as $application)
+          
             @if($application->o_id == $job_opening->id && $application->c_id == $candidate->id)
             
             <div class="btn btn-danger disabled mb-2">Already Applied for this job</div>
@@ -154,14 +153,12 @@
   <script src="{{ asset('assets/plugins/datatables-net-bs4/dataTables.bootstrap4.js') }}"></script>
   <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
   <script src="{{ asset('assets/plugins/select2/select2.min.js') }}"></script>
-  <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 @endpush
 
 @push('custom-scripts')
   {{-- <script src="{{ asset('assets/js/data-table.js') }}"></script> --}}
   <script src="{{ asset('assets/js/inputmask.js') }}"></script>
   <script src="{{ asset('assets/js/select2.js') }}"></script>
-  <script src="{{ asset('assets/js/sweet-alert.js') }}"></script>
   <script type="text/javascript">
     var aurl = {!! json_encode(url('/')) !!}
   </script>

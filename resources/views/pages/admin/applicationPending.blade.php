@@ -1,18 +1,11 @@
 @extends('layout.master')
 @section('title',"Application Pending")
-@php
-//   use App\Candidate;
-//   $c_id =  Session::get('c_id');
-// //   dd($c_id)
-//   $candidate = Candidate::where('c_id', $c_id)->first();  
-@endphp 
 @push('plugin-styles')
   <link href="{{ asset('assets/plugins/datatables-net/dataTables.bootstrap4.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/@mdi/css/materialdesignicons.min.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/select2/select2.min.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/tempusdominus-bootstrap-4/tempusdominus-bootstrap-4.min.css') }}" rel="stylesheet" />
-  <link href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" />
   <link rel="stylesheet" href=" {{ asset('css/style.css') }}">
 @endpush
 
@@ -57,8 +50,8 @@
                 @if($tls->isEmpty())
                 <option selected disabled hidden>please add team leader as user first</option>
               @else
+                <option value=""selected disabled hidden>Select Team Leader</option>
                 @foreach ($tls as $tl)
-                  <option value=""selected disabled hidden>Select Team Leader</option>
                   <option value="{{ $tl['id'] }}">{{ $tl['full_name'] }}</option>
                 @endforeach
               @endif
@@ -115,13 +108,11 @@
   <script src="{{ asset('assets/plugins/datatables-net-bs4/dataTables.bootstrap4.js') }}"></script>
   <script src="{{ asset('assets/plugins/inputmask/jquery.inputmask.bundle.min.js') }}"></script>
   <script src="{{ asset('assets/plugins/select2/select2.min.js') }}"></script>
-  <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
 @endpush
 
 @push('custom-scripts')
   <script src="{{ asset('assets/js/inputmask.js') }}"></script>
   <script src="{{ asset('assets/js/select2.js') }}"></script>
-  <script src="{{ asset('assets/js/sweet-alert.js') }}"></script>
   <script type="text/javascript">
     var aurl = {!! json_encode(url('/')) !!}
   </script>

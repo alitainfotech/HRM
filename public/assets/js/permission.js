@@ -8,40 +8,35 @@ $.ajaxSetup({
 });
   
   /* datatable */
-$(function() {
-'use strict';
-    $(function() {
-        $('#dataTableExample').DataTable({
-        "aLengthMenu": [
-            [10, 30, 50, -1],
-            [10, 30, 50, "All"]
-        ],
-        "iDisplayLength": 10,
-        "language": {
-            search: ""
-        },
-        'ajax': {
-            type:'POST',
-            url: aurl + "/admin/permission/listing", 
-        },
-        'columns': [
-            { data: 'id' },
-            { data: 'name' },
-            { data: 'action' },
+var listing=$('#dataTableExample').DataTable({
+    "aLengthMenu": [
+        [10, 30, 50, -1],
+        [10, 30, 50, "All"]
+    ],
+    "iDisplayLength": 10,
+    "language": {
+        search: ""
+    },
+    'ajax': {
+        type:'POST',
+        url: aurl + "/admin/permission/listing", 
+    },
+    'columns': [
+        { data: 'id' },
+        { data: 'name' },
+        { data: 'action' },
 
-        ]
-        });
-        $('#dataTableExample').each(function() {
-        var datatable = $(this);
-        // SEARCH - Add the placeholder for Search and Turn this into in-line form control
-        var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
-        search_input.attr('placeholder', 'Search');
-        search_input.removeClass('form-control-sm');
-        // LENGTH - Inline-Form control
-        var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
-        length_sel.removeClass('form-control-sm');
-        });
-    });
+    ]
+});
+$('#dataTableExample').each(function() {
+    var datatable = $(this);
+    // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+    var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+    search_input.attr('placeholder', 'Search');
+    search_input.removeClass('form-control-sm');
+    // LENGTH - Inline-Form control
+    var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+    length_sel.removeClass('form-control-sm');
 });
   
 $(document).ready(function(){
@@ -83,23 +78,8 @@ $(document).ready(function(){
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    if(data.status){
-                        $('#permission_modal').modal('hide');
-                        window.location.href = aurl + "/admin/permission";
-                    }else{
-                        const swalWithBootstrapButtons = Swal.mixin({
-                            customClass: {
-                                confirmButton: 'btn btn-success',
-                                cancelButton: 'btn btn-danger me-2'
-                            },
-                            buttonsStyling: false,
-                        })
-                        swalWithBootstrapButtons.fire(
-                            'Cancelled',
-                            data.message,
-                            'error'
-                        )
-                    }
+                    $('#permission_modal').modal('hide');
+                    toaster_message(data.message,data.icon,data.redirect_url);
                 },
             });
         } else {
@@ -117,43 +97,19 @@ $(document).ready(function(){
             type: "POST",
             dataType: "JSON",
             data: {id:id},
-            dataType: "JSON",
             success: function(data){
-                if(data.responce.status){
+                if(data.status){
                     $("#permission_form").trigger('reset');
                     $('#title_permission_modal').text("Update permission");
                     $('#permission_modal').modal('show');
                     $('.submit_value').text("Update permission");
-                    $('.name').val(data.permission.name);
+                    $('.name').val(data.name);
                 }else{
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger me-2'
-                        },
-                        buttonsStyling: false,
-                        })
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        data.responce.message,
-                        'error'
-                    )
+                    toaster_message(data.message,data.icon,data.redirect_url);
                 }
             },
             error: function (error) {
-                alert('error; ' + eval(error));
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: {
-                        confirmButton: 'btn btn-success',
-                        cancelButton: 'btn btn-danger me-2'
-                    },
-                    buttonsStyling: false,
-                    })
-                swalWithBootstrapButtons.fire(
-                    'Cancelled',
-                    'this data is not available for update :)',
-                    'error'
-                )
+                toaster_message(error,'error',''); 
             }
         });
     });
@@ -186,47 +142,14 @@ $(document).ready(function(){
                     url: aurl + "/admin/permission/delete",
                     data: {id: id},
                     success: function(data) {
-                        if(data.status){
-                            swalWithBootstrapButtons.fire({
-                                title: 'Deleted!',
-                                text: "Your file has been deleted.",
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                reverseButtons: true
-                            }).then((result) => {
-                                if(result.value){
-                                    window.location.href = aurl + "/admin/permission";
-                                }
-                            })
-                        }else{
-                            const swalWithBootstrapButtons = Swal.mixin({
-                                customClass: {
-                                    confirmButton: 'btn btn-success',
-                                    cancelButton: 'btn btn-danger me-2'
-                                },
-                                buttonsStyling: false,
-                                })
-                            swalWithBootstrapButtons.fire(
-                                'Cancelled',
-                                data.message,
-                                'error'
-                            )
-                        }
+                        toaster_message(data.message,data.icon,data.redirect_url);
                     },
                     error: function (error) {
-                        swalWithBootstrapButtons.fire(
-                            'Cancelled',
-                            'this data is not available for delete:)',
-                            'error'
-                        )
+                        toaster_message(error,'error',''); 
                     }
                 });
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                swalWithBootstrapButtons.fire(
-                'Cancelled',
-                'Your data is safe :)',
-                'error'
-                )
+                toaster_message('Cancle deleting','error','');
             }
         })
     });

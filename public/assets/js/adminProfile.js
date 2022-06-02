@@ -42,14 +42,17 @@ $(document).ready(function(){
         if($("#adminProfile_form").valid()){   
             $.ajax({
                 url: aurl + "/admin/profile/update",
-                type: 'POST',
-                data:formData,
-                cache:false,
+                type: "POST",
+                dataType: "JSON",
+                data: formData,
+                cache: false,
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    $('#profile_modal').modal('hide');
-                    window.location.href = aurl + "/admin/profile";
+                    if (data.status) {
+                        $("#profile_modal").modal("hide");
+                    }
+                    toaster_message(data.message,data.icon,data.redirect_url);
                 },
             });
         } else {

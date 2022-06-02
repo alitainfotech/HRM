@@ -35,6 +35,7 @@ License: For each use you must have a valid license purchased only from above li
   <link href="{{ asset('assets/fonts/feather-font/css/iconfont.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/flag-icon-css/css/flag-icon.min.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/perfect-scrollbar/perfect-scrollbar.css') }}" rel="stylesheet" />
+  <link href="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.css') }}" rel="stylesheet" />
   <!-- end plugin css -->
 
   @stack('plugin-styles')
@@ -66,6 +67,7 @@ License: For each use you must have a valid license purchased only from above li
     <script src="{{ asset('assets/plugins/feather-icons/feather.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js') }}"></script>
     <script src="{{ asset('assets/plugins/pusher/pusher.min.js') }}"></script>
+    <script src="{{ asset('assets/plugins/sweetalert2/sweetalert2.min.js') }}"></script>
     <!-- end base js -->
 
     <!-- plugin js -->
@@ -74,6 +76,7 @@ License: For each use you must have a valid license purchased only from above li
 
     <!-- common js -->
     <script src="{{ asset('assets/js/template.js') }}"></script>
+    <script src="{{ asset('assets/js/sweet-alert.js') }}"></script>
     <!-- end common js -->
     <script type="text/javascript">
       var notificationsWrapper   = $('.dropdown-notifications');

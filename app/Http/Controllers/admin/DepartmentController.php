@@ -61,36 +61,38 @@ class DepartmentController extends Controller
             $old_d = Department::where('status',1)->where('name',$request->name)->first();
             if(is_null($old_d)){
                 $department = new Department();
-                $department->created_at =now();
             }else{
-                $responce = [
-                    'status'=>false,
-                    'message'=>"Already create this department!",
-                    'redirect_url'=>"",
+                $response = [
+                    'status' => false,
+                    'message' => "Already create this department!",
+                    'icon' => 'info',
+                    'redirect_url' => "",
                 ];
-                echo json_encode($responce);
+                echo json_encode($response);
                 exit;
             } 
         }else{
             $department = Department::where('id','=',$request['id'])->first();
         }
         $department->name = $request['name'];
-        $department->updated_at =now();
-        $department->save();
-        if($department->save()){
-            $responce = [
-                'status'=>true,
-                'message'=>"Success",
+        $result = ($request['id'] == 0) ? $department->save() : $department->update();
+        if($result){
+            $response = [
+                'status' => true,
+                'message' => 'Department '.($request['id']==0 ? 'added' : 'updated').' successfully',
+                'icon' => 'success',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"Fail in adding department",
-                'redirect_url'=>"",
+            $response = [
+                'status' => false,
+                'message' => "error in updating",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }
     }
@@ -98,22 +100,23 @@ class DepartmentController extends Controller
     /* display data of department for updating data */
     public function show(Request $request)
     {
-        $department= Department::where('id',$request['id'])->first();
+        $department= Department::select('name')->where('id',$request['id'])->first();
         if(!is_null($department) ){
-            $data['responce'] = [
-                'status'=>true,
-                'message'=>"Success",
+            $response['status'] = [
+                'status' => true,
+                'icon' => 'success',
             ];
-            $data['department'] = $department;
-            echo json_encode($data);
+            $response['department_name'] = $department;
+            echo json_encode($response);
             exit;
         }else{
-            $data['responce'] = [
-                'status'=>false,
-                'message'=>"This data is not available for update",
-                'redirect_url'=>"",
+            $response = [
+                'status' => false,
+                'message' => "error in fetching",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($data);
+            echo json_encode($response);
             exit;
         }
     }
@@ -125,21 +128,24 @@ class DepartmentController extends Controller
         $department = Department::where('id',$id)->first();
         if(!is_null($department) && $department['status']==1){
             $department->status = 2;
-            $department->updated_at=now();
-            $department->update();
-            $responce = [
-                'status'=>true,
-                'message'=>"Success",
+        }
+        if($department->update()){
+            $response = [
+                'status' => true,
+                'message' => "Department deleted successfully",
+                'icon' => 'success',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
-        }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"This data is not available for delete",
-                'redirect_url'=>"",
+        }else {
+            $response = [
+                'status' => false,
+                'message' => "error in deleting",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }
     }

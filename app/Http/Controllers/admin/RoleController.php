@@ -66,14 +66,14 @@ class RoleController extends Controller
             $role_t = Role::where('title',$request['title'])->first();
             if(is_null($role_t)){
                 $role = new Role();
-                $role->created_at =now();
             }else{
-                $responce = [
-                    'status'=>false,
-                    'message'=>"Already create this role!",
-                    'redirect_url'=>"",
+                $response = [
+                    'status' => false,
+                    'message' => "Already added this Role",
+                    'icon' => 'info',
+                    'redirect_url' => "",
                 ];
-                echo json_encode($responce);
+                echo json_encode($response);
                 exit;
             } 
         }else{
@@ -81,9 +81,7 @@ class RoleController extends Controller
             DB::table('role__permissions')->where('role_id', $request['id'])->delete();
         }
         $role->title = $request['title'];
-        $role->created_at =now();
-        $role->updated_at =now();
-        $role->save();
+        $result = ($request['id'] == 0) ? $role->save() : $role->update();
         foreach($request['permission'] as $permission){
             $permissions[] = [
                 "role_id" => $role['id'],
@@ -91,52 +89,26 @@ class RoleController extends Controller
             ];
         }
         $x= Role_permission::insert($permissions);
-        if($role->save() && $x){
-            $responce = [
-                'status'=>true,
-                'message'=>"Success",
+        if($result && $x){
+            $response = [
+                'status' => true,
+                'message' => 'Role '.($request['id']==0 ? 'Added' : 'Updated ').' Successfully',
+                'icon' => 'success',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"Fail in adding role",
-                'redirect_url'=>"",
+            $response = [
+                'status' => false,
+                'message' => "error in updating",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }
     }
-
-    // public function show(Request $request)
-    // {
-    //     $id=$request['id'];
-    //     $role = Role::where('id',$id)->with('role_role_permission')->first();
-    //     if(!is_null($role) ){
-    //         $data['responce'] = [
-    //             'status'=>true,
-    //             'message'=>"Success",
-    //         ];
-    //         $i=0;
-    //         foreach($role->role_role_permission as $permission){
-    //             $p_id[$i]=$permission->permission_id;
-    //             $i++;
-    //         }
-    //         $title=$role->title;
-    //         $data['permission'] = array("title"=>$title, "p_id"=>$p_id);
-    //         echo json_encode($data);
-    //         exit;
-    //     }else{
-    //         $data['responce'] = [
-    //             'status'=>false,
-    //             'message'=>"This data is not available for update",
-    //             'redirect_url'=>"",
-    //         ];
-    //         echo json_encode($data);
-    //         exit;
-    //     } 
-    // }
 
     public function delete(Request $request)
     {
@@ -144,23 +116,26 @@ class RoleController extends Controller
         $role = role::where('id',$id)->first();
         if(!is_null($role) && $role['status']==1){
             $role->status = 2;
-            $role->updated_at=now();
-            $role->update();
-            $responce = [
-                'status'=>true,
-                'message'=>"Success",
+        }
+        if($role->update()){
+            $response = [
+                'status' => true,
+                'message' => "Role deleted successfully",
+                'icon' => 'success',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"This data is not available for delete",
-                'redirect_url'=>"",
+            $response = [
+                'status' => false,
+                'message' => "error in deleting",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
-        }
+        }   
     }
     public function role_show(Role $role)
     {

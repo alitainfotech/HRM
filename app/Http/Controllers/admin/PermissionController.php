@@ -61,37 +61,38 @@ class PermissionController extends Controller
             $old_p = Permission::where('status',1)->where('name',$request->name)->first();
             if(is_null($old_p)){
                 $permission = new Permission();
-                $permission->created_at =now();
             }else{
-                $responce = [
-                    'status'=>false,
-                    'message'=>"Already create this permission!",
-                    'redirect_url'=>"",
+                $response = [
+                    'status' => false,
+                    'message' => "Already added this permission",
+                    'icon' => 'info',
+                    'redirect_url' => "",
                 ];
-                echo json_encode($responce);
+                echo json_encode($response);
                 exit;
             } 
         }else{
             $permission = Permission::where('id','=',$request['id'])->first();
         }
         $permission->name = $request['name'];
-        $permission->created_at =now();
-        $permission->updated_at =now();
-        $permission->save();
-        if($permission->save()){
-            $responce = [
-                'status'=>true,
-                'message'=>"Success",
+        $result = ($request['id'] == 0) ? $permission->save() : $permission->update();
+        if ($result) {
+            $response = [
+                'status' => true,
+                'message' => 'Permission '.($request['id']==0 ? 'Added' : 'Updated ').' Successfully',
+                'icon' => 'success',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"Fail in adding permission",
-                'redirect_url'=>"",
+            $response = [
+                'status' => false,
+                'message' => "error in updating",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }
     }
@@ -101,22 +102,22 @@ class PermissionController extends Controller
     {
         $permission = Permission::where('id',$request['id'])->first(); 
         if(!is_null($permission) ){
-            $data['responce'] = [
+            $response = [
                 'status'=>true,
-                'message'=>"Success",
+                'name' => $permission->name,
             ];
-            $data['permission'] = $permission;
-            echo json_encode($data);
+            echo json_encode($response);
             exit;
         }else{
-            $data['responce'] = [
-                'status'=>false,
-                'message'=>"This data is not available for update",
-                'redirect_url'=>"",
+            $response = [
+                'status' => false,
+                'message' => "error in fetching",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($data);
+            echo json_encode($response);
             exit;
-        } 
+        }
     }
 
     /* for deleting permission */
@@ -125,21 +126,24 @@ class PermissionController extends Controller
         $permission = Permission::where('id',$request['id'])->first();
         if(!is_null($permission) && $permission['status']==1){
             $permission->status = 2;
-            $permission->updated_at=now();
-            $permission->update();
-            $responce = [
-                'status'=>true,
-                'message'=>"Success",
+        }
+        if($permission->update()){
+            $response = [
+                'status' => true,
+                'message' => "Permission deleted successfully",
+                'icon' => 'success',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"This data is not available for delete",
-                'redirect_url'=>"",
+            $response = [
+                'status' => false,
+                'message' => "error in deleting",
+                'icon' => 'error',
+                'redirect_url' => "",
             ];
-            echo json_encode($responce);
+            echo json_encode($response);
             exit;
         }
     }

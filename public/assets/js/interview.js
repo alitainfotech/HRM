@@ -8,44 +8,39 @@ function updateTextInput(val) {
     document.getElementById('textInput').value=val; 
 }
 /* datatable */
-$(function() {
-'use strict';
-    $(function() {
-        $('#dataTableExample').DataTable({
-        "aLengthMenu": [
-            [10, 30, 50, -1],
-            [10, 30, 50, "All"]
-        ],
-        "iDisplayLength": 10,
-        "language": {
-            search: ""
-        },
-        'ajax': {
-            type:'POST',
-            url: aurl + "/admin/interview/listing", 
-        },
-        'columns': [
-            { data: 'id' },
-            { data: 'post' },
-            { data: 'Interviewer' },
-            { data: 'Interviewee' },
-            { data: 'date' },
-            { data: 'cv' },
-            { data: 'action' },
-            
-        ]
-        });
-        $('#dataTableExample').each(function() {
-        var datatable = $(this);
-        // SEARCH - Add the placeholder for Search and Turn this into in-line form control
-        var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
-        search_input.attr('placeholder', 'Search');
-        search_input.removeClass('form-control-sm');
-        // LENGTH - Inline-Form control
-        var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
-        length_sel.removeClass('form-control-sm');
-        });
-    });
+var listing=$('#dataTableExample').DataTable({
+"aLengthMenu": [
+    [10, 30, 50, -1],
+    [10, 30, 50, "All"]
+],
+"iDisplayLength": 10,
+"language": {
+    search: ""
+},
+'ajax': {
+    type:'POST',
+    url: aurl + "/admin/interview/listing", 
+},
+'columns': [
+    { data: 'id' },
+    { data: 'post' },
+    { data: 'Interviewer' },
+    { data: 'Interviewee' },
+    { data: 'date' },
+    { data: 'cv' },
+    { data: 'action' },
+    
+]
+});
+$('#dataTableExample').each(function() {
+    var datatable = $(this);
+    // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+    var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+    search_input.attr('placeholder', 'Search');
+    search_input.removeClass('form-control-sm');
+    // LENGTH - Inline-Form control
+    var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+    length_sel.removeClass('form-control-sm');
 });
   
 $(document).ready(function(){
@@ -112,38 +107,11 @@ $(document).ready(function(){
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    if(data.status){
-                        $('#interview_form').modal('hide');
-                        window.location.href = aurl + "/admin/interview";
-                    }else{
-                        const swalWithBootstrapButtons = Swal.mixin({
-                            customClass: {
-                                confirmButton: 'btn btn-success',
-                                cancelButton: 'btn btn-danger me-2'
-                            },
-                            buttonsStyling: false,
-                        })
-                        swalWithBootstrapButtons.fire(
-                            'Cancelled',
-                            data.message,
-                            'error'
-                        )
-                    }
+                    $('#interview_form').modal('hide');
+                    toaster_message(data.message,data.icon,data.redirect_url);
                 },
                 error: function (error) {
-                    alert('error; ' + eval(error));
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger me-2'
-                        },
-                        buttonsStyling: false,
-                        })
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'this application is not available for interview :)',
-                        'error'
-                    )
+                    toaster_message(error,'error',''); 
                 }
             });
         } else {
@@ -176,35 +144,11 @@ $(document).ready(function(){
                         dropdownParent: $('#interview_modal')
                     });
                 }else{
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger me-2'
-                        },
-                        buttonsStyling: false,
-                        })
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        data.message,
-                        'error'
-                    )
-                
+                    toaster_message(data.message,data.icon,data.redirect_url);
                 }
             },
             error: function (error) {
-                alert('error; ' + eval(error));
-                const swalWithBootstrapButtons = Swal.mixin({
-                    customClass: {
-                        confirmButton: 'btn btn-success',
-                        cancelButton: 'btn btn-danger me-2'
-                    },
-                    buttonsStyling: false,
-                    })
-                swalWithBootstrapButtons.fire(
-                    'Cancelled',
-                    'this data is not available for access :)',
-                    'error'
-                )
+                toaster_message('error','error',''); 
             }
         });
     });
@@ -245,35 +189,21 @@ $(document).ready(function(){
                     data: {id: id,reason: reason,i_id: i_id},
                     dataType: "JSON",
                     success: function(data) {
-                        if(data.status){
-                            swal.fire({
-                                title: 'rejected!',
-                                text: "Application is rejected",
-                                icon: 'success',
-                                confirmButtonText: 'OK',
-                                reverseButtons: true
-                            }).then((result) => {
-                                if(result.value){
-                                    window.location.href = aurl + "/admin/application/pending";
-                                }
-                            })
-                        }else{
-                            swal.fire('Cancelled',data.message,'error')
-                        }
+                        toaster_message(data.message,data.icon,data.redirect_url);
                     },
                     error: function (error) {
-                        alert('error; ' + eval(error));
+                        toaster_message(error,'error',''); 
                     }
                 });
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                swal.fire("Cancelled", "Application is pending :)", "info");
+                toaster_message('Cancle rejecting application','error','');
             }
         });
     });
 
     /* display add review modal */
     $("body").on("click", ".add_review", function () {
-        var id = $(this).data("id");
+        var id = $(this).data("i_id");
         $(".i_id").val(id);
         $("#review_form").trigger("reset");
         $("#review_modal").modal("show");
@@ -297,37 +227,13 @@ $(document).ready(function(){
                 processData: false,
                 success: function(data) {
                     if(data.status){
-                        $('#review_form').modal('hide');
-                        window.location.href = aurl + "/admin/interview";
+                        $('#review_modal').modal('hide');
                     }else{
-                        const swalWithBootstrapButtons = Swal.mixin({
-                            customClass: {
-                                confirmButton: 'btn btn-success',
-                                cancelButton: 'btn btn-danger me-2'
-                            },
-                            buttonsStyling: false,
-                        })
-                        swalWithBootstrapButtons.fire(
-                            'Cancelled',
-                            data.message,
-                            'error'
-                        )
+                        toaster_message(data.message,data.icon,data.redirect_url);
                     }
                 },
                 error: function (error) {
-                    alert('error; ' + eval(error));
-                    const swalWithBootstrapButtons = Swal.mixin({
-                        customClass: {
-                            confirmButton: 'btn btn-success',
-                            cancelButton: 'btn btn-danger me-2'
-                        },
-                        buttonsStyling: false,
-                        })
-                    swalWithBootstrapButtons.fire(
-                        'Cancelled',
-                        'this application is not available for review :)',
-                        'error'
-                    )
+                    toaster_message(error,'error',''); 
                 }
             });
         } else {

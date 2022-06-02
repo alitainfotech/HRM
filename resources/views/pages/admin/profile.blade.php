@@ -54,12 +54,12 @@ if(!empty($admin_user['image'])){
                   </div>
                   <div class="col-md-6">
                     <label for="phone" class="form-label">Phone</label>
-                    <input type="number" class="form-control" id="phone" name="phone"  value="">
+                    <input type="number" class="form-control" id="phone" name="phone"  value="{{ $admin_user->phone }}">
                   </div>
                 </div>
                 <div class="date datepicker mb-3" id="datePickerExample">
                   <label for="dob" class="form-label">DOB</label>
-                  <input type="text" class="form-control input-group-addon" id="dob" name="dob" value="">
+                  <input type="text" class="form-control input-group-addon" id="dob" name="dob" value="{{ $admin_user->dob }}">
                 </div>
                 <div class="mb-3 select">
                   <label class="form-label">Bio</label>

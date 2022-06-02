@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class UserPasswoRdreset extends Mailable
+class UserPasswordReset extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -30,7 +30,6 @@ class UserPasswoRdreset extends Mailable
         $data['email'] = $this->email;
         $data['password'] = $this->password;
         $user = Admin::where('email',$data['email'])->first();
-        // dd($user);
         $data['fullname'] = $user->full_name;
         return $this->markdown('emails.PasswordReset')->with('data',$data);
     }
