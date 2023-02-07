@@ -89,7 +89,7 @@ class CandidateController extends Controller
         $application->save();
         if($application->save()){
             // event(new NewApplication($fullname));
-            Mail::to($candidate->email)->send(new MailApplication($request['o_id'],$fullname));
+            // Mail::to($candidate->email)->send(new MailApplication($request['o_id'],$fullname));
         }
         
 
