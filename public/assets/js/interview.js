@@ -188,7 +188,11 @@ $(document).ready(function(){
                     url: aurl + "/admin/application/pending/reject",
                     data: {id: id,reason: reason,i_id: i_id},
                     dataType: "JSON",
+                    beforeSend: function() {
+                        $('body').removeClass('loaded');
+                    },
                     success: function(data) {
+                        $('body').addClass('loaded');
                         toaster_message(data.message,data.icon,data.redirect_url);
                     },
                     error: function (error) {

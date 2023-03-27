@@ -7,6 +7,8 @@ use App\Models\Admin;
 use App\Models\Application;
 use App\Models\Interview;
 use Illuminate\Http\Request;
+use App\Mail\RejectApplication;
+use Mail;
 
 class ApplicationController extends Controller
 {
@@ -91,6 +93,17 @@ class ApplicationController extends Controller
             $data->status=3;
             $data->reason=$request['reason'];
             if($data->update()){
+                
+                $body = [
+                    'full_name' => !empty($data->candidate) ? $data->candidate->full_name : '',
+                    'job_title' => !empty($data->opening) ? $data->opening->title : '',
+                    'reason' => $request['reason']
+                ];
+                $email = !empty($data->candidate) ? $data->candidate->email : '';
+                if($email != ''){
+                    Mail::to($email)->send(new RejectApplication($body));
+                }
+
                 if(!is_null($request['i_id'])){
                     $interview = Interview::where('id',$request['i_id'])->first();
                     if(!is_null($interview)){

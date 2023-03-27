@@ -10,7 +10,7 @@
       <div class="card">
         <div class="row">
           <div class="col-md-4 pe-md-0">
-            <div class="auth-side-wrapper" style="background-image: url({{ url('assets/images/background.jpg') }})">
+            <div class="auth-side-wrapper" style="background-image: url({{ asset('assets/images/background.jpg') }})">
 
             </div>
           </div>
@@ -19,24 +19,29 @@
               <a href="#" class="noble-ui-logo d-block mb-2"><img src="{{ asset('assets/images/logo-black.png') }}" alt=""></a>
               <h5 class="text-muted fw-normal mb-4">Welcome back! Log in to your account.</h5>
 
-              {{-- error --}}
-              @if (!empty($data))
-              <div class="alert alert-danger">
-                  <p>{{ $data }}</p>
-              </div>
-
+              @if (session()->has('message'))
+                <div class="alert alert-{{ session()->get('type') }} alert-dismissible fade show" role="alert">
+                  {{ session()->get('message') }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="btn-close"></button>
+                </div>
               @endif
 
               {{-- login form start --}}
               <form class="forms-sample" action="{{ route('login') }}" method="post">
                 @csrf
                 <div class="mb-3">
-                  <label for="email" class="form-label">Email address</label>
-                  <input type="email" class="form-control" id="email" placeholder="Email" name="email">
+                  <label for="email" class="form-label">Email address / User Name</label>
+                  <input type="text" class="form-control" id="email" placeholder="Email" name="email">
+                  @error('email')
+                      <div class="error text-danger">{{ $message }}</div>
+                  @enderror
                 </div>
                 <div class="mb-3">
                   <label for="password" class="form-label">Password</label>
                   <input type="password" class="form-control" id="password" name="password" autocomplete="current-password" placeholder="Password">
+                  @error('password')
+                      <div class="error text-danger">{{ $message }}</div>
+                  @enderror
                 </div>
                 <div class="form-check mb-3">
                   <input type="checkbox" class="form-check-input" id="authCheck" name="remember_me">

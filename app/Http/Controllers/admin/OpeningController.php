@@ -137,7 +137,7 @@ class OpeningController extends Controller
                 </button>';
             }
             $image= $opening['image'];
-            $img = '<img src="'.url('/assets/images/openings/technology_icon').'/'.$image.'" height="50px" width="50px" alt="">';
+            $img = '<img src="'.asset('/assets/images/openings/technology_icon').'/'.$image.'" height="50px" width="50px" alt="">';
             $remaining = $opening['number_openings']-$i;
             $data_result[] = array( 
             "id"=>$id, 
@@ -220,5 +220,3 @@ class OpeningController extends Controller
     }
 
 }
-
-

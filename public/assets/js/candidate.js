@@ -113,6 +113,7 @@ $(document).ready(function(){
 
     /* display add application modal */
     $('body').on("click", ".apply_job", function(){
+        $('.already-exist').text('');
         var id = $(this).data("id");
         $('.o_id').val(id);
         $("#application_form").trigger('reset');
@@ -127,6 +128,7 @@ $(document).ready(function(){
     /* adding and updating application data */    
     $(".submit_value").on("click", function(event){
         event.preventDefault();
+        $('.already-exist').text('');
         var form = $('#application_form')[0];
         var formData = new FormData(form);
         if($("#application_form").valid()){   
@@ -138,8 +140,12 @@ $(document).ready(function(){
                 contentType: false,
                 processData: false,
                 success: function(data) {
-                    $('#application_form').modal('hide');
-                    window.location.href = aurl + "/dashboard";
+                    if(data.status == 0){
+                        $('.already-exist').text(data.message);
+                    }else{
+                        $('#application_form').modal('hide');
+                        window.location.href = aurl + "/dashboard";
+                    }
                 },
             });
         } else {

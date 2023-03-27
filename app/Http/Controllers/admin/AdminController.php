@@ -66,8 +66,8 @@ class AdminController extends Controller
    public function destroy(Request $request)
     {
         Auth::guard('admin')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        // $request->session()->invalidate();
+        // $request->session()->regenerateToken();
         return redirect(route('admin.login'));
     }
 

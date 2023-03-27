@@ -10,7 +10,7 @@
       <div class="card">
         <div class="row">
           <div class="col-md-4 pe-md-0">
-            <div class="auth-side-wrapper" style="background-image: url({{ url('assets/images/background.jpg') }})">
+            <div class="auth-side-wrapper" style="background-image: url({{ asset('assets/images/background.jpg') }})">
 
             </div>
           </div>

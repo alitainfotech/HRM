@@ -1,5 +1,6 @@
 
 @php
+if (Request::segment(1) != 'admin'){
   if (isset(Auth::user()->id)) {
     $user = Auth::user();
     if(!empty($user['image'])){
@@ -11,18 +12,44 @@
     $logout=route('user.logout');
     $email=$user['email'];
     $fullname=$user['full_name'];
-  }elseif (isset(Auth::guard('admin')->user()->id)) {
-    $admin_user = Auth::guard('admin')->user();
-    if(!empty($admin_user['image'])){
-      $url=url('/assets/images/admin_users/admin_users_profile_photo/'.$admin_user['image']);
-    }else {
-      $url=url('https://via.placeholder.com/30x30');
-    }
-    $profile=route('admin.profile');
-    $logout=route('admin.logout');
-    $email=$admin_user['email'];
-    $fullname=$admin_user['full_name'];
   }
+}else{
+   $admin_user = Auth::guard('admin')->user();
+   if(isset($admin_user)){
+     if(!empty($admin_user['image'])){
+       $url=url('/assets/images/admin_users/admin_users_profile_photo/'.$admin_user['image']);
+     }else {
+       $url=url('https://via.placeholder.com/30x30');
+     }
+     $profile=route('admin.profile');
+     $logout=route('admin.logout');
+     $email=$admin_user['email'];
+     $fullname=$admin_user['full_name'];
+   }
+}
+  // if (isset(Auth::user()->id)) {
+  //   $user = Auth::user();
+  //   if(!empty($user['image'])){
+  //     $url=url('/assets/images/users/users_profile_photo/'.$user['image']);
+  //   }else {
+  //     $url=url('https://via.placeholder.com/30x30');
+  //   }
+  //   $profile=route('candidate.profile');
+  //   $logout=route('user.logout');
+  //   $email=$user['email'];
+  //   $fullname=$user['full_name'];
+  // }elseif (isset(Auth::guard('admin')->user()->id)) {
+  //   $admin_user = Auth::guard('admin')->user();
+  //   if(!empty($admin_user['image'])){
+  //     $url=url('/assets/images/admin_users/admin_users_profile_photo/'.$admin_user['image']);
+  //   }else {
+  //     $url=url('https://via.placeholder.com/30x30');
+  //   }
+  //   $profile=route('admin.profile');
+  //   $logout=route('admin.logout');
+  //   $email=$admin_user['email'];
+  //   $fullname=$admin_user['full_name'];
+  // }
  
 @endphp  
 

@@ -36,6 +36,9 @@
             </div>
           }
           @endif
+
+          <span class="text-danger already-exist"></span>
+
           <form class="forms-sample" method="POST" enctype="multipart/form-data" id="application_form">
             @csrf
             <div class="mb-3">
@@ -61,7 +64,7 @@
             <div class="row mb-3">
               <div class="col-md-6">
                 <label class="form-label">Contact number:</label>
-                <input type="number" class="form-control mb-4 mb-md-0 phone" name="phone"/>
+                <input type="number" class="form-control mb-4 mb-md-0 phone" name="phone" placeholder="Contact number">
               </div>
               <div class="col-md-6">
                 <label class="form-label" for="cv">CV upload</label>
@@ -80,11 +83,11 @@
             <div class="mb-3 row">
               <div class="col-md-6">
                 <label for="experience_year" class="form-label">Experience In year </label>
-                <input type="number" class="form-control experience col-md-6 experience_year" id="experience_year" name="experience_year" value="">
+                <input type="number" class="form-control experience col-md-6 experience_year" id="experience_year" name="experience_year" value="" placeholder="Enter experience in year">
               </div>
               <div class="col-md-6">
                 <label for="experience_month" class="form-label">Experience In month</label>
-                <input type="number" class="form-control experience col-md-6 experience_month" id="experience_month" name="experience_month" value="">
+                <input type="number" class="form-control experience col-md-6 experience_month" id="experience_month" name="experience_month" value="" placeholder="Enter experience in month">
               </div>
             </div>
             <input class="btn btn-primary submit_value" type="button" value="Submit">
@@ -105,41 +108,14 @@
   
   
   
-  <div class="col-sm-12 col-md-4 col-xl-3 m-1 overlay">
+  <div class="col-sm-6 col-md-4 col-xl-3 mt-2 overlay">
     <div class="card">
-      <img src="{{ url('assets/images/openings/technology_icon/'.$job_opening['image']) }}" class="card-img-top overlay-content" alt="..." height="150px">
+      <img src="{{ asset('assets/images/openings/technology_icon/'.$job_opening['image']) }}" class="card-img-top overlay-content" alt="..." height="150px">
         <div class="card-body">
           <h5 class="card-title">{{ $job_opening['title'] }}</h5>
           <p class="card-text mb-3">{{ mb_strimwidth($job_opening['description'], 0, 50, "...") }}</p>
           <p class="card-text mb-3">Required Minimum Experience: {{ $experience }}</p>
-          @if($job_opening->application->isNotEmpty())
-          @foreach ($job_opening->application as $application)
-          
-            @if($application->o_id == $job_opening->id && $application->c_id == $candidate->id)
-            
-            <div class="btn btn-danger disabled mb-2">Already Applied for this job</div>
-            @php
-            
-            if($application->status==0){
-            $status="pending";$class="btn-info";}
-            elseif($application->status==1){
-            $status="reviewed";$class="btn-info";}
-            elseif($application->status==2){
-            $status="selected";$class="btn-success";}
-            elseif($application->status==3){
-            $status="rejected";$class="btn-danger";}
-            @endphp
-            
-            <label class="float-left">Status</label>
-            <div class="btn mx-2 {{ $class }} ">{{ $status }}</div>
-            @else
               <a href="#" class="btn btn-primary apply_job" data-id="{{ $job_opening['id'] }}" data-c_id="{{ $candidate->id }}">Apply</a>
-            @endif
-          @endforeach
-           
-          @else
-          <a href="#" class="btn btn-primary apply_job" data-id="{{ $job_opening['id'] }}" data-c_id="{{ $candidate->id }}">Apply</a>
-          @endif
         </div>
     </div> 
   </div>

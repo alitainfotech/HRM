@@ -4,6 +4,7 @@ namespace App\Http\Controllers\frontend;
 
 use App\Http\Controllers\Controller;
 use App\Mail\application as MailApplication;
+use App\Mail\ApplicationApply;
 use App\Models\Application;
 use App\Models\Opening;
 use App\Models\User;
@@ -11,9 +12,120 @@ use Illuminate\Http\Request;
 use App\Events\NewApplication;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+use Hash;
 
 class CandidateController extends Controller
 {
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function opening()
+    {
+        $job_openings = Opening::where('status','=',1)->get();
+        return view('pages.candidate.opening',compact('job_openings'));
+    }
+    
+     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function candidateApply(Request $request, $id)
+    {
+        $opningId = decrypt($id);
+        $opening = Opening::where('id', $opningId)->first();
+        if(!empty($opening)){
+            return view('pages.candidate.apply-form',compact('opening'));
+        }
+        return redirect()->back();
+    }
+
+    
+    public function ApplySubmit(Request $request)
+    {
+        $request->validate(
+            [
+                'name' => 'required',
+                'email' => 'required|email',
+                'phone' => 'required',
+                'cv' => 'mimes:pdf,docx|required',
+                'experience_year' => 'required',
+                'experience_month' => 'required',
+                'description' => 'required'
+            ]
+        );
+            
+        $application = new Application();
+        $o_id = decrypt($request->o_id);
+        if($o_id){
+            $rand_pass = '';
+            $getCandidate = User::where('email',$request->email)->first();
+            if(!empty($getCandidate)){
+                $getApplication = Application::where(['c_id' => $getCandidate->id,'o_id' => $o_id])->where("created_at",">", Carbon::now()->subMonths(3))->first();
+                if(!empty($getApplication)){
+                    return redirect()->back()->with(['type' => 'danger', 'message' => 'You have already applied for this job']);
+                }
+                $getCandidate->full_name = $request->name;
+                $getCandidate->phone = $request->phone;
+                $getCandidate->save();
+            }else{
+                $lastRecord = User::latest()->value('id');
+                $number = 1001 + $lastRecord;
+                if($lastRecord >= 2000){
+                    $number = $lastRecord + 1;
+                }
+                $user_name = 'AI'.$number;
+                $rand_pass = Str::random(10);
+                
+                $candidate = new User;
+                $candidate->user_name = $user_name;
+                $candidate->full_name = $request->name;
+                $candidate->email = $request->email;
+                $candidate->phone = $request->phone;
+                $candidate->password = Hash::make($rand_pass);
+                $candidate->save();
+                $getCandidate = $candidate;
+            }
+            $cv = $request['cv'];
+            if(isset($cv)) {
+                $name = date('YmdHis').'_'.$cv->getClientOriginalName();
+                $allowedcvExtension=['pdf','docx'];
+                $extension = $cv->getClientOriginalExtension();
+                $check=in_array($extension,$allowedcvExtension);
+                if($check){
+                    $image['filePath'] = $name;
+                    $cv->move(public_path().'/assets/images/users/users_cv/', $name);
+                    $application->cv = $name;
+                }
+            }
+            $experience = ($request->experience_year)+$request->experience_month;
+           
+            $application->c_id = $getCandidate->id;
+            $application->o_id = $o_id;
+            $application->description = addslashes($request['description']);
+            $application->experience = $experience;  
+            // $application->created_at =now();
+            // $application->updated_at =now();
+            $application->save();
+            if($application->save()){
+                $data = [
+                    'o_id' => $application->o_id,
+                    'fullname' => $getCandidate->full_name,
+                    'password' => $rand_pass,
+                    'user_name' => $getCandidate->user_name
+                 ];
+                // event(new NewApplication($fullname));
+                Mail::to($getCandidate->email)->send(new ApplicationApply($data));
+            }
+            return redirect(route('login'))->with(['type' => 'success', 'message' => 'Job applied successfully. Please log in to check the job status']);
+        }
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -21,9 +133,10 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        $job_openings = Opening::with(['application'=>function($q){
-            $q->where('c_id',Auth::user()->id);
-        }])->where('status','=',1)->get();
+        // $job_openings = Opening::with(['application'=>function($q){
+        //     $q->where('c_id',Auth::user()->id);
+        // }])->where('status','=',1)->get();
+        $job_openings = Opening::where('status','=',1)->get();
         return view('pages.candidate.dashboard',compact('job_openings'));
     }
 
@@ -56,9 +169,20 @@ class CandidateController extends Controller
             ]
         );
             
-        $application = new Application();
         $c_id = $request['c_id'];
         $cv = $request['cv'];
+
+        $getApplication = Application::where(['c_id' => $c_id,'o_id' => $request['o_id']])->where("created_at",">", Carbon::now()->subMonths(3))->first();
+        if(!empty($getApplication)){
+            $data = [
+                'status' => 0,
+                'message'=> 'You have already applied for this job' 
+            ];
+            return $data;
+        }
+        
+        $application = new Application();
+     
         if(isset($cv) && !empty($cv)) {
 
             $name = $cv->getClientOriginalName();
