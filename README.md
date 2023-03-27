@@ -5,4 +5,4 @@
 - npm run dev
 - php artisan migrate --seed
 - php artisan serve
-- Project : http://localhost:8000
+- Project : http://localhost/HRM
