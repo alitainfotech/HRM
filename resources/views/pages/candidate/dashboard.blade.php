@@ -64,7 +64,7 @@
             <div class="row mb-3">
               <div class="col-md-6">
                 <label class="form-label">Contact number:</label>
-                <input type="number" class="form-control mb-4 mb-md-0 phone" name="phone" placeholder="Contact number">
+                <input type="number" class="form-control mb-4 mb-md-0 phone" name="phone" placeholder="Contact number" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');" pattern="^[6-9][0-9]{9}$">
               </div>
               <div class="col-md-6">
                 <label class="form-label" for="cv">CV upload</label>
@@ -83,11 +83,11 @@
             <div class="mb-3 row">
               <div class="col-md-6">
                 <label for="experience_year" class="form-label">Experience In year </label>
-                <input type="number" class="form-control experience col-md-6 experience_year" id="experience_year" name="experience_year" value="" placeholder="Enter experience in year">
+                <input type="number" class="form-control experience col-md-6 experience_year" id="experience_year" name="experience_year" value="" placeholder="Enter experience in year" min="0" max="99">
               </div>
               <div class="col-md-6">
                 <label for="experience_month" class="form-label">Experience In month</label>
-                <input type="number" class="form-control experience col-md-6 experience_month" id="experience_month" name="experience_month" value="" placeholder="Enter experience in month">
+                <input type="number" class="form-control experience col-md-6 experience_month" id="experience_month" name="experience_month" value="" placeholder="Enter experience in month" min="0" max="12">
               </div>
             </div>
             <input class="btn btn-primary submit_value" type="button" value="Submit">
@@ -115,7 +115,7 @@
           <h5 class="card-title">{{ $job_opening['title'] }}</h5>
           <p class="card-text mb-3">{{ mb_strimwidth($job_opening['description'], 0, 50, "...") }}</p>
           <p class="card-text mb-3">Required Minimum Experience: {{ $experience }}</p>
-              <a href="#" class="btn btn-primary apply_job" data-id="{{ $job_opening['id'] }}" data-c_id="{{ $candidate->id }}">Apply</a>
+              <a href="javascript:void(0)" class="btn btn-primary apply_job" data-id="{{ $job_opening['id'] }}" data-c_id="{{ $candidate->id }}">Apply</a>
         </div>
     </div> 
   </div>

@@ -1,3 +1,13 @@
 .error{
 color: red;
 }
+
+/* Permission css start */
+.permission-list{
+    width: 160px;
+    margin: 2px;
+}
+.permission-checkbox{
+    width: 200px;
+}
+/* Permission css end */

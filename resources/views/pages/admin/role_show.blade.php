@@ -38,12 +38,12 @@
             <div class="col-md-3">
                 Permissions
             </div>
-            <div class="col">
+            <div class="col-md-9">
                @php
                 $p_name=$data['p_id'];
                @endphp
                @foreach ( $p_name as $p_name )
-                   <div class="btn btn-primary">{{ $p_name }}</div>
+                   <div class="btn btn-primary permission-list">{{ $p_name }}</div>
                @endforeach
                {{-- {{ date("d-m-Y ", $d) }} --}}
             </div>    

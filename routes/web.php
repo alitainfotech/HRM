@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 
 /* admin routes */
 Route::group(['prefix' => 'admin'], function(){
+    Route::get('/',[AdminController::class,'index'])->name('admin.login_form');
     Route::get('/login',[AdminController::class,'index'])->name('admin.login_form');
     Route::post('/login',[AdminController::class,'login'])->name('admin.login'); 
     // Route::get('/dashboard',[AdminController::class,'dashboard'])->middleware('admin')->name('admin.dashboard');

@@ -45,9 +45,9 @@
                 }
               }
               @endphp
-              <div class="form-check form-check-inline">
-                <input type="checkbox" value="{{ $permission['id'] }}" name="permission[]" class="form-check-input permission" id="" {{ $checked }} >
-                <label class="form-check-label" for="">
+              <div class="form-check form-check-inline permission-checkbox">
+                <input type="checkbox" value="{{ $permission['id'] }}" name="permission[]" class="form-check-input permission" id="permission_{{ $permission['id'] }}" {{ $checked }} >
+                <label class="form-check-label" for="permission_{{ $permission['id'] }}">
                   {{ $permission['name'] }}
                 </label>
               </div>
@@ -62,7 +62,7 @@
             <div class="">
               <button class="btn btn-primary submit_value" type="button">{{ (!is_null($data['role'])) ? 'Update' :'Save'}}</button>
               <a href="{{ route('role.dashboard') }}">
-                <button class="btn btn-primary"  type="button">Cancle</button>
+                <button class="btn btn-secondary"  type="button">Cancle</button>
               </a>
             </div>
           </form>

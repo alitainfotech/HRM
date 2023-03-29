@@ -50,7 +50,7 @@ class CandidateController extends Controller
     {
         $request->validate(
             [
-                'name' => 'required',
+                'name' => ['required','string'],
                 'email' => 'required|email',
                 'phone' => 'required',
                 'cv' => 'mimes:pdf,docx|required',

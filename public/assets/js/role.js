@@ -136,6 +136,10 @@ $(document).ready(function(){
     });
 
     /* select all permissions */
+    if ($('.permission:checked').length == $('.permission').length){
+        $('#selectall').prop('checked',true);
+    }
+
     $("#selectall").change(function(){  //"select all" change 
         var status = this.checked; // "select all" checked status
         $('.permission').each(function(){ //iterate all listed checkbox items

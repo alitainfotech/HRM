@@ -20,9 +20,11 @@
             text-align: center;
             padding: 80px 0px 80px 0px;
         }
+        .row label.error {
+            color:#dc3545;
+        }
     </style>
 </head>
-<body>
     <body>
         <section>
             <div class="opening-title">
@@ -58,8 +60,8 @@
                         <input type="hidden" class="form-control o_id" id="o_id" name="o_id" value="{{ encrypt($opening->id)}}">
                         <div class="row mb-3">
                           <div class="col-md-6">
-                            <label for="Name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="Name" name="name" value="{{ old('name') }}">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" pattern="^[A-Za-zÀ-ÿ ,.'-]+$">
                             <div class="text-danger">
                                 @error('name')
                                     {{$message}}
@@ -79,7 +81,7 @@
                         <div class="row mb-3">
                           <div class="col-md-6">
                             <label class="form-label">Contact number:</label>
-                            <input type="number" class="form-control mb-4 mb-md-0 phone" name="phone" value="{{ old('phone') }}"  min='1'>
+                            <input type="number" class="form-control mb-4 mb-md-0 phone" name="phone" value="{{ old('phone') }}" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');" pattern="^[6-9][0-9]{9}$">
                             <div class="text-danger">
                                 @error('phone')
                                     {{$message}}
@@ -108,7 +110,7 @@
                         <div class="mb-3 row">
                           <div class="col-md-6">
                             <label for="experience_year" class="form-label">Experience In year </label>
-                            <input type="number" class="form-control experience experience_year" id="experience_year" name="experience_year" value="{{ old('experience_year') }}"  min='1' max="99" minlength="4">
+                            <input type="number" class="form-control experience experience_year" id="experience_year" name="experience_year" value="{{ old('experience_year') }}"  min='0' max="99">
                             <div class="text-danger">
                                 @error('experience_year')
                                     {{$message}}
@@ -117,7 +119,7 @@
                           </div>
                           <div class="col-md-6">
                             <label for="experience_month" class="form-label">Experience In month</label>
-                            <input type="number" class="form-control experience experience_month" id="experience_month" name="experience_month" value="{{ old('experience_month') }}" min='1'  max="12">
+                            <input type="number" class="form-control experience experience_month" id="experience_month" name="experience_month" value="{{ old('experience_month') }}" min='0'  max="12">
                             <div class="text-danger">
                                 @error('experience_month')
                                     {{$message}}
@@ -130,6 +132,54 @@
                 </div>
             </div>  
         </section>
+
+        <script src="{{ asset('assets/js/jquery.validate.min.js')}}"></script>
+        <script src="{{ asset('assets/js/additional-methods.min.js')}}"></script>
+        <script>
+            $(document).ready(function () {
+
+                jQuery.validator.addMethod("full_name", function(value, element) {
+                if (/^([a-zA-Z]{2,}\s[a-zA-z]{1,}'?-?[a-zA-Z]{2,}\s?([a-zA-Z]{1,})?)/.test(value)) {
+                    return true;
+                } else {
+                    return false;
+                };
+                }, 'Please enter your full name.');
+
+                $('#application_form').validate({ // initialize the plugin
+                    rules: {
+                        name: {
+                            required: true,
+                            full_name: true
+                        },
+                        email: {
+                            required: true,
+                            email: true
+                        },
+                        phone: {
+                            required: true,
+                            minlength:10,
+                            maxlength:10,
+                        },
+                        cv: {
+                            required: true,
+                            extension: "pdf|docx"
+                        },
+                        description: {
+                            required: true,
+                        },
+                        experience_year: {
+                            required: true,
+                            maxlength:2,
+                        },
+                        experience_month: {
+                            required: true,
+                            maxlength:2,
+                        },
+                    }
+                });
+
+            });
+        </script>
     </body>
-</body>
 </html>
