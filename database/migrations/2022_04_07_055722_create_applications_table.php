@@ -18,8 +18,8 @@ class CreateApplicationsTable extends Migration
             $table->unsignedBigInteger('c_id');
             $table->foreign('c_id')->references('id')->on('users');
             $table->unsignedBigInteger('o_id');
-            $table->unique(['o_id', 'c_id']);
-            $table->foreign('o_id')->references('id')->on('openings');
+            // $table->unique(['o_id', 'c_id']);
+            // $table->foreign('o_id')->references('id')->on('openings');
             $table->string('cv',250);
             $table->string('experience',100);
             $table->text('description');
