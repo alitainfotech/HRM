@@ -23,12 +23,12 @@ class PermissionController extends Controller
         foreach ($data['permissions'] as $permission) {
             $button = '';
             if(in_array("15", permission())){
-                $button .= '<button class="permission_edit btn btn-sm btn-success m-1" data-id="'.$permission['id'].'" > 
+                $button .= '<button class="permission_edit btn btn-icon btn-sm btn-primary m-1" data-id="'.$permission['id'].'" > 
                 <i class="mdi mdi-square-edit-outline"></i>
                 </button>';
             }
             if(in_array("16", permission())){
-                $button .= '<button class="permission_delete btn btn-sm btn-danger m-1" data-id="'.$permission['id'].'"> 
+                $button .= '<button class="permission_delete btn btn-icon btn-sm btn-danger m-1" data-id="'.$permission['id'].'"> 
                 <i class="mdi mdi-delete"></i>
                 </button>';
             }

@@ -23,12 +23,12 @@ class DepartmentController extends Controller
         foreach ($data['departments'] as $department) {
             $button = '';
             if(in_array("27", permission())){
-                $button .= '<button class="department_edit btn btn-sm btn-success m-1" data-id="'.$department['id'].'" > 
+                $button .= '<button class="department_edit btn-icon btn btn-sm btn-primary m-1" data-id="'.$department['id'].'" > 
                 <i class="mdi mdi-square-edit-outline"></i>
                 </button>';
             }
             if(in_array("28", permission())){
-                $button .= '<button class="department_delete btn btn-sm btn-danger m-1" data-id="'.$department['id'].'"> 
+                $button .= '<button class="department_delete btn-icon btn btn-sm btn-danger m-1" data-id="'.$department['id'].'"> 
                 <i class="mdi mdi-delete"></i>
                 </button>';
             }

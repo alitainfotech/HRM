@@ -46,18 +46,18 @@ class AdminUserController extends Controller
         foreach ($data['admin_users'] as $admin_user) {
             $button = '';
             if(in_array("7", permission())){
-                $button .= '<button class="user_edit btn btn-sm btn-success m-1" data-id="'.$admin_user['id'].'" > 
-                <i class="fa-solid fa-pen-to-square"></i>
+                $button .= '<button class="user_edit btn btn-sm btn-icon btn-primary m-1" data-id="'.$admin_user['id'].'" > 
+                <i class="mdi mdi-square-edit-outline"></i>
                 </button>';
             }
             if(in_array("8", permission())){
-                $button .= '<button class="user_delete btn btn-sm btn-danger m-1" data-id="'.$admin_user['id'].'"> 
-                <i class="fa-solid fa-trash"></i>
+                $button .= '<button class="user_delete btn btn-icon btn-sm btn-danger m-1" data-id="'.$admin_user['id'].'"> 
+                <i class="mdi mdi-delete"></i>
                 </button>';
             }
             if(in_array("7", permission())){
-                $button .= '<button class="user_password_edit btn btn-sm btn-success m-1" data-id="'.$admin_user['id'].'" > 
-                <i class="fa-solid fa-unlock"></i>
+                $button .= '<button class="user_password_edit btn-icon btn btn-sm btn-success m-1" data-id="'.$admin_user['id'].'" > 
+                <i class="mdi mdi-lock-open-outline"></i>
                 </button>';
             }
             $joining_date=date('d-m-Y',strtotime($admin_user['created_at']));

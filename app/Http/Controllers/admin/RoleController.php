@@ -24,16 +24,16 @@ class RoleController extends Controller
         $id = 0;
         foreach ($data['roles'] as $role) {
             $button = '';
-            $button .= '<a href="'.route('role.role_show',$role['id']).'"><button class="role_show btn btn-sm btn-success m-1"  data-id="'.$role['id'].'" > 
+            $button .= '<a href="'.route('role.role_show',$role['id']).'"><button class="role_show btn btn-icon btn-sm btn-success m-1"  data-id="'.$role['id'].'" > 
             <i class="mdi mdi-view-module"></i>
             </button></a>';
             if(in_array("11", permission())){
-                $button .= '<a href="'.route('role.edit',$role['id']).'"><button class="role_edit btn btn-sm btn-success m-1" data-id="'.$role['id'].'" > 
+                $button .= '<a href="'.route('role.edit',$role['id']).'"><button class="role_edit btn btn-icon btn-sm btn-primary m-1" data-id="'.$role['id'].'" > 
                 <i class="mdi mdi-square-edit-outline"></i>
                 </button></a>';
             }
             if(in_array("12", permission())){
-                $button .= '<button class="role_delete btn btn-sm btn-danger m-1" data-id="'.$role['id'].'"> 
+                $button .= '<button class="role_delete btn btn-icon btn-sm btn-danger m-1" data-id="'.$role['id'].'"> 
                 <i class="mdi mdi-delete"></i>
                 </button>';
             }

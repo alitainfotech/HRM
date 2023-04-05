@@ -127,12 +127,12 @@ class OpeningController extends Controller
             $month_max=($max_month==1) ? 'month' : 'months';
             $max_experience= $max_year.' '.$year_max.' '.$max_month.' '.$month_max;
             if(in_array("3", permission())){
-                $button .= '<button class="job_edit btn btn-sm btn-success m-1" data-id="'.$opening['id'].'" > 
+                $button .= '<button class="job_edit btn btn-icon btn-sm btn-primary m-1" data-id="'.$opening['id'].'" > 
                 <i class="mdi mdi-square-edit-outline"></i>
                 </button>';
             }
             if(in_array("4", permission())){
-                $button .= '<button class="job_delete btn btn-sm btn-danger m-1" data-id="'.$opening['id'].'"> 
+                $button .= '<button class="job_delete btn btn-icon btn-sm btn-danger m-1" data-id="'.$opening['id'].'"> 
                 <i class="mdi mdi-delete"></i>
                 </button>';
             }
