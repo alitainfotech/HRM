@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Admin;
 use App\Models\Application;
 use App\Models\Interview;
+use App\Models\Review;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -156,4 +157,25 @@ class InterviewController extends Controller
             exit;
         }
     }
+
+    /* Get TL Review */
+    public function getReview(Request $request)
+    {
+        $review = Review::where('i_id',$request->id)->where('status',0)->first();
+        if(!empty($review)){
+            $response = [
+                'status'=>true,
+                'data' => $review
+            ];
+            echo json_encode($response);
+            exit;
+        }
+        $response = [
+            'status' => false,
+        ];
+        echo json_encode($response);
+        exit;
+    }
+
+    
 }

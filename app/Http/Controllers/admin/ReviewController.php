@@ -9,6 +9,8 @@ use App\Models\Interview;
 use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Mail\RejectApplication;
+use Mail;
 
 class ReviewController extends Controller
 {
@@ -76,10 +78,16 @@ class ReviewController extends Controller
                 'description' => 'required',
             ]
         );
+        
         $status=(Admin::with(['role'])->find(Auth::guard('admin')->id())->role->title=='HR') ? '1' : '0';
-        $review_old=Review::where('status',$status)->where('i_id',$request['i_id'])->first();
-        if(is_null($review_old)){
+        $review_old = Review::where('status',$status)->where('id',$request['review_id'])->where('i_id',$request['i_id'])->first();
+        // if(is_null($review_old)){
             $review= new Review;
+            $message = 'Review added successfully';
+            if(!empty($review_old)){
+                $review = $review_old;
+                $message = 'Review updated successfully';
+            }
             $review->i_id=$request['i_id'];
             $range=$request['review'];
             if($range<5){
@@ -89,29 +97,30 @@ class ReviewController extends Controller
             }else{
                 $review_r= 'excellent';
             }
+            $review->rating=$request['review'];
             $review->review=$review_r;
             $review->description=$request['description'];
             $review->status=$status;
             if($review->save()){
                 $response = [
                     'status' => true,
-                    'message' => 'Review Added Successfully',
+                    'message' => $message,
                     'icon' => 'success',
                     'redirect_url' => "",
                 ];
                 echo json_encode($response);
                 exit;
             }
-        }else{
-            $responce = [
-                'status'=>false,
-                'message'=>"Already upload reviews!",
-                'icon' => 'error',
-                'redirect_url'=>"",
-            ];
-            echo json_encode($responce);
-            exit;
-        }
+        // }else{
+        //     $responce = [
+        //         'status'=>false,
+        //         'message'=>"Already upload reviews!",
+        //         'icon' => 'error',
+        //         'redirect_url'=>"",
+        //     ];
+        //     echo json_encode($responce);
+        //     exit;
+        // }
     }
     
     /* reject the application */
@@ -129,6 +138,17 @@ class ReviewController extends Controller
                     $application->status = 3;
                     $application->reason = $request['reason'];
                     if($application->update()){
+
+                        $body = [
+                            'full_name' => !empty($application->candidate) ? $application->candidate->full_name : '',
+                            'job_title' => !empty($application->opening) ? $application->opening->title : '',
+                            'reason' => $request['reason']
+                        ];
+                        $email = !empty($application->candidate) ? $application->candidate->email : '';
+                        if($email != ''){
+                            Mail::to($email)->send(new RejectApplication($body));
+                        }
+
                         $response = [
                             'status' => true,
                             'message' => 'Candidate rejected Successfully',
@@ -172,6 +192,7 @@ class ReviewController extends Controller
                 $application = Application::where('id',$request['a_id'])->first();
                 if(!is_null($application)){
                     $application->status = 2;
+                    $application->reason = $request['reason'];
                     if($application->update()){
                         $response = [
                             'status' => true,

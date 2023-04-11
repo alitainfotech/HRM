@@ -103,13 +103,28 @@ $(document).ready(function(){
             confirmButtonText: "Yes, select it!",
             cancelButtonText: "No, cancel!",
             showCancelButton: true,
+            input: "textarea",
+            inputPlaceholder: "Why do you want to select...",
+            inputAttributes: {
+                "aria-label": "Type your message here",
+            },
+            showCancelButton: true,
+            inputValidator: (value) => {
+                return new Promise((resolve) => {
+                    if (value) {
+                        resolve();
+                    } else {
+                        resolve("reason is required!");
+                    }
+                });
+            },
         }).then((result) => {
             if (result.isConfirmed) {
                 var reason = result.value;
                 $.ajax({
                     type: "post",
                     url: aurl + "/admin/review/select",
-                    data: {id: id,a_id: a_id},
+                    data: {id: id,a_id: a_id, reason:reason},
                     dataType: "JSON",
                     success: function(data) {
                         toaster_message(data.message,data.icon,data.redirect_url);

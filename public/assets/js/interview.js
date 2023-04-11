@@ -208,11 +208,37 @@ $(document).ready(function(){
     /* display add review modal */
     $("body").on("click", ".add_review", function () {
         var id = $(this).data("i_id");
+        // alert(id);
         $(".i_id").val(id);
-        $("#review_form").trigger("reset");
-        $("#review_modal").modal("show");
-        $("#title_review_modal").text("Add Review");
-        $(".submit_value").val("Add Review");
+        // $("#review_modal").modal("show");
+       
+        var token = "{{csrf_token()}}";
+        $.ajax({
+            url: aurl + "/admin/interview/get-review",
+            type: 'POST',
+            dataType: "JSON",
+            data:{id:id},
+            success: function(response) {
+                $("#review_modal").modal("show");
+                if(response.status){
+                    $('#review_id').val(response.data.id);
+                    $('#rating_range').val(response.data.rating);
+                    $('#textInput').val(response.data.rating);
+                    $('#description').val(response.data.description);
+                    // $('#review_modal').modal('hide');
+                    $("#title_review_modal").text("Update Review");
+                    $(".submit_value").val("Update Review");
+                }else{
+                    $("#review_form").trigger("reset");
+                    $("#title_review_modal").text("Add Review");
+                    $(".submit_value").val("Add Review");
+                    // toaster_message(response.message,response.icon,response.redirect_url);
+                }
+            },
+            error: function (error) {
+                toaster_message(error,'error',''); 
+            }
+        });
     });
 
     /* adding review data in database */
@@ -232,6 +258,7 @@ $(document).ready(function(){
                 success: function(data) {
                     if(data.status){
                         $('#review_modal').modal('hide');
+                        toaster_message(data.message,data.icon,data.redirect_url);
                     }else{
                         toaster_message(data.message,data.icon,data.redirect_url);
                     }

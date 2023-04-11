@@ -103,7 +103,7 @@ class CandidateController extends Controller
                     $application->cv = $name;
                 }
             }
-            $experience = ($request->experience_year)+$request->experience_month;
+            $experience = ($request->experience_year * 12) + $request->experience_month;
            
             $application->c_id = $getCandidate->id;
             $application->o_id = $o_id;

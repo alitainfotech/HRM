@@ -92,10 +92,12 @@
           @csrf
           <div class="mb-3">
             <input type="hidden" class="form-control i_id" id="i_id" name="i_id" value="0">
+            <input type="hidden" class="form-control" id="review_id" name="review_id" value="0">
+            
           </div>
           <div class="mb-3">
             <label class="form-label">Review</label>
-            <input type="range" class="form-range" name="review" min="0" max="10" value="0" onchange="updateTextInput(this.value);">
+            <input type="range" class="form-range" name="review" id="rating_range" min="0" max="10" value="0" onchange="updateTextInput(this.value);">
             <input type="text" class="form-control" id="textInput" value="">
           </div>
           <div class="mb-3">

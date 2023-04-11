@@ -121,6 +121,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/listing',[InterviewController::class,'listing']);
         Route::post('/show',[InterviewController::class,'show']);
         Route::post('/store',[InterviewController::class,'store']);
+        Route::post('/get-review',[InterviewController::class,'getReview']);
     });
 
     /* departments route */

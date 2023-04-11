@@ -24,7 +24,7 @@ class ApplicationController extends Controller
     /* listing of pending application */
     public function listing()
     {
-        $data['applications']= Application::where('status',0)->with('candidate')->with('opening')->get();
+        $data['applications']= Application::whereIn('status',[0,1])->with('candidate')->with('opening')->get();
         $data_result = [];
         $id=0;
         foreach ($data['applications'] as $application) {
@@ -39,17 +39,20 @@ class ApplicationController extends Controller
             if(in_array("20", permission())){
             $button.='<div class="btn btn-icon btn-danger reject m-1" data-id="'.$application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
             }
+            if($application['status'] == 1){
+                $button = '';
+            }
             $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p>'.$application['cv'].'</p></a>';
             $data_result[] = array( 
-            "id"=>$id, 
-            "post"=>$application->opening['title'],
-            "name"=>$application->candidate['full_name'],
-            "phone"=>$application->candidate['phone'],
-            "email"=>$application->candidate['email'],
-            "cv"=>$cv,
-            "description"=>mb_strimwidth($application['description'], 0, 50, "..."),
-            "experience"=>$experience,
-            "action"=>$button
+                "id"=>$id, 
+                "post"=>$application->opening['title'],
+                "name"=>$application->candidate['full_name'],
+                "phone"=>$application->candidate['phone'],
+                "email"=>$application->candidate['email'],
+                "cv"=>$cv,
+                "description"=>mb_strimwidth($application['description'], 0, 50, "..."),
+                "experience"=>$experience,
+                "action"=>$button
             );
         }
         $dataset = array(
