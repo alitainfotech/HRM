@@ -7,6 +7,7 @@ use App\Models\Admin;
 use App\Models\Application;
 use App\Models\Interview;
 use App\Models\Opening;
+use App\Models\Review;
 use App\Models\User;
 use Facade\FlareClient\View;
 use Illuminate\Http\Request;
@@ -51,12 +52,14 @@ class AdminController extends Controller
     public function value()
     {
         $data['openings_active']= count(Opening::where('status',1)->get());
-        $data['users_active']= count(User::where('status',1)->get());
-        $data['users_inactive']= count(User::where('status',0)->get());
-        $data['application_pending']= count(Application::where('status',0)->get());
+        $data['users_active']= count(Admin::where('status',1)->where('role_id','!=',1)->get());
+        $data['users_inactive']= count(Admin::where('status',0)->where('role_id','!=',1)->get());
+        $data['application_pending']= count(Application::whereIn('status',[0,1])->get());
         $data['application_reviewed']= count(Application::where('status',1)->get());
         $data['application_rejected']= count(Application::where('status',3)->get());
         $data['application_selected']= count(Application::where('status',2)->get());
+        $data['total_applicant']= count(Application::get());
+        $data['total_application_review']= count(Review::get());
         $data['interviews_active']= count(Interview::where('status',1)->get());
         $data['interviews_inactive']= count(Interview::where('status',0)->get());
         echo json_encode($data); 

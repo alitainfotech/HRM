@@ -22,32 +22,37 @@ class ReviewController extends Controller
      /* listing of reviews */
     public function listing()
     {
-        $interviews= Interview::where('status',1)->with('application')->with('tl')->with('reviews')->get();
+        // $interviews= Interview::where('status',1)->with('application')->with('tl')->with('reviews')->get();
+        $review = Review::get();
         $data_result = [];
         $id=0;
         $hr_des='';
         $hr_review='';
         $tl_des='';
         $tl_review='';
-        foreach ($interviews as $interview) {
-            foreach($interview->reviews as $review){
-                if($review->status==0){
-                    $tl_review.=$review->review;
-                    $tl_des.=$review->description;
-                }else{
-                    $hr_review.=$review->review;
-                    $hr_des.=$review->description;
-                }
+        foreach ($review as $row) {
+            if($row->status==0){
+                $tl_review = $row->review;
+                $tl_des = $row->description;
+                $hr_des='';
+                $hr_review='';
+            }else{
+                $hr_review = $row->review;
+                $hr_des = $row->description;
+                $tl_des='';
+                $tl_review='';
             }
-            $candidate = $interview->application->load('candidate')->candidate;
-            $opening = $interview->application->load('opening')->opening;
+            $candidate = $row->getInterview->application->load('candidate')->candidate;
+            $opening = $row->getInterview->application->load('opening')->opening;
             $id++;
             $button = '';
-            if(in_array("32", permission())){
-                 $button.='<div class="btn btn-icon btn-danger reject_candidate m-1" data-id="'.$interview['id'].'" data-a_id="'.$interview->application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
-            }
-            if(in_array("31", permission())){
-                $button.='<div class="btn btn-icon btn-success select_candidate m-1" data-id="'.$interview['id'].'" data-a_id="'.$interview->application['id'].'"><i class="mdi mdi-check-outline"></i></div>';
+            if($row->getInterview->status == 1){     
+                if(in_array("32", permission())){
+                     $button.='<div class="btn btn-icon btn-danger reject_candidate m-1" data-id="'.$row->i_id.'" data-a_id="'.$row->getInterview->application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
+                }
+                if(in_array("31", permission())){
+                    $button.='<div class="btn btn-icon btn-success select_candidate m-1" data-id="'.$row->i_id.'" data-a_id="'.$row->getInterview->application['id'].'"><i class="mdi mdi-check-outline"></i></div>';
+                }
             }
             $data_result[] = array( 
             "id"=>$id, 

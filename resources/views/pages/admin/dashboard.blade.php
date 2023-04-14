@@ -26,11 +26,11 @@
       <div class="col-md-4 grid-margin stretch-card">
         <div class="card card-common">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-middle">
+            <div class="d-flex justify-content-between align-items-center">
               <i class="fa-solid fa-briefcase fa-4x text-success"></i>
               <div class="text-right text-dark">
-                <h2 class="active_openings text-success"></h2>
-                <a href="{{ (in_array("1", permission())) ? route('opening.dashboard') : route('admin.dashboard') }}" class="text-dark"><h4>Active Openings</h4></a>
+                <h3 class="active_openings text-success"></h3>
+                <a href="{{ (in_array("1", permission())) ? route('opening.dashboard') : route('admin.dashboard') }}" class="text-dark"><h5>Active Openings</h5></a>
               </div>
             </div>
           </div>
@@ -51,11 +51,11 @@
       <div class="col-md-4 grid-margin stretch-card">
         <div class="card card-common">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-middle">
+            <div class="d-flex justify-content-between align-items-center">
               <i class="fa-solid fa-users fa-4x text-success"></i>
               <div class="text-right text-dark">
-                <h2 class="active_users text-success"></h2>
-                <a href="{{ (in_array("5", permission())) ? route('user.dashboard') : route('admin.dashboard') }}" class="text-dark"><h4>Active Users</h4></a>
+                <h3 class="active_users text-success"></h3>
+                <a href="{{ (in_array("5", permission())) ? route('user.dashboard') : route('admin.dashboard') }}" class="text-dark"><h5>Active Users</h5></a>
               </div>
             </div>
           </div>
@@ -64,11 +64,11 @@
       <div class="col-md-4 grid-margin stretch-card">
         <div class="card card-common">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-middle">
+            <div class="d-flex justify-content-between align-items-center">
               <i class="fa-solid fa-users-slash fa-4x text-danger"></i>
                 <div class="text-right text-dark">
-                  <h2 class="inactive_users text-danger"></h2>
-                  <h4>Inactive Users</h4>
+                  <h3 class="inactive_users text-danger"></h3>
+                  <h5>Inactive Users</h5>
                 </div>
             </div>
           </div>
@@ -90,11 +90,11 @@
       <div class="col-md-4 grid-margin stretch-card">
         <div class="card card-common">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-middle">
-              <i class="fa-solid fa-clipboard fa-4x text-info"></i>
+            <div class="d-flex justify-content-between align-items-center">
+              <i class="fa-solid fa-clipboard fa-4x text-dark"></i>
               <div class="text-right text-dark">
-                <h2 class="pending_applications text-info"></h2>
-                <a href="{{ (in_array("17", permission())) ? route('application.pending') : route('admin.dashboard') }}" class="text-dark"><h4>Pending Applications</h4></a>
+                <h3 class="total_applicant text-dark"></h3>
+                <a href="{{ (in_array("17", permission())) ? route('application.pending') : route('admin.dashboard') }}" class="text-dark"><h5>Total Applicant</h5></a>
               </div>
             </div>
           </div>
@@ -103,11 +103,24 @@
       <div class="col-md-4 grid-margin stretch-card">
         <div class="card card-common">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-middle">
+            <div class="d-flex justify-content-between align-items-center">
+              <i class="fa-solid fa-clipboard fa-4x text-info"></i>
+              <div class="text-right text-dark">
+                <h3 class="pending_applications text-info"></h3>
+                <a href="{{ (in_array("17", permission())) ? route('application.pending') : route('admin.dashboard') }}" class="text-dark"><h5>Pending Applications</h5></a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 grid-margin stretch-card">
+        <div class="card card-common">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
               <i class="fa-solid fa-clipboard-question fa-4x text-warning"></i>
                 <div class="text-right text-dark">
-                  <h2 class="reviewed_applications text-warning"></h2>
-                  <h4>Reviewed Applications</h4>
+                  <h3 class="total_application_review text-warning"></h3>
+                  <h5>Total Reviewed Applications</h5>
                 </div>
             </div>
           </div>
@@ -116,11 +129,11 @@
       <div class="col-md-4 grid-margin stretch-card">
         <div class="card card-common">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-middle">
+            <div class="d-flex justify-content-between align-items-center">
               <i class="fa-regular fa-clipboard fa-4x text-danger"></i>
                 <div class="text-right text-dark">
-                  <h2 class="rejected_applications text-danger"></h2>
-                  <a href="{{ (in_array("17", permission())) ? route('application.reject') : route('admin.dashboard') }}" class="text-dark"><h4>Rejected Applications</h4></a>
+                  <h3 class="rejected_applications text-danger"></h3>
+                  <a href="{{ (in_array("17", permission())) ? route('application.reject') : route('admin.dashboard') }}" class="text-dark"><h5>Rejected Applications</h5></a>
                 </div>
             </div>
           </div>
@@ -129,11 +142,11 @@
       <div class="col-md-4 grid-margin stretch-card">
         <div class="card card-common">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-middle">
+            <div class="d-flex justify-content-between align-items-center">
               <i class="fa-solid fa-clipboard-check fa-4x text-success"></i>
                 <div class="text-right text-dark">
-                  <h2 class="selected_applications text-success"></h2>
-                  <a href="{{ (in_array("17", permission())) ? route('application.select') : route('admin.dashboard') }}" class="text-dark"><h4>Selected Applications</h4></a>
+                  <h3 class="selected_applications text-success"></h3>
+                  <a href="{{ (in_array("17", permission())) ? route('application.select') : route('admin.dashboard') }}" class="text-dark"><h5>Selected Applications</h5></a>
                 </div>
             </div>
           </div>
@@ -155,11 +168,11 @@
       <div class="col-md-4 grid-margin stretch-card">
         <div class="card card-common">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-middle">
+            <div class="d-flex justify-content-between align-items-center">
               <i class="fa-solid fa-user-check fa-4x text-success"></i>
               <div class="text-right text-dark">
-                <h2 class="active_interviews text-success"></h2>
-                <a href="{{ (in_array("21", permission())) ? route('interview.dashboard') : route('admin.dashboard') }}" class="text-dark"><h4>Active Interviews</h4></a>
+                <h3 class="active_interviews text-success"></h3>
+                <a href="{{ (in_array("21", permission())) ? route('interview.dashboard') : route('admin.dashboard') }}" class="text-dark"><h5>Active Interviews</h5></a>
               </div>
             </div>
           </div>
@@ -168,11 +181,11 @@
       <div class="col-md-4 grid-margin stretch-card">
         <div class="card card-common">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-middle">
+            <div class="d-flex justify-content-between align-items-center">
               <i class="fa-solid fa-user-xmark fa-4x text-danger"></i>
                 <div class="text-right text-dark">
-                  <h2 class="inactive_interviews text-danger"></h2>
-                  <h4 class="title">Inactive Interviews</h4>
+                  <h3 class="inactive_interviews text-danger"></h3>
+                  <h5 class="title">Inactive Interviews</h5>
                 </div>
             </div>
           </div>

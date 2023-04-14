@@ -17,8 +17,10 @@ $(document).ready(function(){
             $('.active_openings').html(data.openings_active);
             $('.active_users').html(data.users_active);
             $('.inactive_users').html(data.users_inactive);
+            $('.total_applicant').html(data.total_applicant);
             $('.pending_applications').html(data.application_pending);
             $('.reviewed_applications').html(data.application_reviewed);
+            $('.total_application_review').html(data.total_application_review);
             $('.rejected_applications').html(data.application_rejected);
             $('.selected_applications').html(data.application_selected);
             $('.active_interviews').html(data.interviews_active);
