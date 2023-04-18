@@ -51,10 +51,10 @@ class InterviewController extends Controller
                 $button.='<div class="btn btn-icon btn-danger reject m-1" data-i_id="'.$interview['id'].'" data-id="'.$interview->application['id'].'" ><i class="mdi mdi-close-outline"></i></div>';
             }
             if(in_array("30", permission())){
-                $button.='<div class="btn btn-icon btn-info add_review m-1" data-i_id="'.$interview['id'].'" data-id="'.$interview->application['id'].'"><i class="mdi mdi-book"></i></div>';
+                $button.='<div class="btn btn-icon btn-info add_review m-1" data-i_id="'.($interview['id']).'" data-id="'.$interview->application['id'].'"><i class="mdi mdi-book"></i><p class="d-none" id="given_review_'.$interview['id'].'">'.$interview->reviews.'</p></div>';
             }
             $date = date('d-m-Y  g:i:s a',strtotime($interview['date']));
-            $cv='<a href="'.asset('/assets/candidates/candidates_cv').'/'.$interview->application['cv'].'" download><p>'.$interview->application['cv'].'</p></a>';
+            $cv='<a href="'.asset('/assets/candidates/candidates_cv').'/'.$interview->application['cv'].'" download><p class="cv-file">'.$interview->application['cv'].'</p></a>';
             $data_result[] = array( 
             "id"=>$id, 
             "post"=>$opening['title'],
@@ -156,26 +156,5 @@ class InterviewController extends Controller
             echo json_encode($response);
             exit;
         }
-    }
-
-    /* Get TL Review */
-    public function getReview(Request $request)
-    {
-        $review = Review::where('i_id',$request->id)->where('status',0)->first();
-        if(!empty($review)){
-            $response = [
-                'status'=>true,
-                'data' => $review
-            ];
-            echo json_encode($response);
-            exit;
-        }
-        $response = [
-            'status' => false,
-        ];
-        echo json_encode($response);
-        exit;
-    }
-
-    
+    } 
 }

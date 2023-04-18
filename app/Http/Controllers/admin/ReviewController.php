@@ -20,48 +20,49 @@ class ReviewController extends Controller
     }
 
      /* listing of reviews */
+
+      /* listing of reviews */
     public function listing()
     {
-        // $interviews= Interview::where('status',1)->with('application')->with('tl')->with('reviews')->get();
-        $review = Review::get();
+        $interviews= Interview::where('status',1)->with('application')->with('tl')->with('reviews')->get();
+        // dd($interviews);
         $data_result = [];
         $id=0;
         $hr_des='';
         $hr_review='';
         $tl_des='';
         $tl_review='';
-        foreach ($review as $row) {
-            if($row->status==0){
-                $tl_review = $row->review;
-                $tl_des = $row->description;
-                $hr_des='';
-                $hr_review='';
-            }else{
-                $hr_review = $row->review;
-                $hr_des = $row->description;
-                $tl_des='';
-                $tl_review='';
-            }
-            $candidate = $row->getInterview->application->load('candidate')->candidate;
-            $opening = $row->getInterview->application->load('opening')->opening;
+        foreach ($interviews as $interview) {
+            // foreach($interview->reviews as $review){
+            //     if($review->status==0){
+            //         $tl_review.= $review->review.'';
+            //         $tl_des.= $review->description;
+            //     }else{
+            //         $hr_review.= $review->review;
+            //         $hr_des.= $review->description;
+            //     }
+            // }
+            $candidate = $interview->application->load('candidate')->candidate;
+            $opening = $interview->application->load('opening')->opening;
             $id++;
             $button = '';
-            if($row->getInterview->status == 1){     
-                if(in_array("32", permission())){
-                     $button.='<div class="btn btn-icon btn-danger reject_candidate m-1" data-id="'.$row->i_id.'" data-a_id="'.$row->getInterview->application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
-                }
-                if(in_array("31", permission())){
-                    $button.='<div class="btn btn-icon btn-success select_candidate m-1" data-id="'.$row->i_id.'" data-a_id="'.$row->getInterview->application['id'].'"><i class="mdi mdi-check-outline"></i></div>';
-                }
+            if(in_array("32", permission())){
+                 $button.='<div class="btn btn-icon btn-danger reject_candidate m-1" data-id="'.$interview['id'].'" data-a_id="'.$interview->application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
+            }
+            if(in_array("31", permission())){
+                $button.='<div class="btn btn-icon btn-success select_candidate m-1" data-id="'.$interview['id'].'" data-a_id="'.$interview->application['id'].'"><i class="mdi mdi-check-outline"></i></div>';
+            }
+            if(in_array("31", permission())){
+                $button.='<div class="btn btn-icon btn-info add_review m-1" data-id="'.($interview['id']).'" data-a_id="'.$interview->application['id'].'"><i class="mdi mdi-book"></i><p class="d-none" id="given_review_'.$interview['id'].'">'.$interview->reviews.'</p></div>';
             }
             $data_result[] = array( 
             "id"=>$id, 
             "post"=>$opening['title'],
             "name"=>$candidate['full_name'],
-            "tl_review"=>$tl_review,
-            "tl_des"=>$tl_des,
-            "hr_review"=>$hr_review,
-            "hr_des"=>$hr_des,
+            // "tl_review"=>$tl_review,
+            // "tl_des"=>$tl_des,
+            // "hr_review"=>$hr_review,
+            // "hr_des"=>$hr_des,
             "action"=>$button
             );
         }
@@ -73,19 +74,22 @@ class ReviewController extends Controller
         ); 
         echo json_encode($dataset);
     }
-     
+
     /* adding review data to database */
     public function store(Request $request)
     {
         $request->validate(
             [
-                'review' => 'required',
+                'type' => 'required',
                 'description' => 'required',
             ]
         );
-        
+        // dd($request['review_id']);
         $status=(Admin::with(['role'])->find(Auth::guard('admin')->id())->role->title=='HR') ? '1' : '0';
-        $review_old = Review::where('status',$status)->where('id',$request['review_id'])->where('i_id',$request['i_id'])->first();
+        $review_old = '';    
+        if($request['review_id'] != 0){
+            $review_old = Review::where('id',decrypt($request['review_id']))->first();
+        }
         // if(is_null($review_old)){
             $review= new Review;
             $message = 'Review added successfully';
@@ -93,8 +97,8 @@ class ReviewController extends Controller
                 $review = $review_old;
                 $message = 'Review updated successfully';
             }
-            $review->i_id=$request['i_id'];
-            $range=$request['review'];
+            $review->i_id=($request['i_id']);
+            $range = isset($request['rate']) ? $request['rate'] : 0;
             if($range<5){
                 $review_r= 'rejected';
             }elseif($range>5 && $range<7){
@@ -102,7 +106,8 @@ class ReviewController extends Controller
             }else{
                 $review_r= 'excellent';
             }
-            $review->rating=$request['review'];
+            $review->rating = isset($request['rate']) ? $request['rate'] : 0;
+            $review->type= $request['type'];
             $review->review=$review_r;
             $review->description=$request['description'];
             $review->status=$status;
@@ -239,4 +244,26 @@ class ReviewController extends Controller
             exit;
         }
     }
+
+    /* Get Review */
+    public function getReview(Request $request)
+    {
+        $i_id = ($request->i_id);
+        $review = Review::where('i_id',$i_id)->where('type',$request->type)->first();
+        if(!empty($review)){
+            $response = [
+                'status'=>true,
+                'data' => $review,
+                'review_id' => encrypt($review->id),
+            ];
+            echo json_encode($response);
+            exit;
+        }
+        $response = [
+            'status' => false,
+        ];
+        echo json_encode($response);
+        exit;
+    }
+
 }

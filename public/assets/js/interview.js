@@ -1,38 +1,38 @@
 /* ajax set up */
 $.ajaxSetup({
     headers: {
-      'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
     }
 });
 function updateTextInput(val) {
-    document.getElementById('textInput').value=val; 
+    document.getElementById('textInput').value = val;
 }
 /* datatable */
-var listing=$('#dataTableExample').DataTable({
-"aLengthMenu": [
-    [10, 30, 50, -1],
-    [10, 30, 50, "All"]
-],
-"iDisplayLength": 10,
-"language": {
-    search: ""
-},
-'ajax': {
-    type:'POST',
-    url: aurl + "/admin/interview/listing", 
-},
-'columns': [
-    { data: 'id' },
-    { data: 'post' },
-    { data: 'Interviewer' },
-    { data: 'Interviewee' },
-    { data: 'date' },
-    { data: 'cv' },
-    { data: 'action' },
-    
-]
+var listing = $('#dataTableExample').DataTable({
+    "aLengthMenu": [
+        [10, 30, 50, -1],
+        [10, 30, 50, "All"]
+    ],
+    "iDisplayLength": 10,
+    "language": {
+        search: ""
+    },
+    'ajax': {
+        type: 'POST',
+        url: aurl + "/admin/interview/listing",
+    },
+    'columns': [
+        { data: 'id' },
+        { data: 'post' },
+        { data: 'Interviewer' },
+        { data: 'Interviewee' },
+        { data: 'date' },
+        { data: 'cv' },
+        { data: 'action' },
+
+    ]
 });
-$('#dataTableExample').each(function() {
+$('#dataTableExample').each(function () {
     var datatable = $(this);
     // SEARCH - Add the placeholder for Search and Turn this into in-line form control
     var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
@@ -42,11 +42,11 @@ $('#dataTableExample').each(function() {
     var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
     length_sel.removeClass('form-control-sm');
 });
-  
-$(document).ready(function(){
+
+$(document).ready(function () {
 
     /* validation of interview form */
-    $('#interview_form').validate({ 
+    $('#interview_form').validate({
         rules: {
             name: {
                 required: true
@@ -59,29 +59,30 @@ $(document).ready(function(){
             },
         },
         errorPlacement: function (label, element) {
-            if(element.attr("type") == "radio" )
-            {
-              label.insertAfter(element.closest(".form-check")); 
+            if (element.attr("type") == "radio") {
+                label.insertAfter(element.closest(".form-check"));
             }
-            else if(element.attr("type") == "checkbox"){
-            label.insertAfter(element.closest(".form-check")); 
+            else if (element.attr("type") == "checkbox") {
+                label.insertAfter(element.closest(".form-check"));
             }
-            else if(element.is('select') ){
-              label.insertAfter(element.closest(".select"));
+            else if (element.is('select')) {
+                label.insertAfter(element.closest(".select"));
             }
-            else 
-            {
-            label.insertAfter(element);
+            else {
+                label.insertAfter(element);
             }
-          },
+        },
         messages: {
             name: "please enter your name",
             leader: "please select team leader",
             date: "please chooce date for interview",
         },
     });
-    $('#review_form').validate({ 
+    $('#review_form').validate({
         rules: {
+            type: {
+                required: true,
+            },
             review: {
                 required: true,
                 minlength: 1,
@@ -93,25 +94,25 @@ $(document).ready(function(){
         },
     });
     /* updating interview data in database */
-    $(".submit_value").on("click", function(event){
+    $(".submit_value").on("click", function (event) {
         event.preventDefault();
         var form = $('#interview_form')[0];
         var formData = new FormData(form);
-        if($("#interview_form").valid()){   
+        if ($("#interview_form").valid()) {
             $.ajax({
                 url: aurl + "/admin/interview/store",
                 type: 'POST',
                 dataType: "JSON",
-                data:formData,
-                cache:false,
+                data: formData,
+                cache: false,
                 contentType: false,
                 processData: false,
-                success: function(data) {
+                success: function (data) {
                     $('#interview_form').modal('hide');
-                    toaster_message(data.message,data.icon,data.redirect_url);
+                    toaster_message(data.message, data.icon, data.redirect_url);
                 },
                 error: function (error) {
-                    toaster_message(error,'error',''); 
+                    toaster_message(error, 'error', '');
                 }
             });
         } else {
@@ -120,45 +121,45 @@ $(document).ready(function(){
     });
 
     /* display update interview modal */
-    $('body').on("click", ".edit_interview", function(event){
+    $('body').on("click", ".edit_interview", function (event) {
         var id = $(this).data("id");
         $('.i_id').val(id);
         event.preventDefault();
         $.ajax({
             url: aurl + "/admin/interview/show",
             type: "POST",
-            data: {id:id},
+            data: { id: id },
             dataType: "JSON",
-            success: function(data){
-                if(data.status){
+            success: function (data) {
+                if (data.status) {
                     $("#interview_form").trigger('reset');
                     $('#interview_modal').modal('show');
                     $('#title_interview_modal').text("Add Interview");
                     $('.submit_value').val("Add interview");
                     $('.name').val(data.name);
-                    $('.leader option[value="'+data.id+'"]').prop('selected', true);
+                    $('.leader option[value="' + data.id + '"]').prop('selected', true);
                     var dateArr = data.date.split(' ');
-                    date = dateArr[0]+'T'+dateArr[1];
+                    date = dateArr[0] + 'T' + dateArr[1];
                     $('.date').val(date);
                     $('.leader').select2({
                         dropdownParent: $('#interview_modal')
                     });
-                }else{
-                    toaster_message(data.message,data.icon,data.redirect_url);
+                } else {
+                    toaster_message(data.message, data.icon, data.redirect_url);
                 }
             },
             error: function (error) {
-                toaster_message('error','error',''); 
+                toaster_message('error', 'error', '');
             }
         });
     });
-    
+
     /* reject the application */
-    $('body').on("click", ".reject", function(event){
+    $('body').on("click", ".reject", function (event) {
         event.preventDefault();
         var id = $(this).data('id');
         var i_id = $(this).data('i_id');
-        const value  = Swal.fire({
+        const value = Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
             icon: "warning",
@@ -186,89 +187,116 @@ $(document).ready(function(){
                 $.ajax({
                     type: "post",
                     url: aurl + "/admin/application/pending/reject",
-                    data: {id: id,reason: reason,i_id: i_id},
+                    data: { id: id, reason: reason, i_id: i_id },
                     dataType: "JSON",
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $('body').removeClass('loaded');
                     },
-                    success: function(data) {
+                    success: function (data) {
                         $('body').addClass('loaded');
-                        toaster_message(data.message,data.icon,data.redirect_url);
+                        toaster_message(data.message, data.icon, data.redirect_url);
                     },
                     error: function (error) {
-                        toaster_message(error,'error',''); 
+                        toaster_message(error, 'error', '');
                     }
                 });
             } else if (result.dismiss === Swal.DismissReason.cancel) {
-                toaster_message('Cancle rejecting application','error','');
+                toaster_message('Cancle rejecting application', 'error', '');
             }
         });
     });
 
     /* display add review modal */
     $("body").on("click", ".add_review", function () {
+        $('#review_form')[0].reset();
+        $('.rating-checked').attr('checked', false);
+        $('#review_id').val(0);
+
         var id = $(this).data("i_id");
-        // alert(id);
         $(".i_id").val(id);
-        // $("#review_modal").modal("show");
-       
-        var token = "{{csrf_token()}}";
-        $.ajax({
-            url: aurl + "/admin/interview/get-review",
-            type: 'POST',
-            dataType: "JSON",
-            data:{id:id},
-            success: function(response) {
-                $("#review_modal").modal("show");
-                if(response.status){
-                    $('#review_id').val(response.data.id);
-                    $('#rating_range').val(response.data.rating);
-                    $('#textInput').val(response.data.rating);
-                    $('#description').val(response.data.description);
-                    // $('#review_modal').modal('hide');
-                    $("#title_review_modal").text("Update Review");
-                    $(".submit_value").val("Update Review");
-                }else{
-                    $("#review_form").trigger("reset");
-                    $("#title_review_modal").text("Add Review");
-                    $(".submit_value").val("Add Review");
-                    // toaster_message(response.message,response.icon,response.redirect_url);
-                }
-            },
-            error: function (error) {
-                toaster_message(error,'error',''); 
+        $("#review_modal").modal("show");
+        $("#title_review_modal").text("Add Review");
+        $(".submit_value").val("Add Review");
+
+        var reviews = $('#given_review_' + id).text();
+        var data = JSON.parse(reviews);
+        var html = '<h4>Given Reviews</h4>';
+        $.each(data, function (key, value) {
+            if (value.type == 1) {
+                html += '<h5 class="mt-2">HR Review</h5>';
+                html += '<p>' + value.description + '</p>'
+            }
+            if (value.type == 2) {
+                html += '<h5 class="mt-2">Verble Review</h5>';
+                html += '<p>' + value.description + '</p>'
+            }
+            if (value.type == 3) {
+                html += '<h5 class="mt-2">Technical Review</h5>';
+                html += '<p>' + value.description + '</p>'
             }
         });
+        $('#given_reviews').html(html);
+    });
+
+    /* display given review modal */
+    $("body").on("change", "#type", function () {
+        var i_id = $('#i_id').val();
+        var type = $(this).val();
+        $('#description').val('');
+        $('#review_id').val(0);
+        $('.rating-checked').attr('checked', false);
+        $("#title_review_modal").text("Add Review");
+        if (type != '') {
+            var token = "{{csrf_token()}}";
+            $.ajax({
+                url: aurl + "/admin/review/get-review",
+                type: 'POST',
+                dataType: "JSON",
+                data: { i_id: i_id, type: type },
+                success: function (response) {
+                    if (response.status) {
+                        $('#description').val(response.data.description);
+                        $('#star' + response.data.rating).attr('checked', true);
+                        $('#review_id').val(response.review_id);
+                        $("#title_review_modal").text("Update Review");
+                    }
+                },
+                error: function (error) {
+                    toaster_message(error, 'error', '');
+                }
+            });
+        }
     });
 
     /* adding review data in database */
-    $(".submit_review").on("click", function(event){
+    $(".submit_review").on("click", function (event) {
         event.preventDefault();
         var form = $('#review_form')[0];
         var formData = new FormData(form);
-        if($("#review_form").valid()){   
+        if ($("#review_form").valid()) {
             $.ajax({
                 url: aurl + "/admin/review/store",
                 type: 'POST',
                 dataType: "JSON",
-                data:formData,
-                cache:false,
+                data: formData,
+                cache: false,
                 contentType: false,
                 processData: false,
-                success: function(data) {
-                    if(data.status){
+                success: function (data) {
+                    if (data.status) {
                         $('#review_modal').modal('hide');
-                        toaster_message(data.message,data.icon,data.redirect_url);
-                    }else{
-                        toaster_message(data.message,data.icon,data.redirect_url);
+                        toaster_message(data.message, data.icon, data.redirect_url);
+                    } else {
+                        toaster_message(data.message, data.icon, data.redirect_url);
                     }
                 },
                 error: function (error) {
-                    toaster_message(error,'error',''); 
+                    toaster_message(error, 'error', '');
                 }
             });
         } else {
             console.log('Please enter required fields!')
         }
     });
+
 });

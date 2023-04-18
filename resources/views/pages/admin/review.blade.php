@@ -31,14 +31,89 @@
                 <th>ID</th>
                 <th>POST</th>
                 <th>NAME</th>
-                <th>HR review</th>
+                {{-- <th>HR review</th>
                 <th>HR description</th>
                 <th>TL review</th>
-                <th>TL description</th>
+                <th>TL description</th> --}}
                 <th>Action</th>
               </tr>
             </thead>
           </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- review_modal -->
+<div class="modal fade  bd-example-modal-md" id="review_modal" tabindex="-1" aria-labelledby="title_review_modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="title_review_modal">Add Review</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+      </div>
+      <div class="modal-body">
+      @if(isset($err)){
+          <div class="alert alert-danger">
+            <p>{{ $err }}</p>
+          </div>
+        }
+        @endif
+        <form class="forms-sample" method="POST" enctype="multipart/form-data" id="review_form">
+          @csrf
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <input type="hidden" class="form-control i_id" id="i_id" name="i_id" value="0">
+              <input type="hidden" class="form-control" id="review_id" name="review_id" value="0">
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="form-label">Type</label>
+              <select name="type" id="type" class="form-control">
+                <option value="">Select Type</option>
+                <option value="1">HR Review</option>
+                <option value="2">Verble Review</option>
+                <option value="3">Technical Review</option>
+              </select>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label class="form-label d-block">Review</label>
+              
+              {{-- <input type="range" class="form-range" name="review" id="rating_range" min="0" max="10" value="0" onchange="updateTextInput(this.value);"> --}}
+              {{-- <input type="number" class="form-control" name="review" id="textInput" value="" min=0 max=10> --}}
+              <div class="rate">
+                <input type="radio" id="star10" class="rating-checked" name="rate" value="10" />
+                <label for="star10" title="text">10 stars</label>
+                <input type="radio" id="star9" class="rating-checked" name="rate" value="9" />
+                <label for="star9" title="text">9 stars</label>
+                <input type="radio" id="star8" class="rating-checked" name="rate" value="8" />
+                <label for="star8" title="text">8 stars</label>
+                <input type="radio" id="star7" class="rating-checked" name="rate" value="7" />
+                <label for="star7" title="text">7 stars</label>
+                <input type="radio" id="star6" class="rating-checked" name="rate" value="6" />
+                <label for="star6" title="text">6 star</label>
+                <input type="radio" id="star5" class="rating-checked" name="rate" value="5" />
+                <label for="star5" title="text">5 stars</label>
+                <input type="radio" id="star4" class="rating-checked" name="rate" value="4" />
+                <label for="star4" title="text">4 stars</label>
+                <input type="radio" id="star3" class="rating-checked" name="rate" value="3" />
+                <label for="star3" title="text">3 stars</label>
+                <input type="radio" id="star2" class="rating-checked" name="rate" value="2" />
+                <label for="star2" title="text">2 stars</label>
+                <input type="radio" id="star1" class="rating-checked" name="rate" value="1" />
+                <label for="star1" title="text">1 star</label>
+              </div>
+            </div>
+            <div class="col-md-12 mb-3">
+              <label for="description" class="form-label">Description</label>
+              <textarea class="form-control description" id="description" name="description" rows="2"></textarea>
+            </div>
+          </div>
+          <input class="btn btn-primary submit_review" type="button" value="Submit" id="add_review">
+        </form>
+        <hr>
+        <div class="given_reviews" id="given_reviews">
+
         </div>
       </div>
     </div>

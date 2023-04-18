@@ -27,7 +27,10 @@
     </style>
 </head>
 <body>
-    <div class="container mt-5">
+    <div class="logo p-3">
+        <img src="{{ asset('/assets/images/logo-black.png') }}" alt="">
+    </div>
+    <div class="container">
         <section>
             <div class="row">
                 @forelse ($job_openings as $item)
@@ -41,7 +44,7 @@
                             <h5 class="jon-title">{{ $item->title }}</h5>
                             <p class="simple-title mt-3">{{ $item->number_openings }} Positions</p>
                             <p class="simple-title">{{ mb_strimwidth($item->description, 0, 50, "...") }}</p>
-                            <p class="simple-title">Required Minimum Experience: {{ $experience }}</p>
+                            <p class="simple-title">Experience: {{ $experience }}</p>
                             <a class="btn btn-outline-dark" href="{{ route('candidate.apply',encrypt($item->id)) }}">Apply</a>
                         </div>
                     </div>

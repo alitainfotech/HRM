@@ -9,6 +9,8 @@ use App\Http\Controllers\admin\OpeningController;
 use App\Http\Controllers\admin\PermissionController;
 use App\Http\Controllers\admin\ReviewController;
 use App\Http\Controllers\admin\RoleController;
+use App\Http\Controllers\admin\CandidateReviewController;
+use App\Http\Controllers\admin\ApplicantController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\frontend\CandidateController;
 use Illuminate\Support\Facades\Route;
@@ -121,7 +123,7 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/listing',[InterviewController::class,'listing']);
         Route::post('/show',[InterviewController::class,'show']);
         Route::post('/store',[InterviewController::class,'store']);
-        Route::post('/get-review',[InterviewController::class,'getReview']);
+        
     });
 
     /* departments route */
@@ -140,6 +142,19 @@ Route::group(['middleware' => ['admin']], function () {
         Route::post('/reject',[ReviewController::class,'reject']);
         Route::post('/select',[ReviewController::class,'select']);
         Route::post('/store',[ReviewController::class,'store']);
+        Route::post('/get-review',[ReviewController::class,'getReview']);
+    });
+
+    /* Get all review route */
+    Route::group(['prefix' => 'admin/review-list'], function(){
+        Route::get('/',[CandidateReviewController::class,'index'])->name('review-list.index');
+        Route::post('/listing',[CandidateReviewController::class,'listing']);
+    });
+
+    /* Applicant List */
+    Route::group(['prefix' => 'admin/applicant'], function(){
+        Route::get('/',[ApplicantController::class,'index'])->name('applicant.index');
+        Route::post('/listing',[ApplicantController::class,'listing']);
     });
 });
 

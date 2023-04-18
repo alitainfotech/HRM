@@ -60,8 +60,8 @@
                         <input type="hidden" class="form-control o_id" id="o_id" name="o_id" value="{{ encrypt($opening->id)}}">
                         <div class="row mb-3">
                           <div class="col-md-6">
-                            <label for="name" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="name" name="name" value="{{ old('name') }}" pattern="^[A-Za-zÀ-ÿ ,.'-]+$">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Full name" value="{{ old('name') }}" pattern="^[A-Za-zÀ-ÿ ,.'-]+$">
                             <div class="text-danger">
                                 @error('name')
                                     {{$message}}
@@ -70,7 +70,7 @@
                           </div>
                           <div class="col-md-6">
                             <label for="email" class="form-label">Email</label>
-                            <input type="text" class="form-control" id="email" name="email" value="{{ old('email') }}">
+                            <input type="text" class="form-control" id="email" name="email" placeholder="Email" value="{{ old('email') }}">
                             <div class="text-danger">
                                 @error('email')
                                     {{$message}}
@@ -81,7 +81,7 @@
                         <div class="row mb-3">
                           <div class="col-md-6">
                             <label class="form-label">Contact number:</label>
-                            <input type="number" class="form-control mb-4 mb-md-0 phone" name="phone" value="{{ old('phone') }}" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');" pattern="^[6-9][0-9]{9}$">
+                            <input type="number" class="form-control mb-4 mb-md-0 phone" name="phone" placeholder="Contact number" value="{{ old('phone') }}" onkeyup="this.value=this.value.replace(/[^0-9]/g,'');" pattern="^[6-9][0-9]{9}$">
                             <div class="text-danger">
                                 @error('phone')
                                     {{$message}}
@@ -100,7 +100,7 @@
                         </div>
                         <div class="mb-3 select">
                           <label class="form-label">Why Should We Hire You</label>
-                          <textarea name="description" class="form-control description" id="description" cols="" rows="1">{{ old('description') }}</textarea>
+                          <textarea name="description" class="form-control description" id="description" cols="" rows="4">{{ old('description') }}</textarea>
                           <div class="text-danger">
                             @error('description')
                               {{$message}}
@@ -109,8 +109,8 @@
                         </div>
                         <div class="mb-3 row">
                           <div class="col-md-6">
-                            <label for="experience_year" class="form-label">Experience In year </label>
-                            <input type="number" class="form-control experience experience_year" id="experience_year" name="experience_year" value="{{ old('experience_year') }}"  min='0' max="99">
+                            <label for="experience_year" class="form-label">Experience In Year </label>
+                            <input type="number" class="form-control experience experience_year" placeholder="Experience in year" id="experience_year" name="experience_year" value="{{ old('experience_year') }}"  min='0' max="99">
                             <div class="text-danger">
                                 @error('experience_year')
                                     {{$message}}
@@ -118,8 +118,8 @@
                             </div>
                           </div>
                           <div class="col-md-6">
-                            <label for="experience_month" class="form-label">Experience In month</label>
-                            <input type="number" class="form-control experience experience_month" id="experience_month" name="experience_month" value="{{ old('experience_month') }}" min='0'  max="12">
+                            <label for="experience_month" class="form-label">Experience In Month</label>
+                            <input type="number" class="form-control experience experience_month" id="experience_month" placeholder="Experience in month"  name="experience_month" value="{{ old('experience_month') }}" min='0'  max="12">
                             <div class="text-danger">
                                 @error('experience_month')
                                     {{$message}}

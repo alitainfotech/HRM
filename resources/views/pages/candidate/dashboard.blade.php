@@ -104,18 +104,21 @@
     $month = $job_opening['min_experience']%12;
     $experience= $year.' year '.$month.' month ';  
   @endphp
-  
-  
-  
-  
+
   <div class="col-sm-6 col-md-4 col-xl-3 mt-2 overlay">
     <div class="card">
       <img src="{{ asset('assets/images/openings/technology_icon/'.$job_opening['image']) }}" class="card-img-top overlay-content" alt="..." height="150px">
         <div class="card-body">
           <h5 class="card-title">{{ $job_opening['title'] }}</h5>
           <p class="card-text mb-3">{{ mb_strimwidth($job_opening['description'], 0, 50, "...") }}</p>
-          <p class="card-text mb-3">Required Minimum Experience: {{ $experience }}</p>
+          <p class="card-text mb-3">Experience: {{ $experience }}</p>
+    
+            @php
+                $data = enableAfterThreeMonthOpening($job_opening->id);
+            @endphp
+            @if (!$data)
               <a href="javascript:void(0)" class="btn btn-primary apply_job" data-id="{{ $job_opening['id'] }}" data-c_id="{{ $candidate->id }}">Apply</a>
+            @endif
         </div>
     </div> 
   </div>

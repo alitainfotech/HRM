@@ -66,7 +66,7 @@ class CandidateController extends Controller
             $rand_pass = '';
             $getCandidate = User::where('email',$request->email)->first();
             if(!empty($getCandidate)){
-                $getApplication = Application::where(['c_id' => $getCandidate->id,'o_id' => $o_id])->where("created_at",">", Carbon::now()->subMonths(3))->first();
+                $getApplication = Application::where(['c_id' => $getCandidate->id,'o_id' => $o_id])->where("created_at",">", Carbon::now()->subMonths(3))->latest()->first();
                 if(!empty($getApplication)){
                     return redirect()->back()->with(['type' => 'danger', 'message' => 'You have already applied for this job']);
                 }
@@ -93,7 +93,7 @@ class CandidateController extends Controller
             }
             $cv = $request['cv'];
             if(isset($cv)) {
-                $name = date('YmdHis').'_'.$cv->getClientOriginalName();
+                $name = $cv->getClientOriginalName().'_'.date('YmdHis');
                 $allowedcvExtension=['pdf','docx'];
                 $extension = $cv->getClientOriginalExtension();
                 $check=in_array($extension,$allowedcvExtension);
@@ -136,7 +136,7 @@ class CandidateController extends Controller
         // $job_openings = Opening::with(['application'=>function($q){
         //     $q->where('c_id',Auth::user()->id);
         // }])->where('status','=',1)->get();
-        $job_openings = Opening::where('status','=',1)->get();
+        $job_openings = Opening::where('status',1)->get();
         return view('pages.candidate.dashboard',compact('job_openings'));
     }
 
@@ -172,7 +172,7 @@ class CandidateController extends Controller
         $c_id = $request['c_id'];
         $cv = $request['cv'];
 
-        $getApplication = Application::where(['c_id' => $c_id,'o_id' => $request['o_id']])->where("created_at",">", Carbon::now()->subMonths(3))->first();
+        $getApplication = Application::where(['c_id' => $c_id,'o_id' => $request['o_id']])->where("created_at",">", Carbon::now()->subMonths(3))->latest()->first();
         if(!empty($getApplication)){
             $data = [
                 'status' => 0,
@@ -184,8 +184,7 @@ class CandidateController extends Controller
         $application = new Application();
      
         if(isset($cv) && !empty($cv)) {
-
-            $name = $cv->getClientOriginalName();
+            $name = $cv->getClientOriginalName().'_'.date('YmdHis');
             $allowedcvExtension=['pdf','docx'];
             $extension = $cv->getClientOriginalExtension();
             $check=in_array($extension,$allowedcvExtension);
@@ -232,13 +231,13 @@ class CandidateController extends Controller
              $month = $application['experience']%12;
              $experience= $year.' year '.$month.' month ';
              if($application['status']==0){
-                $status="pending";$class="btn-info";}
+                $status="pending";$class="badge bg-warning text-dark";}
                 elseif($application['status']==1){
-                $status="reviewed";$class="btn-info";}
+                $status="reviewed";$class="badge bg-info text-dark";}
                 elseif($application['status']==2){
-                $status="selected";$class="btn-success";}
+                $status="selected";$class="badge bg-success";}
                 elseif($application['status']==3){
-                $status="rejected";$class="btn-danger";}
+                $status="rejected";$class="badge bg-danger";}
                 $status_div= '<div class="btn mx-2 '.$class.' ">'. $status .'</div>';
                 $date=date('d-m-Y ',strtotime($application['created_at']));
              $data_result[] = array( 

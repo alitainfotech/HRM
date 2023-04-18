@@ -42,7 +42,7 @@ class ApplicationController extends Controller
             if($application['status'] == 1){
                 $button = '';
             }
-            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p>'.$application['cv'].'</p></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p class="cv-file">'.$application['cv'].'</p></a>';
             $data_result[] = array( 
                 "id"=>$id, 
                 "post"=>$application->opening['title'],
@@ -165,7 +165,8 @@ class ApplicationController extends Controller
             $year = intdiv($application['experience'],12);
             $month = $application['experience']%12;
             $experience= $year.' year '.$month.' month ';
-            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p>'.$application['cv'].'</p></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p class="cv-file">'.$application['cv'].'</p></a>';
+            $button='<a class="btn btn-icon btn-info m-1 show-reason" data-reason="'.$application['reason'].'"><i class="mdi mdi-eye"></i></a>';
             $data_result[] = array( 
             "id"=>$id, 
             "post"=>$application->opening['title'],
@@ -175,7 +176,7 @@ class ApplicationController extends Controller
             "cv"=>$cv,
             "description"=>mb_strimwidth($application['description'], 0, 50, "..."),
             "experience"=>$experience,
-            "reason"=>$application['reason']
+            "reason"=> $button
             );
         }
         $dataset = array(
@@ -209,7 +210,7 @@ class ApplicationController extends Controller
             $month = $application['experience']%12;
             $experience= $year.' year '.$month.' month ';
             
-            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p>'.$application['cv'].'</p></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p class="cv-file">'.$application['cv'].'</p></a>';
             $data_result[] = array( 
             "id"=>$id, 
             "post"=>$application->opening['title'],

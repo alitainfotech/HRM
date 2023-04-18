@@ -112,6 +112,22 @@
           </a>
         </li>
         @endif
+        @if(in_array("33", permission()))
+        <li class="nav-item {{ active_class(['admin/review-list']) }} ">
+          <a href="{{ route('review-list.index') }}" class="nav-link">
+            <i class="link-icon" data-feather="clipboard"></i>
+            <span class="link-title">Review List</span>
+          </a>
+        </li>
+        @endif
+        @if(in_array("34", permission()))
+        <li class="nav-item {{ active_class(['admin/applicant']) }} ">
+          <a href="{{ route('applicant.index') }}" class="nav-link">
+            <i class="link-icon" data-feather="users"></i>
+            <span class="link-title">Applicant</span>
+          </a>
+        </li>
+        @endif
         @endif
       @endif
     </ul>

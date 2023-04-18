@@ -1,8 +1,10 @@
  <?php
 
 use App\Models\Admin;
+use App\Models\Application;
 use App\Models\Role_Permission;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
     if(!function_exists('permissions')){
         function permission(){
@@ -25,5 +27,13 @@ use Illuminate\Support\Facades\Auth;
       
     function show_class($path) {
       return call_user_func_array('Request::is', (array)$path) ? 'show' : '';
+    }
+
+    function enableAfterThreeMonthOpening($opningId){ 
+      $getApplication = Application::where(['c_id' => Auth::user()->id,'o_id' => $opningId])->where("created_at",">", Carbon::now()->subMonths(3))->latest()->first();
+      if(!empty($getApplication)){
+        return true;
+      }
+      return false;
     }
  ?>

@@ -1,5 +1,6 @@
 @extends('layout.master')
-@section('title',"Application Rejected")
+@section('title',"Applicant")
+
 @push('plugin-styles')
   <link href="{{ asset('assets/plugins/datatables-net/dataTables.bootstrap4.css') }}" rel="stylesheet" />
   <link href="{{ asset('assets/plugins/@mdi/css/materialdesignicons.min.css') }}" rel="stylesheet" />
@@ -13,8 +14,7 @@
 <nav class="page-breadcrumb">
   <ol class="breadcrumb">
     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Applications</li>
-    <li class="breadcrumb-item active" aria-current="page">Rejected</li>
+    <li class="breadcrumb-item active" aria-current="page">Applicant</li>
   </ol>
 </nav>
 <div class="row">
@@ -22,7 +22,7 @@
     <div class="card">
       <div class="card-body">
           <div class="row">
-            <h6 class="card-title col">Rejected applications for job</h6>
+            <h6 class="card-title col">Applicant</h6>
           </div>
         <div class="table-responsive mt-2">
           <table id="dataTableExample" class="table" >
@@ -31,12 +31,9 @@
                 <th>ID</th>
                 <th>POST</th>
                 <th>NAME</th>
-                <th>PHONE</th>
-                <th>EMAIL</th>
-                <th>CV</th>
-                <th>Description</th>
-                <th>experience</th>
-                <th>Reason</th>
+                <th>APPLIED DATE</th>
+                <th>EXPERIENCE</th>
+                <th>STATUS</th>
               </tr>
             </thead>
           </table>
@@ -45,20 +42,7 @@
     </div>
   </div>
 </div>
-<!-- review_modal -->
-<div class="modal fade  bd-example-modal-md" id="show_reason" tabindex="-1" aria-labelledby="title_show_reason" aria-hidden="true">
-  <div class="modal-dialog modal-md modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="title_show_reason">Rejected Reason</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
-      </div>
-      <div class="modal-body">
-          <p id="reject_reason"></p>
-      </div>
-    </div>
-  </div>
-</div>
+
 @endsection
 
 @push('plugin-scripts')
@@ -77,6 +61,6 @@
    {{-- custom js --}}
  <!-- jquery validationjs -->
  <script src="{{ asset('assets/js/jquery.validate.min.js')}}"></script>
-  <script src="{{ asset('assets/js/applicationReject.js') }}"></script>
+  <script src="{{ asset('assets/js/applicant.js') }}"></script>
   
 @endpush

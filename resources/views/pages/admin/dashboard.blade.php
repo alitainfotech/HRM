@@ -117,19 +117,6 @@
         <div class="card card-common">
           <div class="card-body">
             <div class="d-flex justify-content-between align-items-center">
-              <i class="fa-solid fa-clipboard-question fa-4x text-warning"></i>
-                <div class="text-right text-dark">
-                  <h3 class="total_application_review text-warning"></h3>
-                  <h5>Total Reviewed Applications</h5>
-                </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 grid-margin stretch-card">
-        <div class="card card-common">
-          <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
               <i class="fa-regular fa-clipboard fa-4x text-danger"></i>
                 <div class="text-right text-dark">
                   <h3 class="rejected_applications text-danger"></h3>
@@ -152,6 +139,19 @@
           </div>
         </div>
       </div>
+      {{-- <div class="col-md-4 grid-margin stretch-card">
+        <div class="card card-common">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <i class="fa-solid fa-clipboard-question fa-4x text-warning"></i>
+                <div class="text-right text-dark">
+                  <h3 class="total_application_review text-warning"></h3>
+                  <h5>Total Reviewed Applications</h5>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div> --}}
     </div>
   </div>
 </div>
