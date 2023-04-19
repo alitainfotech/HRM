@@ -13,14 +13,13 @@ class ApplicantController extends Controller
         return view('pages.admin.applicant.index');
     }
 
-    /* listing of reviews */
+    /* listing of applicant */
     public function listing(Request $request)
     {
-        $data['applications']= Application::with('candidate')->with('opening')->get();
+        $applicationData = Application::with('candidate')->with('opening')->get();
         $data_result = [];
         $id=0;
-        foreach ($data['applications'] as $application) {
-            
+        foreach ($applicationData as $application) {
             $id++;
             $year = intdiv($application['experience'],12);
             $month = $application['experience']%12;

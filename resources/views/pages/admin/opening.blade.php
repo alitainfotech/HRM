@@ -36,7 +36,7 @@
           </div>
           <div class="mb-3">
               <label for="description" class="form-label">Description</label>
-              <textarea class="form-control description" id="description" name="description" rows="2"></textarea>
+              <textarea class="form-control description ckeditor" id="description" name="description" rows="2"></textarea>
           </div>
           <div class="mb-3">
             <label for="number_openings" class="form-label">Number Openings</label>
@@ -100,7 +100,6 @@
                 <th>Minimum Experience</th>
                 <th>Maximum Experience</th>
                 <th>Action</th>
-                
               </tr>
             </thead>
           </table>
@@ -119,15 +118,20 @@
 @endpush
 
 @push('custom-scripts')
-  <script src="{{ asset('assets/js/inputmask.js') }}"></script>
-  <script src="{{ asset('assets/js/select2.js') }}"></script>
-  <script type="text/javascript">
-    var aurl = {!! json_encode(url('/')) !!}
-  </script>
-   {{-- custom js --}}
- <!-- jquery validationjs -->
- <script src="{{ asset('assets/js/jquery.validate.min.js')}}"></script>
- <script src="{{ asset('assets/js/additional-methods.min.js')}}"></script>
+    <script src="{{ asset('assets/js/inputmask.js') }}"></script>
+    <script src="{{ asset('assets/js/select2.js') }}"></script>
+    <script type="text/javascript">
+      var aurl = {!! json_encode(url('/')) !!}
+    </script>
+    {{-- custom js --}}
+  <!-- jquery validationjs -->
+  <script src="{{ asset('assets/js/jquery.validate.min.js')}}"></script>
+  <script src="{{ asset('assets/js/additional-methods.min.js')}}"></script>
   <script src="{{ asset('assets/js/opening.js') }}"></script>
-  
+  <script src="{{ URL::to('https://cdn.ckeditor.com/4.21.0/standard/ckeditor.js')}}"></script>
+  <script>
+    CKEDITOR.replace( 'description', {
+        format_tags: 'p;h1;h2;h3;h4;h5;h6;pre;address;div'
+    });
+  </script>
 @endpush

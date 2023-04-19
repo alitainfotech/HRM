@@ -42,9 +42,9 @@
                 @endphp
                 <div class="col-md-6">
                     <h4>Job Description</h4>
-                    <p class="simple-title mt-3">{{ $opening->number_openings }} Positions</p>
-                    <p class="simple-title">Required Minimum Experience: {{ $experience }}</p>
-                    <p>{{ $opening->description }}</p>
+                    {{-- <p class="simple-title mt-3">{{ $opening->number_openings }} Positions</p>
+                    <p class="simple-title">Required Minimum Experience: {{ $experience }}</p> --}}
+                    <p>{!! $opening->description !!}</p>
                 </div>
                 <div class="col-md-6">
 
