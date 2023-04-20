@@ -43,7 +43,7 @@
                             @endphp
                             <h5 class="jon-title">{{ $item->title }}</h5>
                             <p class="simple-title mt-3">{{ $item->number_openings }} Positions</p>
-                            <p class="simple-title">{{ mb_strimwidth($item->description, 0, 50, "...") }}</p>
+                            <p class="simple-title">{!! mb_strimwidth($item->description, 0, 50, "...") !!}</p>
                             <p class="simple-title">Experience: {{ $experience }}</p>
                             <a class="btn btn-outline-dark" href="{{ route('candidate.apply',encrypt($item->id)) }}">Apply</a>
                         </div>
