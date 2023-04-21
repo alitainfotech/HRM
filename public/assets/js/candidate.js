@@ -3,50 +3,51 @@
 /* ajax set up */
 $.ajaxSetup({
     headers: {
-      'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
+        'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content')
     }
-  });
-  
-  /* datatable */
-  $(function() {
+});
+
+/* datatable */
+$(function () {
     'use strict';
-    $(function() {
-      $('#dataTableExample').DataTable({
-        "aLengthMenu": [
-          [10, 30, 50, -1],
-          [10, 30, 50, "All"]
-        ],
-        "iDisplayLength": 10,
-        "language": {
-          search: ""
-        },
-        'ajax': {
-          type:'POST',
-          url: aurl + "/application/listing", 
-      },
-      'columns': [
-          { data: 'id' },
-          { data: 'title' },
-          { data: 'date' },
-          { data: 'experience' },
-          { data: 'status' },
-  
-      ]
-      });
-      $('#dataTableExample').each(function() {
-        var datatable = $(this);
-        // SEARCH - Add the placeholder for Search and Turn this into in-line form control
-        var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
-        search_input.attr('placeholder', 'Search');
-        search_input.removeClass('form-control-sm');
-        // LENGTH - Inline-Form control
-        var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
-        length_sel.removeClass('form-control-sm');
-      });
+    $(function () {
+        $('#dataTableExample').DataTable({
+            "aLengthMenu": [
+                [10, 30, 50, -1],
+                [10, 30, 50, "All"]
+            ],
+            "iDisplayLength": 10,
+            "language": {
+                search: ""
+            },
+            'ajax': {
+                type: 'POST',
+                url: aurl + "/application/listing",
+            },
+            'columns': [
+                { data: 'id' },
+                { data: 'title' },
+                { data: 'date' },
+                { data: 'experience' },
+                { data: 'status' },
+                { data: 'action' },
+
+            ]
+        });
+        $('#dataTableExample').each(function () {
+            var datatable = $(this);
+            // SEARCH - Add the placeholder for Search and Turn this into in-line form control
+            var search_input = datatable.closest('.dataTables_wrapper').find('div[id$=_filter] input');
+            search_input.attr('placeholder', 'Search');
+            search_input.removeClass('form-control-sm');
+            // LENGTH - Inline-Form control
+            var length_sel = datatable.closest('.dataTables_wrapper').find('div[id$=_length] select');
+            length_sel.removeClass('form-control-sm');
+        });
     });
-  });
-  
-$(document).ready(function(){
+});
+
+$(document).ready(function () {
 
     $('#application_form').validate({ // initialize the plugin
         rules: {
@@ -75,13 +76,13 @@ $(document).ready(function(){
             description: {
                 required: true
             },
-            experience_month:{
+            experience_month: {
                 required: true,
                 minlength: 1,
                 maxlength: 10,
                 digits: true
             },
-            experience_year:{
+            experience_year: {
                 required: true,
                 minlength: 1,
                 maxlength: 10,
@@ -91,28 +92,28 @@ $(document).ready(function(){
         messages: {
             fullname: "Please enter your full name",
             email: {
-              required: "Please enter a valid email address",
-              emailcheck: "Please register with another email id"
+                required: "Please enter a valid email address",
+                emailcheck: "Please register with another email id"
             },
             phone: {
                 required: "Please enter your phone number",
                 minlength: "Your phone must be 10 characters long",
-                maxlength:"Your phone must be 10 characters only"
+                maxlength: "Your phone must be 10 characters only"
             },
             cv: {
                 required: "Please upload your cv",
                 extension: "Please upload pdf or docx file only",
             },
             password: {
-              required: "Please provide a password",
-              minlength: "Your password must be at least 8 characters long",
-              pwcheck: "please enter atleast one uppercase, number and special character!"
+                required: "Please provide a password",
+                minlength: "Your password must be at least 8 characters long",
+                pwcheck: "please enter atleast one uppercase, number and special character!"
             },
-          },
+        },
     });
 
     /* display add application modal */
-    $('body').on("click", ".apply_job", function(){
+    $('body').on("click", ".apply_job", function () {
         $('.already-exist').text('');
         var id = $(this).data("id");
         $('.o_id').val(id);
@@ -125,24 +126,24 @@ $(document).ready(function(){
         });
     });
 
-    /* adding and updating application data */    
-    $(".submit_value").on("click", function(event){
+    /* adding and updating application data */
+    $(".submit_value").on("click", function (event) {
         event.preventDefault();
         $('.already-exist').text('');
         var form = $('#application_form')[0];
         var formData = new FormData(form);
-        if($("#application_form").valid()){   
+        if ($("#application_form").valid()) {
             $.ajax({
                 url: aurl + "/application/store",
                 type: 'POST',
-                data:formData,
-                cache:false,
+                data: formData,
+                cache: false,
                 contentType: false,
                 processData: false,
-                success: function(data) {
-                    if(data.status == 0){
+                success: function (data) {
+                    if (data.status == 0) {
                         $('.already-exist').text(data.message);
-                    }else{
+                    } else {
                         $('#application_form').modal('hide');
                         window.location.href = aurl + "/dashboard";
                     }
@@ -154,7 +155,7 @@ $(document).ready(function(){
     });
 
     /* display update application modal */
-    $('body').on("click", ".application_edit", function(event){
+    $('body').on("click", ".application_edit", function (event) {
         var id = $(this).data("id");
         $('.id').val(id);
         // alert(id);
@@ -162,9 +163,9 @@ $(document).ready(function(){
         $.ajax({
             url: aurl + "/candidate/application/show",
             type: "POST",
-            data: {id:id},
+            data: { id: id },
             dataType: "JSON",
-            success: function(data){
+            success: function (data) {
                 $("#application_form").trigger('reset');
                 $('#title_application_modal').text("Update application");
                 $('#application_modal').modal('show');
@@ -175,7 +176,7 @@ $(document).ready(function(){
                 var experience = data.experience.split('-');
                 $('.phone').val(data.candidate.phone);
                 $('.description').val(data.description);
-                $('.post option[value="'+data.post+'"]').prop('selected', true);
+                $('.post option[value="' + data.post + '"]').prop('selected', true);
                 $('.post').trigger('change');
                 $('.experience_year').val(experience[0]);
                 $('.experience_month').val(experience[1]);
@@ -188,7 +189,7 @@ $(document).ready(function(){
                         cancelButton: 'btn btn-danger me-2'
                     },
                     buttonsStyling: false,
-                    })
+                })
                 swalWithBootstrapButtons.fire(
                     'Cancelled',
                     'this data is not available for update :)',
@@ -197,8 +198,8 @@ $(document).ready(function(){
             }
         });
     });
-    
-    $('body').on("click", ".application_delete", function(event){
+
+    $('body').on("click", ".application_delete", function (event) {
         event.preventDefault();
         var id = $(this).data('id');
         // alert(id);
@@ -208,9 +209,9 @@ $(document).ready(function(){
                 cancelButton: 'btn btn-danger me-2'
             },
             buttonsStyling: false,
-            })
-            
-            swalWithBootstrapButtons.fire({
+        })
+
+        swalWithBootstrapButtons.fire({
             title: 'Are you sure?',
             text: "You won't be able to revert this!",
             icon: 'warning',
@@ -218,13 +219,13 @@ $(document).ready(function(){
             confirmButtonText: 'Yes, delete it!',
             cancelButtonText: 'No, cancel!',
             reverseButtons: true
-            }).then((result) => {
+        }).then((result) => {
             if (result.value) {
                 $.ajax({
                     type: "post",
                     url: aurl + "/candidate/application/delete",
-                    data: {id: id},
-                    success: function(data) {
+                    data: { id: id },
+                    success: function (data) {
                         swalWithBootstrapButtons.fire({
                             title: 'Deleted!',
                             text: "Your file has been deleted.",
@@ -232,7 +233,7 @@ $(document).ready(function(){
                             confirmButtonText: 'OK',
                             reverseButtons: true
                         }).then((result) => {
-                            if(result.value){
+                            if (result.value) {
                                 window.location.href = aurl + "/candidate";
                             }
                         })
@@ -246,18 +247,25 @@ $(document).ready(function(){
                         )
                     }
                 });
-               
+
             } else if (
                 // Read more about handling dismissals
                 result.dismiss === Swal.DismissReason.cancel
             ) {
                 swalWithBootstrapButtons.fire(
-                'Cancelled',
-                'Your data is safe :)',
-                'error'
+                    'Cancelled',
+                    'Your data is safe :)',
+                    'error'
                 )
             }
         })
     });
-   
+
+    $(document).on('click', '.show-reason', function () {
+        $("#show_reason").modal("show");
+        let reason = $(this).data('reason');
+        $('#reject_reason').text(reason);
+    });
+
+
 });

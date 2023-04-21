@@ -54,4 +54,18 @@ color: red;
 .rate > label:hover ~ input:checked ~ label {
     color: #c59b08;
 }
+
+.given-rating .rating-details {
+    margin: 4px;
+    padding: 10px;
+    background: #ededed;
+}
+
+.given-rating .rating-details p {
+    margin-top: 10px;
+}
+
+.given-rating .given-rating-start{
+    color: #deb217;  
+}
 /* End Start rating CSS */

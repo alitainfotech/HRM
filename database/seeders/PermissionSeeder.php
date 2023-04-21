@@ -54,6 +54,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'candidate.reject', 'status' => 1] ,
             ['name' => 'review-list.index', 'status' => 1] ,
             ['name' => 'Applicant.View', 'status' => 1] ,
+            ['name' => 'review-list.review', 'status' => 1] ,
         ];
 
         Permission::insert($permissions);

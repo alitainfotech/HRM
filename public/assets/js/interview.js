@@ -220,21 +220,47 @@ $(document).ready(function () {
 
         var reviews = $('#given_review_' + id).text();
         var data = JSON.parse(reviews);
-        var html = '<h4>Given Reviews</h4>';
+        var html = '<h4 class="text-center">Given Reviews</h4>';
+        html += '<div class="row mt-2 given-rating">';
+
         $.each(data, function (key, value) {
             if (value.type == 1) {
-                html += '<h5 class="mt-2">HR Review</h5>';
-                html += '<p>' + value.description + '</p>'
+                html += '<div class="col-md-4">';
+                html += '<div class="rating-details">';
+                html += '<h5>HR Review</h5><hr>';
+                for (i = 1; i <= value.rating; i++) {
+                    html += '<span class="fa fa-star given-rating-start"></span>';
+                    // html += '<input type="radio" id="star_' + i + '" class="rating-checked" value="' + i + '" checked/><label for="star_' + i + '" title="text"></label>';
+                };
+                html += '<p>' + value.description + '</p>';
+                html += '</div>';
+                html += '</div>';
             }
             if (value.type == 2) {
-                html += '<h5 class="mt-2">Verble Review</h5>';
-                html += '<p>' + value.description + '</p>'
+                html += '<div class="col-md-4">';
+                html += '<div class="rating-details">';
+                html += '<h5>Verble Review</h5><hr>';
+                for (i = 1; i <= value.rating; i++) {
+                    html += '<span class="fa fa-star given-rating-start"></span>';
+                };
+                html += '<p>' + value.description + '</p>';
+                html += '</div>';
+                html += '</div>';
             }
             if (value.type == 3) {
-                html += '<h5 class="mt-2">Technical Review</h5>';
-                html += '<p>' + value.description + '</p>'
+                html += '<div class="col-md-4">';
+                html += '<div class="rating-details">';
+
+                html += '<h5>Technical Review</h5><hr>';
+                for (i = 1; i <= value.rating; i++) {
+                    html += '<span class="fa fa-star given-rating-start"></span>';
+                };
+                html += '<p>' + value.description + '</p>';
+                html += '</div>';
+                html += '</div>';
             }
         });
+        html += '</div>';
         $('#given_reviews').html(html);
     });
 

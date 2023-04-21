@@ -29,15 +29,28 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>POST</th>
                 <th>NAME</th>
-                <th>Review Type</th>
-                <th>Review</th>
-                <th>Description</th>
+                <th>POST</th>
+                <th>Action</th>
               </tr>
             </thead>
           </table>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- review_modal -->
+<div class="modal fade  bd-example-modal-md" id="given_review" tabindex="-1" aria-labelledby="title_given_review" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="title_given_review">Given Review</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+      </div>
+      <div class="modal-body">
+          <div id="given_review_list"></div>
       </div>
     </div>
   </div>

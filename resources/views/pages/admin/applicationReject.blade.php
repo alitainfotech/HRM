@@ -29,10 +29,10 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>POST</th>
                 <th>NAME</th>
                 <th>PHONE</th>
                 <th>EMAIL</th>
+                <th>POST</th>
                 <th>CV</th>
                 <th>Description</th>
                 <th>experience</th>

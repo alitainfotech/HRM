@@ -22,10 +22,10 @@ var listing = $("#dataTableExample").DataTable({
     },
     columns: [
         { data: "id" },
-        { data: "post" },
         { data: "name" },
         { data: "phone" },
         { data: "email" },
+        { data: "post" },
         { data: "cv" },
         { data: "description" },
         { data: "experience" },
@@ -99,7 +99,7 @@ $(document).ready(function () {
                         dropdownParent: $("#interview_modal"),
                     });
                 } else {
-                    toaster_message(data.message,data.icon,data.redirect_url);
+                    toaster_message(data.message, data.icon, data.redirect_url);
                 }
             },
         });
@@ -121,7 +121,7 @@ $(document).ready(function () {
                 processData: false,
                 success: function (data) {
                     $("#interview_modal").modal("hide");
-                    toaster_message(data.message,data.icon,data.redirect_url);
+                    toaster_message(data.message, data.icon, data.redirect_url);
                 },
                 error: function (error) {
                     alert("error; " + eval(error));
@@ -135,7 +135,7 @@ $(document).ready(function () {
     $("body").on("click", ".reject", function (event) {
         event.preventDefault();
         var id = $(this).data("id");
-        const value  = Swal.fire({
+        const value = Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
             icon: "warning",
@@ -163,18 +163,52 @@ $(document).ready(function () {
                 $.ajax({
                     type: "post",
                     url: aurl + "/admin/application/pending/reject",
-                    data: {id: id,reason: reason},
+                    data: { id: id, reason: reason },
                     dataType: "JSON",
-                    beforeSend: function() {
+                    beforeSend: function () {
                         $('body').removeClass('loaded');
                     },
-                    success: function(data) {
+                    success: function (data) {
                         $('body').addClass('loaded');
-                        toaster_message(data.message,data.icon,data.redirect_url);
+                        toaster_message(data.message, data.icon, data.redirect_url);
                     },
                 });
             } else if (result.dismiss === Swal.DismissReason.cancel) {
                 swal.fire("Cancelled", "Application is pending :)", "info");
+            }
+        });
+    });
+
+    /* display update interview modal */
+    $('body').on("click", ".edit_interview", function (event) {
+        var id = $(this).data("id");
+        $('.i_id').val(id);
+        event.preventDefault();
+        $.ajax({
+            url: aurl + "/admin/interview/show",
+            type: "POST",
+            data: { id: id },
+            dataType: "JSON",
+            success: function (data) {
+                if (data.status) {
+                    $("#interview_form").trigger('reset');
+                    $('#interview_modal').modal('show');
+                    $('#title_interview_modal').text("Update Interview");
+                    $('.submit_value').val("Update interview");
+                    $('.name').val(data.name);
+                    $('.leader option[value="' + data.id + '"]').prop('selected', true);
+                    var dateArr = data.date.split(' ');
+                    date = dateArr[0] + 'T' + dateArr[1];
+                    $('.date').val(date);
+                    $('.leader').select2({
+                        dropdownParent: $('#interview_modal')
+                    });
+                } else {
+                    toaster_message(data.message, data.icon, data.redirect_url);
+                }
+            },
+            error: function (error) {
+                toaster_message('error', 'error', '');
             }
         });
     });

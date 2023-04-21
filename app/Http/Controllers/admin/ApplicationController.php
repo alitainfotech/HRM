@@ -40,15 +40,17 @@ class ApplicationController extends Controller
             $button.='<div class="btn btn-icon btn-danger reject m-1" data-id="'.$application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
             }
             if($application['status'] == 1){
-                $button = '';
+                if(in_array("23", permission())){
+                    $button ='<div class="btn btn-icon btn-warning edit_interview m-1" data-id="'.$application->getInterview->id.'"><i class="mdi mdi-square-edit-outline"></i></div>';
+                }
             }
-            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p class="cv-file">'.$application['cv'].'</p></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" class="btn btn-icon btn-info m-1" download><i class="mdi mdi-download"></a>';
             $data_result[] = array( 
                 "id"=>$id, 
-                "post"=>$application->opening['title'],
                 "name"=>$application->candidate['full_name'],
                 "phone"=>$application->candidate['phone'],
                 "email"=>$application->candidate['email'],
+                "post"=>$application->opening['title'],
                 "cv"=>$cv,
                 "description"=>mb_strimwidth($application['description'], 0, 50, "..."),
                 "experience"=>$experience,
@@ -165,14 +167,14 @@ class ApplicationController extends Controller
             $year = intdiv($application['experience'],12);
             $month = $application['experience']%12;
             $experience= $year.' year '.$month.' month ';
-            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p class="cv-file">'.$application['cv'].'</p></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" class="btn btn-icon btn-info m-1" download><i class="mdi mdi-download"></a>';
             $button='<a class="btn btn-icon btn-info m-1 show-reason" data-reason="'.$application['reason'].'"><i class="mdi mdi-eye"></i></a>';
             $data_result[] = array( 
             "id"=>$id, 
-            "post"=>$application->opening['title'],
             "name"=>$application->candidate['full_name'],
             "phone"=>$application->candidate['phone'],
             "email"=>$application->candidate['email'],
+            "post"=>$application->opening['title'],
             "cv"=>$cv,
             "description"=>mb_strimwidth($application['description'], 0, 50, "..."),
             "experience"=>$experience,
@@ -209,14 +211,13 @@ class ApplicationController extends Controller
             $year = intdiv($application['experience'],12);
             $month = $application['experience']%12;
             $experience= $year.' year '.$month.' month ';
-            
-            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" download><p class="cv-file">'.$application['cv'].'</p></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" class="btn btn-icon btn-info m-1" download><i class="mdi mdi-download"></a>';
             $data_result[] = array( 
             "id"=>$id, 
-            "post"=>$application->opening['title'],
             "name"=>$application->candidate['full_name'],
             "phone"=>$application->candidate['phone'],
             "email"=>$application->candidate['email'],
+            "post"=>$application->opening['title'],
             "cv"=>$cv,
             "experience"=>$experience,
             "action"=>$button

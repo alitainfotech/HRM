@@ -24,10 +24,10 @@ $(function () {
       },
       'columns': [
         { data: 'id' },
-        { data: 'post' },
         { data: 'name' },
         { data: 'phone' },
         { data: 'email' },
+        { data: 'post' },
         { data: 'cv' },
         { data: 'description' },
         { data: 'experience' },

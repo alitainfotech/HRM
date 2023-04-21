@@ -21,8 +21,8 @@ var listing = $('#dataTableExample').DataTable({
     },
     'columns': [
         { data: 'id' },
-        { data: 'post' },
         { data: 'name' },
+        { data: 'post' },
         // { data: 'hr_review' },
         // { data: 'hr_des' },
         // { data: 'tl_review' },
@@ -78,7 +78,11 @@ $(document).ready(function () {
                     url: aurl + "/admin/review/reject",
                     data: { id: id, reason: reason, a_id: a_id },
                     dataType: "JSON",
+                    beforeSend: function () {
+                        $('body').removeClass('loaded');
+                    },
                     success: function (data) {
+                        $('body').addClass('loaded');
                         toaster_message(data.message, data.icon, data.redirect_url);
                     },
                     error: function (error) {
@@ -152,21 +156,49 @@ $(document).ready(function () {
         $(".submit_value").val("Add Review");
         var reviews = $('#given_review_' + id).text();
         var data = JSON.parse(reviews);
-        var html = '<h4>Given Reviews</h4>';
+        var html = '<h4 class="text-center">Given Reviews</h4>';
+        html += '<div class="row mt-2 given-rating">';
+
         $.each(data, function (key, value) {
+            // console.log(value);
+
             if (value.type == 1) {
-                html += '<h5 class="mt-2">HR Review</h5>';
-                html += '<p>' + value.description + '</p>'
+                html += '<div class="col-md-4">';
+                html += '<div class="rating-details">';
+                html += '<h5>HR Review</h5><hr>';
+                for (i = 1; i <= value.rating; i++) {
+                    html += '<span class="fa fa-star given-rating-start"></span>';
+                    // html += '<input type="radio" id="star_' + i + '" class="rating-checked" value="' + i + '" checked/><label for="star_' + i + '" title="text"></label>';
+                };
+                html += '<p>' + value.description + '</p>';
+                html += '</div>';
+                html += '</div>';
             }
             if (value.type == 2) {
-                html += '<h5 class="mt-2">Verble Review</h5>';
-                html += '<p>' + value.description + '</p>'
+                html += '<div class="col-md-4">';
+                html += '<div class="rating-details">';
+                html += '<h5>Verble Review</h5><hr>';
+                for (i = 1; i <= value.rating; i++) {
+                    html += '<span class="fa fa-star given-rating-start"></span>';
+                };
+                html += '<p>' + value.description + '</p>';
+                html += '</div>';
+                html += '</div>';
             }
             if (value.type == 3) {
-                html += '<h5 class="mt-2">Technical Review</h5>';
-                html += '<p>' + value.description + '</p>'
+                html += '<div class="col-md-4">';
+                html += '<div class="rating-details">';
+
+                html += '<h5>Technical Review</h5><hr>';
+                for (i = 1; i <= value.rating; i++) {
+                    html += '<span class="fa fa-star given-rating-start"></span>';
+                };
+                html += '<p>' + value.description + '</p>';
+                html += '</div>';
+                html += '</div>';
             }
         });
+        html += '</div>';
         $('#given_reviews').html(html);
     });
 

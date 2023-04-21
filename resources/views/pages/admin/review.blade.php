@@ -29,8 +29,8 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>POST</th>
                 <th>NAME</th>
+                <th>POST</th>
                 {{-- <th>HR review</th>
                 <th>HR description</th>
                 <th>TL review</th>
@@ -78,7 +78,6 @@
             </div>
             <div class="col-md-12 mb-3">
               <label class="form-label d-block">Review</label>
-              
               {{-- <input type="range" class="form-range" name="review" id="rating_range" min="0" max="10" value="0" onchange="updateTextInput(this.value);"> --}}
               {{-- <input type="number" class="form-control" name="review" id="textInput" value="" min=0 max=10> --}}
               <div class="rate">

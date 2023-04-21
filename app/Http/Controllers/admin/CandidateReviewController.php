@@ -15,36 +15,25 @@ class CandidateReviewController extends Controller
     /* listing of reviews */
     public function listing()
     {
-        $review = Review::select('*',\DB::raw('(CASE 
-        WHEN type = "0" THEN "-"
-        WHEN type = "1" THEN "HR Review"
-        WHEN type = "2" THEN "Verble Review"
-        WHEN type = "3" THEN "Technical Review"
-        ELSE "-"
-        END) AS type'))->get();
+        $review = Review::get()->groupBy('i_id');
+        // $review = Review::get();
+        // dd($review);
         $data_result = [];
         $id=0;
         foreach ($review as $row) {
-            
-            $candidate = $row->getInterview->application->load('candidate')->candidate;
-            $opening = $row->getInterview->application->load('opening')->opening;
+            // dd($row[0]['i_id']);
+            $candidate = $row[0]->getInterview->application->load('candidate')->candidate;
+            $opening = $row[0]->getInterview->application->load('opening')->opening;
             $id++;
-            // $button = '';
-            // if($row->getInterview->status == 1){     
-            //     if(in_array("32", permission())){
-            //          $button.='<div class="btn btn-icon btn-danger reject_candidate m-1" data-id="'.$row->i_id.'" data-a_id="'.$row->getInterview->application['id'].'"><i class="mdi mdi-close-outline"></i></div>';
-            //     }
-            //     if(in_array("31", permission())){
-            //         $button.='<div class="btn btn-icon btn-success select_candidate m-1" data-id="'.$row->i_id.'" data-a_id="'.$row->getInterview->application['id'].'"><i class="mdi mdi-check-outline"></i></div>';
-            //     }
-            // }
+            $button = '';
+            if(in_array("35", permission())){
+                $button.='<div class="btn btn-icon btn-info show-given-review m-1" data-i_id="'.($row[0]->i_id).'"><i class="mdi mdi-eye"></i><p class="d-none" id="given_review_'.$row[0]->i_id.'">'.$row[0]->getInterview->reviews.'</p></div>';
+            }
             $data_result[] = array( 
-            "id"=>$id, 
-            "post"=>$opening['title'],
-            "name"=>$candidate['full_name'],
-            "review_type"=>$row->type,
-            "review"=>$row->review,
-            "description"=>$row->description,
+                "id"=>$id, 
+                "name"=>$candidate['full_name'],
+                "post"=>$opening['title'],
+                "action"=>$button,
             );
         }
         $dataset = array(

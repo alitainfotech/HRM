@@ -110,7 +110,7 @@
       <img src="{{ asset('assets/images/openings/technology_icon/'.$job_opening['image']) }}" class="card-img-top overlay-content" alt="..." height="150px">
         <div class="card-body">
           <h5 class="card-title">{{ $job_opening['title'] }}</h5>
-          <p class="card-text mb-3">{{ mb_strimwidth($job_opening['description'], 0, 50, "...") }}</p>
+          <p class="card-text mb-3">{!! mb_strimwidth($job_opening['description'], 0, 50, "...") !!}</p>
           <p class="card-text mb-3">Experience: {{ $experience }}</p>
     
             @php

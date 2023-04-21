@@ -57,8 +57,8 @@ class ReviewController extends Controller
             }
             $data_result[] = array( 
             "id"=>$id, 
-            "post"=>$opening['title'],
             "name"=>$candidate['full_name'],
+            "post"=>$opening['title'],
             // "tl_review"=>$tl_review,
             // "tl_des"=>$tl_des,
             // "hr_review"=>$hr_review,

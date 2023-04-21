@@ -35,10 +35,26 @@ $candidate = Auth::user();
                 <th>APPLIED DATE</th>
                 <th>REQUIRE EXPERIENCE</th>
                 <th>STATUS</th>
+                <th>Action</th>
               </tr>
             </thead>
           </table>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- review_modal -->
+<div class="modal fade  bd-example-modal-md" id="show_reason" tabindex="-1" aria-labelledby="title_show_reason" aria-hidden="true">
+  <div class="modal-dialog modal-md modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="title_show_reason">Rejected Reason</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="btn-close"></button>
+      </div>
+      <div class="modal-body">
+          <p id="reject_reason"></p>
       </div>
     </div>
   </div>

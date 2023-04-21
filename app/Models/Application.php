@@ -14,4 +14,7 @@ class Application extends Model
     public function opening(){
         return $this->hasOne('App\Models\Opening', 'id' ,'o_id');
     }
+    public function getInterview(){
+        return $this->belongsTo('App\Models\Interview', 'id' ,'a_id');
+    }
 }

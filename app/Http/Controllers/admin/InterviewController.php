@@ -54,7 +54,8 @@ class InterviewController extends Controller
                 $button.='<div class="btn btn-icon btn-info add_review m-1" data-i_id="'.($interview['id']).'" data-id="'.$interview->application['id'].'"><i class="mdi mdi-book"></i><p class="d-none" id="given_review_'.$interview['id'].'">'.$interview->reviews.'</p></div>';
             }
             $date = date('d-m-Y  g:i:s a',strtotime($interview['date']));
-            $cv='<a href="'.asset('/assets/candidates/candidates_cv').'/'.$interview->application['cv'].'" download><p class="cv-file">'.$interview->application['cv'].'</p></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$interview->application['cv'].'" class="btn btn-icon btn-info m-1" download><i class="mdi mdi-download"></a>';
+            // $cv='<a href="'.asset('/assets/candidates/candidates_cv').'/'.$interview->application['cv'].'" download><p class="cv-file">'.$interview->application['cv'].'</p></a>';
             $data_result[] = array( 
             "id"=>$id, 
             "post"=>$opening['title'],

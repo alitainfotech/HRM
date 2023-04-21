@@ -240,12 +240,14 @@ class CandidateController extends Controller
                 $status="rejected";$class="badge bg-danger";}
                 $status_div= '<div class="btn mx-2 '.$class.' ">'. $status .'</div>';
                 $date=date('d-m-Y ',strtotime($application['created_at']));
-             $data_result[] = array( 
-             "id"=>$id, 
-             "title"=>$application->opening['title'],
-             "date"=>$date,
-             "experience"=>$experience,
-             "status"=>$status_div
+                $button='<a class="btn btn-icon btn-info m-1 show-reason" data-reason="'.$application['reason'].'"><i class="mdi mdi-eye"></i></a>';
+                $data_result[] = array( 
+                "id"=>$id, 
+                "title"=>$application->opening['title'],
+                "date"=>$date,
+                "experience"=>$experience,
+                "status"=>$status_div,
+                'action' => $button
              );
          }
          $dataset = array(

@@ -35,7 +35,7 @@
           <form class="forms-sample" method="POST" name="registration" enctype="multipart/form-data" id="interview_form">
             @csrf
             <div class="mb-3">
-                <input type="hidden" class="form-control id" id="id" name="id" value="">
+                <input type="hidden" class="form-control id" id="id" name="id" value="0">
             </div>
             <div class="mb-3">
               <input type="hidden" class="form-control i_id" id="i_id" name="i_id" value="0">
@@ -65,7 +65,7 @@
             
             <div class="mb-3">
             <label class="form-label">Date & Time</label>
-            <input type="datetime-local" class="form-control mb-4 mb-md-0 phone" name="date"/>
+            <input type="datetime-local" class="form-control mb-4 mb-md-0 phone date" name="date"/>
             </div>
             <input class="btn btn-primary submit_value" type="button" value="Submit" id="add_interview">
           </form>
@@ -85,10 +85,10 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>POST</th>
                 <th>NAME</th>
                 <th>PHONE</th>
                 <th>EMAIL</th>
+                <th>POST</th>
                 <th>CV</th>
                 <th>Description</th>
                 <th>experience</th>
