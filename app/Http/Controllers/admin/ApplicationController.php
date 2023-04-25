@@ -44,7 +44,7 @@ class ApplicationController extends Controller
                     $button ='<div class="btn btn-icon btn-warning edit_interview m-1" data-id="'.$application->getInterview->id.'"><i class="mdi mdi-square-edit-outline"></i></div>';
                 }
             }
-            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" class="btn btn-icon btn-info m-1" download><i class="mdi mdi-download"></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" class="btn btn-icon btn-primary m-1" download><i class="mdi mdi-download"></a>';
             $data_result[] = array( 
                 "id"=>$id, 
                 "name"=>$application->candidate['full_name'],
@@ -167,7 +167,7 @@ class ApplicationController extends Controller
             $year = intdiv($application['experience'],12);
             $month = $application['experience']%12;
             $experience= $year.' year '.$month.' month ';
-            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" class="btn btn-icon btn-info m-1" download><i class="mdi mdi-download"></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" class="btn btn-icon btn-primary m-1" download><i class="mdi mdi-download"></a>';
             $button='<a class="btn btn-icon btn-info m-1 show-reason" data-reason="'.$application['reason'].'"><i class="mdi mdi-eye"></i></a>';
             $data_result[] = array( 
             "id"=>$id, 
@@ -211,7 +211,7 @@ class ApplicationController extends Controller
             $year = intdiv($application['experience'],12);
             $month = $application['experience']%12;
             $experience= $year.' year '.$month.' month ';
-            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" class="btn btn-icon btn-info m-1" download><i class="mdi mdi-download"></a>';
+            $cv='<a href="'.asset('/assets/images/users/users_cv').'/'.$application['cv'].'" class="btn btn-icon btn-primary m-1" download><i class="mdi mdi-download"></a>';
             $data_result[] = array( 
             "id"=>$id, 
             "name"=>$application->candidate['full_name'],
