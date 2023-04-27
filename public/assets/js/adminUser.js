@@ -234,7 +234,11 @@ $(document).ready(function () {
             type: "POST",
             data: { id: id },
             dataType: "JSON",
+            beforeSend: function () {
+                $('body').removeClass('loaded');
+            },
             success: function (data) {
+                $('body').addClass('loaded');
                 toaster_message(data.message, data.icon, data.redirect_url);
             },
             error: function (error) {

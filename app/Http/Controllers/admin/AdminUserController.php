@@ -210,7 +210,7 @@ class AdminUserController extends Controller
         $user = Admin::where('id',$id)->first();
         if(!is_null($user)){
             $password=generateRandomString(12);
-            $user->password=$password;
+            $user->password = Hash::make($password);
             if($user->update()){
                 $response = [
                     'status' => true,

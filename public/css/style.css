@@ -69,3 +69,10 @@ color: red;
     color: #deb217;  
 }
 /* End Start rating CSS */
+
+/* Table CSS start */
+.table tbody td {
+    color: #808080;
+}
+
+/* Table CSS End */
